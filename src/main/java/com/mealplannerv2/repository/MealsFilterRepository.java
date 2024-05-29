@@ -6,5 +6,5 @@ import com.mealplannerv2.entity.Recipe;
 import java.util.List;
 
 public interface MealsFilterRepository {
-    List<Recipe> findMatchingRecipes(InfoForFiltering info);
+    List<Recipe> findRecipesWithMatchingIngNamesAndAmounts(InfoForFiltering info);
 }

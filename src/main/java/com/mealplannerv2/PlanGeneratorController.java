@@ -26,7 +26,7 @@ class PlanGeneratorController {
 //                .productsToAvoid(List.of("oliwki"))
                 .build();
 
-        List<Recipe> matchingRecipes = repository.findMatchingRecipes(info);
+        List<Recipe> matchingRecipes = repository.findRecipesWithMatchingIngNamesAndAmounts(info);
         System.out.println(matchingRecipes);
         return matchingRecipes.toString();
     }

@@ -12,8 +12,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DirectorTest {
 
-    QueryBuilder queryPreferences = new QueryPreferences();
-    Director director = new Director(queryPreferences);
+    FirstTypeQueryBuilder firstTypeQueryBuilder = new FirstTypeQueryBuilder();
+    SecoundTypeQueryBuilder secoundTypeQueryBuilder = new SecoundTypeQueryBuilder();
+    Director director = new Director(firstTypeQueryBuilder, secoundTypeQueryBuilder);
 
     InfoForFiltering info;
 
@@ -24,66 +25,64 @@ public class DirectorTest {
                 .diet("diet")
                 .timeForPrepareMin(1)
                 .userProducts(List.of(new IngredientDto("productU", 0.0, "")))
-                .productsToAvoid(List.of("productD"))
+                .productsToAvoid(List.of("productA"))
                 .build();
     }
 
     @Test
     void should_include_all_arguments() {
         // when
-        Aggregation aggregation = director.firstTry(info);
-
+        Aggregation agrFirstType = director.firstTry(info, firstTypeQueryBuilder);
+        Aggregation agrSecoundType = director.firstTry(info, secoundTypeQueryBuilder);
         // then
-        String expectedPipeline = "{ \"aggregate\" : \"__collection__\", \"pipeline\" : [" +
-                "{ \"$match\" : { \"max_storage_time\" : { \"$gte\" : 1}}}, " +
-                "{ \"$match\" : { \"diet\" : \"diet\"}}, " +
-                "{ \"$match\" : { \"ingredients.name\" : { \"$in\" : [\"productU\"]}}}, " +
-                "{ \"$match\" : { \"prepare_time\" : { \"$lte\" : 1}}}, " +
-                "{ \"$match\" : { \"ingredients.name\" : { \"$nin\" : [\"productD\"]}}}]}";
+        List<String> expectedValues = List.of("max_storage_time", "diet", "productU", "prepare_time", "productA");
 
-        assertThat(aggregation.toString()).isEqualTo(expectedPipeline);
+        assertThat(agrFirstType.toString()).contains(expectedValues);
+        assertThat(agrSecoundType.toString()).contains(expectedValues);
     }
 
     @Test
     void should_omit_productsToAvoid() {
         // when
-        Aggregation aggregation = director.secondTry(info);
-
+        Aggregation agrFirstType = director.secondTry(info, firstTypeQueryBuilder);
+        Aggregation agrSecoundType = director.secondTry(info, secoundTypeQueryBuilder);
         // then
-        String expectedPipeline = "{ \"aggregate\" : \"__collection__\", \"pipeline\" : [" +
-                "{ \"$match\" : { \"max_storage_time\" : { \"$gte\" : 1}}}, " +
-                "{ \"$match\" : { \"diet\" : \"diet\"}}, " +
-                "{ \"$match\" : { \"ingredients.name\" : { \"$in\" : [\"productU\"]}}}, " +
-                "{ \"$match\" : { \"prepare_time\" : { \"$lte\" : 1}}}]}";
+        List<String> expectedValues = List.of("max_storage_time", "diet", "productU", "prepare_time");
 
-        assertThat(aggregation.toString()).isEqualTo(expectedPipeline);
+        assertThat(agrFirstType.toString()).contains(expectedValues);
+        assertThat(agrFirstType.toString()).doesNotContain("productA");
+
+        assertThat(agrSecoundType.toString()).contains(expectedValues);
+        assertThat(agrSecoundType.toString()).doesNotContain("productA");
     }
 
     @Test
     void should_omit_productsToAvoid_and_prepareTime() {
         // when
-        Aggregation aggregation = director.thirdTry(info);
-
+        Aggregation agrFirstType = director.thirdTry(info, firstTypeQueryBuilder);
+        Aggregation agrSecoundType = director.thirdTry(info, secoundTypeQueryBuilder);
         // then
-        String expectedPipeline = "{ \"aggregate\" : \"__collection__\", \"pipeline\" : [" +
-                "{ \"$match\" : { \"max_storage_time\" : { \"$gte\" : 1}}}, " +
-                "{ \"$match\" : { \"diet\" : \"diet\"}}, " +
-                "{ \"$match\" : { \"ingredients.name\" : { \"$in\" : [\"productU\"]}}}]}";
+        List<String> expectedValues = List.of("max_storage_time", "diet", "productU");
 
-        assertThat(aggregation.toString()).isEqualTo(expectedPipeline);
+        assertThat(agrFirstType.toString()).contains(expectedValues);
+        assertThat(agrFirstType.toString()).doesNotContain(List.of("productA", "prepare_time"));
+
+        assertThat(agrSecoundType.toString()).contains(expectedValues);
+        assertThat(agrSecoundType.toString()).doesNotContain(List.of("productA", "prepare_time"));
     }
 
     @Test
     void should_omit_productsToAvoid_and_prepareTime_and_userProducts() {
         // when
-        Aggregation aggregation = director.fourthTry(info);
-        System.out.println(aggregation);
-
+        Aggregation agrFirstType = director.fourthTry(info, firstTypeQueryBuilder);
+        Aggregation agrSecoundType = director.fourthTry(info, secoundTypeQueryBuilder);
         // then
-        String expectedPipeline = "{ \"aggregate\" : \"__collection__\", \"pipeline\" : [" +
-                "{ \"$match\" : { \"max_storage_time\" : { \"$gte\" : 1}}}, " +
-                "{ \"$match\" : { \"diet\" : \"diet\"}}]}";
+        List<String> expectedValues = List.of("max_storage_time", "diet");
 
-        assertThat(aggregation.toString()).isEqualTo(expectedPipeline);
+        assertThat(agrFirstType.toString()).contains(expectedValues);
+        assertThat(agrFirstType.toString()).doesNotContain(List.of("productA", "prepare_time", "productU"));
+
+        assertThat(agrSecoundType.toString()).contains(expectedValues);
+        assertThat(agrSecoundType.toString()).doesNotContain(List.of("productA", "prepare_time", "productU"));
     }
 }

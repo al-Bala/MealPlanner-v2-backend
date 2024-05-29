@@ -14,7 +14,7 @@ public record RecipeTest(
         int prepare_time,
         int max_storage_time,
         String diet,
-        List<IngredientDto> ingredients,
+        List<Ingredient> ingredients,
         List<String> steps
 ) {
 }

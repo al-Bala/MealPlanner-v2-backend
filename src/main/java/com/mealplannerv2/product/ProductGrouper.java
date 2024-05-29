@@ -15,7 +15,7 @@ import static com.mealplannerv2.product.ProductKeeperFacade.productsInUse;
 @Service
 public class ProductGrouper {
 
-    public static List<IngredientDto> getAllWithGivenDaysNumber(long waitingLevel) {
+    public static List<IngredientDto> getAllWithGivenWaitingLevel(long waitingLevel) {
         if (productsInUse.isEmpty()) {
             return null;
         } else {

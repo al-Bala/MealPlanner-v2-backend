@@ -21,14 +21,13 @@ public class MealsFilterRepositoryImpl implements MealsFilterRepository{
     private final MongoTemplate mongoTemplate;
     private final Director director;
 
-    public List<Recipe> findMatchingRecipes(InfoForFiltering info) {
+    public List<Recipe> findRecipesWithMatchingIngNamesAndAmounts(InfoForFiltering info) {
+        List<Aggregation> aggregations = director.namesAndAmounts(info);
+        return fetchRecipes(aggregations);
+    }
 
-        List<Aggregation> aggregations = new ArrayList<>(List.of(
-                director.firstTry(info),
-                director.secondTry(info),
-                director.thirdTry(info),
-                director.fourthTry(info))
-        );
+    public List<Recipe> findRecipesWithMatchingIngNames(InfoForFiltering info) {
+        List<Aggregation> aggregations = director.names(info);
         return fetchRecipes(aggregations);
     }
 

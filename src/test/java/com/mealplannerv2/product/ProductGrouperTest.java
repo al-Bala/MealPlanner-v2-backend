@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import static com.mealplannerv2.product.ProductKeeperFacade.productsInUse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProductGrouperTest {
 
@@ -28,7 +27,7 @@ class ProductGrouperTest {
     @Test
     void should_return_ingredients_with_latest_date_when_waitingLevel_is_1() {
         // when
-        List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenDaysNumber(1);
+        List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenWaitingLevel(1);
         // then
         System.out.println(allWithGivenDaysNumber);
         assertThat(allWithGivenDaysNumber).containsExactly(
@@ -39,7 +38,7 @@ class ProductGrouperTest {
     @Test
     void should_return_ingredients_with_latest_date_when_waitingLevel_is_equal_or_less_than_0() {
         // when
-        List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenDaysNumber(-1);
+        List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenWaitingLevel(-1);
         // then
         System.out.println(allWithGivenDaysNumber);
         assertThat(allWithGivenDaysNumber).containsExactly(
@@ -50,7 +49,7 @@ class ProductGrouperTest {
     @Test
     void should_return_all_ingredients_when_waitingLevel_is_larger_than_number_of_groups() {
         // when
-        List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenDaysNumber(100);
+        List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenWaitingLevel(100);
         // then
         System.out.println(allWithGivenDaysNumber);
         assertThat(allWithGivenDaysNumber).containsExactly(

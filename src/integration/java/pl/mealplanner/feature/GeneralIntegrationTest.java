@@ -28,7 +28,7 @@ public class GeneralIntegrationTest extends BaseIntegrationTest {
                 .build();
 
         // when
-        List<Recipe> matchingRecipes = mealsFilterRepository.findMatchingRecipes(info);
+        List<Recipe> matchingRecipes = mealsFilterRepository.findRecipesWithMatchingIngNamesAndAmounts(info);
 
 //        verify(mongoTemplate, times(3)).aggregate(any(Aggregation.class), anyString(), any(Class.class));
 

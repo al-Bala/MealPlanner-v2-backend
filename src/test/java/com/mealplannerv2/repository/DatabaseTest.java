@@ -1,8 +1,8 @@
 package com.mealplannerv2.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mealplannerv2.repository.querybuilder.Director;
-import com.mealplannerv2.repository.querybuilder.QueryPreferences;
+import com.mealplannerv2.repository.querybuilder.FirstTypeQueryBuilder;
+import com.mealplannerv2.repository.querybuilder.QueryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +30,7 @@ public class DatabaseTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private final QueryPreferences queryPreferences = new QueryPreferences();
-    private final Director director = new Director(queryPreferences);
+    private final QueryBuilder queryBuilder = new FirstTypeQueryBuilder();
 
     @BeforeEach
     void setUp() throws IOException {
@@ -53,8 +52,8 @@ public class DatabaseTest {
                 new IngredientDto("marchew", 2.0, "szt")
         );
 
-        queryPreferences.setUserProducts(ing, 1);
-        Aggregation aggregation = queryPreferences.getAggregation();
+        queryBuilder.setUserProducts(ing, 1);
+        Aggregation aggregation = queryBuilder.getAggregation();
 
         // when
         AggregationResults<RecipeTest> aggregate = mongoTemplate.aggregate(aggregation, "recipes-test", RecipeTest.class);
