@@ -1,8 +1,8 @@
 package com.mealplannerv2;
 
-import com.mealplannerv2.entity.Recipe;
+import com.mealplannerv2.recipe.RecipeFetcherFacade;
 import com.mealplannerv2.repository.IngredientDto;
-import com.mealplannerv2.repository.MealsFilterRepository;
+import com.mealplannerv2.repository.RecipeDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/plan")
 class PlanGeneratorController {
 
-    private final MealsFilterRepository repository;
+    private final RecipeFetcherFacade recipeFetcherFacade;
 
     @GetMapping("")
     public String find() {
@@ -31,9 +31,9 @@ class PlanGeneratorController {
                         new IngredientDto("ryż", 300.0, "")))
                 .build();
 
-        List<Recipe> matchingRecipes = repository.findRecipesWithMatchingIngNamesAndAmounts(info);
-        System.out.println(matchingRecipes);
-        return matchingRecipes.toString();
+        RecipeDto result = recipeFetcherFacade.fetchRecipeByPreferences(info);
+        System.out.println(result);
+        return result.toString();
     }
 
 }

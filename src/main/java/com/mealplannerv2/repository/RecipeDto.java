@@ -13,4 +13,7 @@ public class RecipeDto {
         this.name = name;
         this.ingredients = ingredients;
     }
+
+    public RecipeDto() {
+    }
 }
