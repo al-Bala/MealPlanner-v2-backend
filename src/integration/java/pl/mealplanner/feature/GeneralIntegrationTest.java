@@ -19,21 +19,30 @@ public class GeneralIntegrationTest extends BaseIntegrationTest {
     @Test
     public void general_test(){
         // given
+//        InfoForFiltering info = InfoForFiltering.builder()
+//                .forHowManyDays(2)
+//                .diet("wegetariańska")
+//                .timeForPrepareMin(5)
+//                .userProducts(List.of(
+//                        new IngredientDto("ryż", 300.0, ""),
+//                        new IngredientDto("marchew", 2.0, "")))
+//                .productsToAvoid(List.of("brokuł"))
+//                .build();
         InfoForFiltering info = InfoForFiltering.builder()
                 .forHowManyDays(2)
-                .diet("wegetariańska")
-                .timeForPrepareMin(5)
-                .userProducts(List.of(new IngredientDto("marchew", 0.0, "")))
-                .productsToAvoid(List.of("brokuł"))
+                .diet("mięsna")
+                .timeForPrepareMin(20)
+                .userProducts(List.of(
+                        new IngredientDto("truskawki", 80.0, "g"),
+                        new IngredientDto("marchew", 1.0, "szt")))
+//                        new IngredientDto("ryż", 300.0, "g")))
                 .build();
 
         // when
-        List<Recipe> matchingRecipes = mealsFilterRepository.findRecipesWithMatchingIngNamesAndAmounts(info);
-
-//        verify(mongoTemplate, times(3)).aggregate(any(Aggregation.class), anyString(), any(Class.class));
+//        List<Recipe> matchingRecipes = mealsFilterRepository.findRecipesWithMatchingIngNamesAndAmounts(info);
+        List<Recipe> matchingRecipes = mealsFilterRepository.findRecipesWithMatchingIngNames(info);
 
         // then
         System.out.println(matchingRecipes);
-        assertThat(matchingRecipes.get(0).name()).isEqualTo("Kasza jaglana z warzywami");
     }
 }

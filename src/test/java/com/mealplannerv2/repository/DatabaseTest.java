@@ -1,8 +1,9 @@
 package com.mealplannerv2.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mealplannerv2.repository.querybuilder.FirstTypeQueryBuilder;
-import com.mealplannerv2.repository.querybuilder.QueryBuilder;
+import com.mealplannerv2.InfoForFiltering;
+import com.mealplannerv2.entity.Recipe;
+import com.mealplannerv2.repository.querybuilder.QueryMaker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,6 @@ public class DatabaseTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private final QueryBuilder queryBuilder = new FirstTypeQueryBuilder();
-
     @BeforeEach
     void setUp() throws IOException {
         Resource resource = new ClassPathResource("test-recipes-data.json");
@@ -42,23 +41,6 @@ public class DatabaseTest {
         List<RecipeTest> documents = Arrays.asList(objectMapper.readValue(jsonData, RecipeTest[].class));
 
         mongoTemplate.insertAll(documents);
-    }
-
-    @Test
-    void find_diet2() {
-        // given
-        List<IngredientDto> ing = List.of(
-                new IngredientDto("ryż", 100.0, "g"),
-                new IngredientDto("marchew", 2.0, "szt")
-        );
-
-        queryBuilder.setUserProducts(ing, 1);
-        Aggregation aggregation = queryBuilder.getAggregation();
-
-        // when
-        AggregationResults<RecipeTest> aggregate = mongoTemplate.aggregate(aggregation, "recipes-test", RecipeTest.class);
-        System.out.println(aggregate.getMappedResults());
-
     }
 
     @Test

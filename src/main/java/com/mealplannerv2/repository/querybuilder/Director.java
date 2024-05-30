@@ -12,62 +12,51 @@ import java.util.List;
 @Component
 public class Director {
 
-    private final FirstTypeQueryBuilder firstTypeQueryBuilder;
-    private final SecoundTypeQueryBuilder secoundTypeQueryBuilder;
+    private final QueryMaker queryMaker;
+    private final NACriteriaBuilder namesAmountsCriteria = new NamesAmountsCriteria();
+    private final NACriteriaBuilder onlyNamesCriteria = new OnlyNamesCriteria();
     private final List<Aggregation> aggregations = new ArrayList<>();
 
     public List<Aggregation> namesAndAmounts(InfoForFiltering info){
         aggregations.clear();
-        aggregations.add(firstTry(info, firstTypeQueryBuilder));
-        aggregations.add(secondTry(info, firstTypeQueryBuilder));
-        aggregations.add(thirdTry(info, firstTypeQueryBuilder));
-        aggregations.add(fourthTry(info, firstTypeQueryBuilder));
+        aggregations.add(firstTry(info, namesAmountsCriteria));
+        aggregations.add(secondTry(info, namesAmountsCriteria));
+        aggregations.add(thirdTry(info, namesAmountsCriteria));
+//        aggregations.add(fourthTry(info));
         return aggregations;
     }
 
     public List<Aggregation> names(InfoForFiltering info){
         aggregations.clear();
-        aggregations.add(firstTry(info, secoundTypeQueryBuilder));
-        aggregations.add(secondTry(info, secoundTypeQueryBuilder));
-        aggregations.add(thirdTry(info, secoundTypeQueryBuilder));
-        aggregations.add(fourthTry(info, secoundTypeQueryBuilder));
+        aggregations.add(firstTry(info, onlyNamesCriteria));
+        aggregations.add(secondTry(info, onlyNamesCriteria));
+        aggregations.add(thirdTry(info, onlyNamesCriteria));
+        aggregations.add(fourthTry(info));
         return aggregations;
     }
 
-    Aggregation fourthTry(InfoForFiltering info, QueryBuilder queryBuilder){
-        queryBuilder.clearOperationsList();
-        queryBuilder.setMaxStorageTime(info.forHowManyDays());
-        queryBuilder.setDiet(info.diet());
-        return queryBuilder.getAggregation();
+    Aggregation fourthTry(InfoForFiltering info){
+        queryMaker.clearOperationsList();
+        queryMaker.setMaxStorageTime(info.forHowManyDays());
+        queryMaker.setDiet(info.diet());
+        return queryMaker.getAggregation();
     }
 
-    Aggregation thirdTry(InfoForFiltering info, QueryBuilder queryBuilder){
-        fourthTry(info, queryBuilder);
-//        builder.clearOperationsList();
-//        builder.setMaxStorageTime(info.forHowManyDays());
-//        builder.setDiet(info.diet());
-        queryBuilder.setUserProducts(info.userProducts(), 1);
-        return queryBuilder.getAggregation();
+    Aggregation thirdTry(InfoForFiltering info, NACriteriaBuilder criteria){
+        fourthTry(info);
+        queryMaker.setUserProducts(info.userProducts(), criteria.getCriteria(info.userProducts()));
+        return queryMaker.getAggregation();
     }
 
-    Aggregation secondTry(InfoForFiltering info, QueryBuilder queryBuilder){
-        thirdTry(info, queryBuilder);
-//        builder.clearOperationsList();
-//        builder.setMaxStorageTime(info.forHowManyDays());
-//        builder.setDiet(info.diet());
-//        builder.setUserProducts(info.userProducts(), 1);
-        queryBuilder.setPrepareTime(info.timeForPrepareMin());
-        return queryBuilder.getAggregation();
+    Aggregation secondTry(InfoForFiltering info, NACriteriaBuilder criteria){
+        thirdTry(info, criteria);
+        queryMaker.setPrepareTime(info.timeForPrepareMin());
+        return queryMaker.getAggregation();
     }
 
-    Aggregation firstTry(InfoForFiltering info, QueryBuilder queryBuilder){
-        secondTry(info, queryBuilder);
-//        builder.clearOperationsList();
-//        builder.setMaxStorageTime(info.forHowManyDays());
-//        builder.setDiet(info.diet());
-//        builder.setUserProducts(info.userProducts(), 1);
-//        builder.setPrepareTime(info.timeForPrepareMin());
-        queryBuilder.setProductsToAvoid(info.productsToAvoid());
-        return queryBuilder.getAggregation();
+    Aggregation firstTry(InfoForFiltering info, NACriteriaBuilder criteria){
+        secondTry(info, criteria);
+        queryMaker.setProductsToAvoid(info.productsToAvoid());
+        return queryMaker.getAggregation();
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,7 +46,11 @@ public class MealsFilterRepositoryImpl implements MealsFilterRepository{
     }
 
     private List<Recipe> makeAggregation(Aggregation agr) {
+        System.out.println("AGR:\n" + agr);
         AggregationResults<Recipe> result = mongoTemplate.aggregate(agr, "recipes", Recipe.class);
         return result.getMappedResults();
     }
+
+
+
 }

@@ -1,34 +1,24 @@
 package com.mealplannerv2.repository;
 
 import com.mealplannerv2.InfoForFiltering;
-import com.mealplannerv2.entity.Recipe;
 import com.mealplannerv2.repository.querybuilder.Director;
-import org.bson.Document;
+import com.mealplannerv2.repository.querybuilder.QueryMaker;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 @ExtendWith(MockitoExtension.class)
 public class MealsFilterRepositoryImplTest {
 
     @Mock
     private MongoTemplate mongoTemplate;
+
+    @Mock
+    QueryMaker queryMaker;
 
     @Mock
     private Director director;
@@ -39,14 +29,14 @@ public class MealsFilterRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        mealsFilterRepository = new MealsFilterRepositoryImpl(mongoTemplate, director);
-
-        List<Aggregation> aggregations = new ArrayList<>();
-        for(int i = 0; i < 4; i++){
-            List<AggregationOperation> criteria = new ArrayList<>();
-            aggregations.add(Aggregation.newAggregation(criteria));
-        }
-        when(director.namesAndAmounts(info)).thenReturn(aggregations);
+//        mealsFilterRepository = new MealsFilterRepositoryImpl(mongoTemplate, director);
+//
+//        List<Aggregation> aggregations = new ArrayList<>();
+//        for(int i = 0; i < 4; i++){
+//            List<AggregationOperation> criteria = new ArrayList<>();
+//            aggregations.add(Aggregation.newAggregation(criteria));
+//        }
+//        when(director.namesAndAmounts(info)).thenReturn(aggregations);
 //        when(director.firstTry(info)).thenReturn(newAggregation(criteria));
 //        when(director.secondTry(info)).thenReturn(newAggregation(criteria));
 //        when(director.thirdTry(info)).thenReturn(newAggregation(criteria));
@@ -59,7 +49,7 @@ public class MealsFilterRepositoryImplTest {
 //        List<Recipe> recipes = List.of(Recipe.builder().build());
 //        when(mongoTemplate.aggregate(any(Aggregation.class), anyString(), any(Class.class)))
 //                .thenReturn(new AggregationResults<>(recipes2, new Document()));
-//        when(mongoTemplate.aggregate(director.thirdTry(info), "recipes", Recipe.class))
+//        when(mongoTemplate.aggregate(director.thirdTry(info, firstTypeQueryBuilder), "recipes", Recipe.class))
 //                .thenReturn(new AggregationResults<>(recipes, new Document()));
 //
 //        mealsFilterRepository.findRecipesWithMatchingIngNamesAndAmounts(info);
