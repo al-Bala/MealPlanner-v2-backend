@@ -2,6 +2,7 @@ package com.mealplannerv2.repository.querybuilder;
 
 import com.mealplannerv2.entity.Ingredient;
 import com.mealplannerv2.product.ProductGrouper;
+import com.mealplannerv2.product.ProductKeeperFacade;
 import com.mealplannerv2.repository.IngredientDto;
 import lombok.Getter;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.mealplannerv2.product.ProductKeeperFacade.getAllWithGivenDaysNumber;
+
 @Getter
 @Component
 public class QueryMaker {
@@ -20,16 +23,11 @@ public class QueryMaker {
     List<AggregationOperation> combinedOperations = new ArrayList<>();
 
     public void setUserProducts(List<IngredientDto> userProducts, Criteria namesAmountCriteria) {
-//        if (!ProductKeeperFacade.productsInUse.isEmpty()) {
-        if (userProducts != null) {
-//            ProductKeeperFacade.addAllUniq(userProducts);
-
-            List<IngredientDto> prioritisedProducts = ProductGrouper.getAllWithGivenWaitingLevel(1);
-
-//            Criteria namesAmountCriteria = Criteria.where("ingredients").elemMatch(
-//                    new Criteria().orOperator(getCriteria(userProducts)));
-
-            List<Ingredient> ingredients = mapFromIngredientDroToIngredient(userProducts);
+        if (!ProductKeeperFacade.productsInUse.isEmpty()) {
+//            if (userProducts != null) {
+            ProductKeeperFacade.addAllUniq(userProducts);
+            List<IngredientDto> prioritisedProducts = getAllWithGivenDaysNumber(1);
+            List<Ingredient> ingredients = mapFromIngredientDroToIngredient(prioritisedProducts);
 
             List<AggregationOperation> productsToUseAgr = Arrays.asList(
                     Aggregation.match(namesAmountCriteria),
@@ -50,23 +48,15 @@ public class QueryMaker {
             );
 
             combinedOperations.addAll(productsToUseAgr);
+//            }
         }
     }
 
-    private List<Ingredient> mapFromIngredientDroToIngredient(List<IngredientDto> ing){
+    private List<Ingredient> mapFromIngredientDroToIngredient(List<IngredientDto> ing) {
         return ing.stream()
                 .map(i -> new Ingredient(i.getName(), i.getAmount(), i.getUnit()))
                 .toList();
     }
-
-//    @Override
-//    public List<Criteria> getCriteria(List<IngredientDto> userProducts) {
-//        List<Criteria> c = new ArrayList<>();
-//        for(IngredientDto i: userProducts){
-//            c.add(Criteria.where("name").is(i.getName()).and("amount").is(i.getAmount()));
-//        }
-//        return c;
-//    }
 
     public void setMaxStorageTime(int daysNr) {
         if (daysNr != 0) {

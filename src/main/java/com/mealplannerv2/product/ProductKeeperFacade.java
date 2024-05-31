@@ -39,7 +39,7 @@ public class ProductKeeperFacade {
         }
     }
 
-    public static List<IngredientDto> getAllWithGivenDaysNumber(long waitingLevel) throws Exception {
+    public static List<IngredientDto> getAllWithGivenDaysNumber(long waitingLevel) {
         List<IngredientDto> allWithGivenDaysNumber = ProductGrouper.getAllWithGivenWaitingLevel(waitingLevel);
         if(allWithGivenDaysNumber == null){
             log.warn("Set: productsInUse is empty.");
