@@ -1,0 +1,16 @@
+{
+    "id": "#",
+    "role": "USER",
+    "username": "user",
+    "password": "password",
+    "email": "email@email.pl",
+    "user_preferences": {
+      "portions": 2,
+      "diet": "wege",
+      "products_to_avoid": [""]
+    },
+    "products_in_use": [],
+    "user_recipes": [],
+    "plan_history": [],
+    "grocery_list":[]
+}

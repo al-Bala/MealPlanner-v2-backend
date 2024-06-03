@@ -1,6 +1,6 @@
 package com.mealplannerv2;
 
-import com.mealplannerv2.repository.IngredientDto;
+import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import lombok.Builder;
 
 import java.util.List;
