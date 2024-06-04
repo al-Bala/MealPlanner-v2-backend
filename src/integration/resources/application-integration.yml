@@ -1,0 +1,5 @@
+auth:
+  jwt:
+    expiration-days: 30
+    secret: secret
+    issuer: meal-planner-backend

@@ -1,5 +1,6 @@
 package pl.mealplanner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mealplannerv2.MealPlannerV2Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +20,9 @@ import org.testcontainers.utility.MountableFile;
 @AutoConfigureMockMvc
 @Testcontainers
 public class BaseIntegrationTest {
+
+    @Autowired
+    public ObjectMapper objectMapper;
 
     @Autowired
     public MockMvc mockMvc;

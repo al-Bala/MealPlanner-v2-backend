@@ -5,6 +5,7 @@ import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ class PlanGeneratorController {
     private final RecipeFetcherFacade recipeFetcherFacade;
 
     @GetMapping("")
-    public String find() {
+    public ResponseEntity<PlanResponseDto> find() {
         InfoForFiltering info = InfoForFiltering.builder()
                 .forHowManyDays(1)
 //                .diet("wegetariańska")
@@ -34,7 +35,7 @@ class PlanGeneratorController {
 
         RecipeDto result = recipeFetcherFacade.fetchRecipeByPreferences(info);
         System.out.println(result);
-        return result.toString();
+        return ResponseEntity.ok(new PlanResponseDto(result));
     }
 
 }

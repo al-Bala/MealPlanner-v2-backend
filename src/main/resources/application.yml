@@ -2,4 +2,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017
-      database: mealplanner
+      database: nmealplanner
+
+auth:
+  jwt:
+    expiration-days: 30
+    secret: ${JWT_SECRET}
+    issuer: meal-planner-backend
