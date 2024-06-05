@@ -2,7 +2,6 @@ package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuil
 
 
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
-import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder.QueryMaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
@@ -43,13 +42,13 @@ public class QueryMakerTest {
 
     @Test
     void should_not_add_userProducts_to_list() {
-        queryMaker.setUserProducts(null ,new Criteria());
+        queryMaker.setIngredientsToUseFirstly(null ,new Criteria());
         assertThat(combinedOperationsTest).isEmpty();
     }
 
     @Test
     void should_save_7_operation_in_list() {
-        queryMaker.setUserProducts(List.of(new Ingredient("product", 0.0, "")), new Criteria());
+        queryMaker.setIngredientsToUseFirstly(List.of(new Ingredient("product", 0.0, "")), new Criteria());
         assertThat(combinedOperationsTest).size().isEqualTo(7);
     }
 
@@ -64,7 +63,7 @@ public class QueryMakerTest {
         queryMaker.setMaxStorageTime(0);
         queryMaker.setDiet(null);
         queryMaker.setPrepareTime(0);
-        queryMaker.setUserProducts(null ,new Criteria());
+        queryMaker.setIngredientsToUseFirstly(null ,new Criteria());
         queryMaker.setProductsToAvoid(null);
 
         assertThat(combinedOperationsTest).isEmpty();
@@ -75,7 +74,7 @@ public class QueryMakerTest {
         queryMaker.setMaxStorageTime(2);
         queryMaker.setDiet("diet");
         queryMaker.setPrepareTime(0);
-        queryMaker.setUserProducts(null ,new Criteria());
+        queryMaker.setIngredientsToUseFirstly(null ,new Criteria());
         queryMaker.setProductsToAvoid(null);
 
         assertThat(combinedOperationsTest).size().isEqualTo(2);
@@ -86,7 +85,7 @@ public class QueryMakerTest {
         queryMaker.setMaxStorageTime(2);
         queryMaker.setDiet("diet");
         queryMaker.setPrepareTime(15);
-        queryMaker.setUserProducts(List.of(new Ingredient("product", 0.0, "")), new Criteria());
+        queryMaker.setIngredientsToUseFirstly(List.of(new Ingredient("product", 0.0, "")), new Criteria());
         queryMaker.setProductsToAvoid(List.of("product"));
 
         assertThat(combinedOperationsTest).size().isEqualTo(11);

@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.util.List;
 
 public interface NACriteriaBuilder {
-    Criteria getCriteria(List<Ingredient> userProducts);
+    Criteria getCriteria(List<Ingredient> ingredients);
 }

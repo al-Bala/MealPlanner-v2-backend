@@ -1,17 +1,17 @@
-package com.mealplannerv2.plangenerator.recipefilter;
+package com.mealplannerv2.productstorage;
 
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
-import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto2;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
+import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
 
 import java.util.List;
 
-class RecipeMapper {
+class ProductMapper {
 
     public static List<RecipeDto> mapFromRecipeListToRecipeDtoList(List<Recipe> recipes){
         return recipes.stream()
-                .map(RecipeMapper::mapFromRecipeToRecipeDto)
+                .map(ProductMapper::mapFromRecipeToRecipeDto)
                 .toList();
     }
 
@@ -30,4 +30,5 @@ class RecipeMapper {
                 .map(i -> new Ingredient(i.getName(), i.getAmount(), i.getUnit()))
                 .toList();
     }
+
 }

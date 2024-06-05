@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
-import com.mealplannerv2.plangenerator.InfoFiltering2;
+import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class Director {
     private final NACriteriaBuilder onlyNamesCriteria = new OnlyNamesCriteria();
     private final List<Aggregation> aggregations = new ArrayList<>();
 
-    public List<Aggregation> namesAndAmounts(InfoFiltering2 info){
+    public List<Aggregation> namesAndAmounts(DataForRecipeFiltering info){
         aggregations.clear();
         aggregations.add(firstTry(info, namesAmountsCriteria));
         aggregations.add(secondTry(info, namesAmountsCriteria));
@@ -26,7 +26,7 @@ public class Director {
         return aggregations;
     }
 
-    public List<Aggregation> names(InfoFiltering2 info){
+    public List<Aggregation> names(DataForRecipeFiltering info){
         aggregations.clear();
         aggregations.add(firstTry(info, onlyNamesCriteria));
         aggregations.add(secondTry(info, onlyNamesCriteria));
@@ -35,26 +35,26 @@ public class Director {
         return aggregations;
     }
 
-    Aggregation fourthTry(InfoFiltering2 info){
+    Aggregation fourthTry(DataForRecipeFiltering info){
         queryMaker.clearOperationsList();
         queryMaker.setMaxStorageTime(info.forHowManyDays());
         queryMaker.setDiet(info.diet());
         return queryMaker.getAggregation();
     }
 
-    Aggregation thirdTry(InfoFiltering2 info, NACriteriaBuilder criteria){
+    Aggregation thirdTry(DataForRecipeFiltering info, NACriteriaBuilder criteria){
         fourthTry(info);
-        queryMaker.setUserProducts(info.userProducts(), criteria.getCriteria(info.userProducts()));
+        queryMaker.setIngredientsToUseFirstly(info.ingredientsToUseFirstly(), criteria.getCriteria(info.ingredientsToUseFirstly()));
         return queryMaker.getAggregation();
     }
 
-    Aggregation secondTry(InfoFiltering2 info, NACriteriaBuilder criteria){
+    Aggregation secondTry(DataForRecipeFiltering info, NACriteriaBuilder criteria){
         thirdTry(info, criteria);
         queryMaker.setPrepareTime(info.timeForPrepareMin());
         return queryMaker.getAggregation();
     }
 
-    Aggregation firstTry(InfoFiltering2 info, NACriteriaBuilder criteria){
+    Aggregation firstTry(DataForRecipeFiltering info, NACriteriaBuilder criteria){
         secondTry(info, criteria);
         queryMaker.setProductsToAvoid(info.productsToAvoid());
         return queryMaker.getAggregation();

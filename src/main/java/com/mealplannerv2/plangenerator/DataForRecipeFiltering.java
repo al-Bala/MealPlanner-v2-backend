@@ -6,11 +6,11 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record InfoFiltering2(
+public record DataForRecipeFiltering(
         int forHowManyDays,
         String diet,
         int timeForPrepareMin,
-        List<Ingredient> userProducts,
+        List<Ingredient> ingredientsToUseFirstly,
         List<String> productsToAvoid
 ) {
 }

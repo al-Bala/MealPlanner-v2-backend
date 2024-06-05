@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db;
 
-import com.mealplannerv2.plangenerator.InfoFiltering2;
+import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFilterRepository;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder.Director;
 import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
@@ -22,13 +22,13 @@ public class RecipeFilterRepositoryImpl implements RecipeFilterRepository {
     private final Director director;
 
     @Override
-    public List<Recipe> findRecipesWithMatchingIngNamesAndAmounts(InfoFiltering2 info) {
+    public List<Recipe> findRecipesWithMatchingIngNamesAndAmounts(DataForRecipeFiltering info) {
         List<Aggregation> aggregations = director.namesAndAmounts(info);
         return fetchRecipes(aggregations);
     }
 
     @Override
-    public List<Recipe> findRecipesWithMatchingIngNames(InfoFiltering2 info) {
+    public List<Recipe> findRecipesWithMatchingIngNames(DataForRecipeFiltering info) {
         List<Aggregation> aggregations = director.names(info);
         return fetchRecipes(aggregations);
     }

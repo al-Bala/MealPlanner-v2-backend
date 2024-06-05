@@ -1,6 +1,6 @@
 package pl.mealplanner.feature;
 
-import com.mealplannerv2.plangenerator.InfoFiltering2;
+import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.RecipeFilterRepositoryImpl;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
@@ -29,16 +29,16 @@ public class GeneralIntegrationTest extends BaseIntegrationTest {
 //                .forHowManyDays(2)
 //                .diet("wegetariańska")
 //                .timeForPrepareMin(5)
-//                .userProducts(List.of(
+//                .ingredientsToUseFirstly(List.of(
 //                        new IngredientDto("ryż", 300.0, ""),
 //                        new IngredientDto("marchew", 2.0, "")))
 //                .productsToAvoid(List.of("brokuł"))
 //                .build();
-        InfoFiltering2 info = InfoFiltering2.builder()
+        DataForRecipeFiltering info = DataForRecipeFiltering.builder()
                 .forHowManyDays(2)
                 .diet("mięsna")
                 .timeForPrepareMin(20)
-                .userProducts(List.of(
+                .ingredientsToUseFirstly(List.of(
                         new Ingredient("truskawki", 80.0, "g"),
                         new Ingredient("marchew", 1.0, "szt")))
 //                        new IngredientDto("ryż", 300.0, "g")))

@@ -1,7 +1,6 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
-import com.mealplannerv2.product.productkeeper.ProductKeeperFacade;
 import lombok.Getter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -18,9 +17,9 @@ public class QueryMaker {
 
     List<AggregationOperation> combinedOperations = new ArrayList<>();
 
-    public void setUserProducts(List<Ingredient> ingredients, Criteria namesAmountCriteria) {
-        if (!ProductKeeperFacade.productsInUse.isEmpty() || !ingredients.isEmpty()) {
-//            if (userProducts != null) {
+    public void setIngredientsToUseFirstly(List<Ingredient> ingredients, Criteria namesAmountCriteria) {
+        if (ingredients != null) {
+//            if (ingredientsToUseFirstly != null) {
 
 
             List<AggregationOperation> productsToUseAgr = Arrays.asList(

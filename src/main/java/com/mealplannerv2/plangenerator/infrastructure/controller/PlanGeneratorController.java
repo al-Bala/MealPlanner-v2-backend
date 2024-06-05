@@ -1,9 +1,9 @@
 package com.mealplannerv2.plangenerator.infrastructure.controller;
 
-import com.mealplannerv2.InfoForFiltering;
+import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
+import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,16 +21,16 @@ class PlanGeneratorController {
 
     @GetMapping("")
     public ResponseEntity<PlanResponseDto> find() {
-        InfoForFiltering info = InfoForFiltering.builder()
+        DataForRecipeFiltering info = DataForRecipeFiltering.builder()
                 .forHowManyDays(1)
 //                .diet("wegetariańska")
 //                .timeForPrepareMin(5)
-//                .userProducts(List.of("marchew"))
+//                .ingredientsToUseFirstly(List.of("marchew"))
 //                .productsToAvoid(List.of("oliwki"))
-                .userProducts(List.of(
-                        new IngredientDto("truskawki", 100.0, ""),
-                        new IngredientDto("marchew", 2.0, ""),
-                        new IngredientDto("ryż", 300.0, "")))
+                .ingredientsToUseFirstly(List.of(
+                        new Ingredient("truskawki", 100.0, ""),
+                        new Ingredient("marchew", 2.0, ""),
+                        new Ingredient("ryż", 300.0, "")))
                 .build();
 
         RecipeDto result = recipeFetcherFacade.fetchRecipeByPreferences(info);
