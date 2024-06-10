@@ -1,4 +1,4 @@
-package com.mealplannerv2.plangenerator.recipefilter.dto;
+package com.mealplannerv2.plangenerator;
 
 public record UserProduct(
         String name,

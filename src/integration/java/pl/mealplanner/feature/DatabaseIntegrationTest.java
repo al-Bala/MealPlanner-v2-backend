@@ -12,18 +12,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GeneralIntegrationTest extends BaseIntegrationTest {
+public class DatabaseIntegrationTest extends BaseIntegrationTest {
     @Autowired
     public RecipeFilterRepositoryImpl mealsFilterRepository;
 
     @Test
-    public void general_test(){
-
-        // ktos podaje preferencje: 2, mięsna, 20, {truskawki, 80}, {marchew, 1}
-        // wykonanie wyszukiwania z nazwamai i ilościami - brak odpowiedzi
-        // wykonanie wyszukiwania z nazwamai - znajduje
-        // zapisuje
-
+    public void database_test(){
         // given
 //        InfoForFiltering info = InfoForFiltering.builder()
 //                .forHowManyDays(2)

@@ -37,6 +37,7 @@ public class Director {
 
     Aggregation fourthTry(DataForRecipeFiltering info){
         queryMaker.clearOperationsList();
+        queryMaker.setTypeOfMeal(info.typeOfMeal());
         queryMaker.setMaxStorageTime(info.forHowManyDays());
         queryMaker.setDiet(info.diet());
         return queryMaker.getAggregation();

@@ -23,6 +23,12 @@ public class QueryMakerTest {
     }
 
     @Test
+    void should_not_add_typeOfMeal_to_list() {
+        queryMaker.setTypeOfMeal(null);
+        assertThat(combinedOperationsTest).isEmpty();
+    }
+
+    @Test
     void should_not_add_maxStorageTime_to_list() {
         queryMaker.setMaxStorageTime(0);
         assertThat(combinedOperationsTest).isEmpty();

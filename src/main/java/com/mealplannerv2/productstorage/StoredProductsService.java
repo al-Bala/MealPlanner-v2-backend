@@ -1,6 +1,6 @@
 package com.mealplannerv2.productstorage;
 
-import com.mealplannerv2.plangenerator.recipefilter.dto.UserProduct;
+import com.mealplannerv2.plangenerator.UserProduct;
 import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import lombok.AllArgsConstructor;

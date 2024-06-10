@@ -1,6 +1,7 @@
 package com.mealplannerv2.loginandregister;
 
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto2;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPreferences;
+import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -30,8 +31,11 @@ public class User implements UserDetails {
 
     @Field("password") String password;
 
+    @Field("preferences")
+    SavedPreferences preferences;
+
     @Field("products_in_use")
-    List<IngredientDto2> productsInUse;
+    List<IngredientDto> productsInUse;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -10,6 +10,7 @@ import java.util.List;
 public record RecipeTest(
         String _id,
         String name,
+        List<String> type_of_meal,
         int portions,
         int prepare_time,
         int max_storage_time,

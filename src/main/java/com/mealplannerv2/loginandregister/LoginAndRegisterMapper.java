@@ -16,6 +16,7 @@ class LoginAndRegisterMapper {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .password(user.getPassword())
+                .preferences(user.getPreferences())
                 .build();
     }
 }

@@ -7,8 +7,9 @@ import java.util.List;
 
 @Builder
 public record DataForRecipeFiltering(
-        int forHowManyDays,
+        String typeOfMeal,
         String diet,
+        int forHowManyDays,
         int timeForPrepareMin,
         List<Ingredient> ingredientsToUseFirstly,
         List<String> productsToAvoid

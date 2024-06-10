@@ -1,7 +1,7 @@
 package com.mealplannerv2.plangenerator.recipefilter;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.BestMatch;
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto2;
+import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.productstorage.ProductStorageFacade;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
@@ -22,7 +22,7 @@ class RecipeChooser {
 
         for(RecipeDto recipe : recipesDto){
             int count = 0;
-            for(IngredientDto2 ing : recipe.getIngredients()){
+            for(IngredientDto ing : recipe.getIngredients()){
                 StoredProductDto productToCheck = new StoredProductDto(ing.getName(), 0.0, ing.getUnit());
                 if(productStorageFacade.getStoredProducts().contains(productToCheck)){
                     count++;

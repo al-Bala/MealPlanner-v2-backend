@@ -1,6 +1,6 @@
 package com.mealplannerv2.productstorage;
 
-import com.mealplannerv2.plangenerator.recipefilter.dto.UserProduct;
+import com.mealplannerv2.plangenerator.UserProduct;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,8 +33,8 @@ public class ProductStorageFacade {
         storedProductsService.updateDaysToSpoilAfterOpening();
     }
 
-    public List<StoredProductDto> createNewProducts(List<UserProduct> ingredients){
-        return storedProductsService.createNewForStoredProducts(ingredients);
+    public List<StoredProductDto> convertIntoStoredProducts(List<UserProduct> userProducts){
+        return storedProductsService.createNewForStoredProducts(userProducts);
     }
 
     public List<StoredProductDto> getProductsWhichMustBeUsedFirstly() {

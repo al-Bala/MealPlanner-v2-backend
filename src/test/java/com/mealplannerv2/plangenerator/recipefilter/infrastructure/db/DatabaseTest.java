@@ -62,6 +62,18 @@ public class DatabaseTest {
         assertThat(names).isEqualTo(expectedIds);
     }
 
+    @Test
+    void find_typeOfMeal() {
+        // given
+        Criteria criteria = Criteria.where("type_of_meal").is("breakfast");
+        // when
+        List<RecipeTest> queryResult = makeQuery(criteria);
+        List<String> names = getRecipeNames(queryResult);
+        // then
+        List<String> expectedIds = List.of("Sałatka owocowa", "Jajecznica z warzywami", "Koktajl owocowy");
+        assertThat(names).isEqualTo(expectedIds);
+    }
+
     @AfterEach
     void tearDown() {
         mongoTemplate.dropCollection("recipes-test");

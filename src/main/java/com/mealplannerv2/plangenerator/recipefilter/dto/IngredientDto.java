@@ -6,27 +6,27 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Data
-public class IngredientDto2 {
+public class IngredientDto {
     private String name;
     private Double amount;
     private String unit;
     private LocalDate openDate;
 
-    public IngredientDto2(String name, Double amount, String unit, LocalDate openDate) {
+    public IngredientDto(String name, Double amount, String unit, LocalDate openDate) {
         this.name = name;
         this.amount = amount;
         this.unit = unit;
         this.openDate = openDate;
     }
 
-    public IngredientDto2(String name, Double amount, String unit) {
+    public IngredientDto(String name, Double amount, String unit) {
         this.name = name;
         this.amount = amount;
         this.unit = unit;
         this.openDate = LocalDate.now();
     }
 
-    public IngredientDto2(String name, String unit) {
+    public IngredientDto(String name, String unit) {
         this.name = name;
         this.unit = unit;
     }
@@ -39,7 +39,7 @@ public class IngredientDto2 {
         if (other == null) {
             return false;
         }
-        if (!(other instanceof IngredientDto2 otherIng)) {
+        if (!(other instanceof IngredientDto otherIng)) {
             return false;
         }
         return otherIng.name.equals(this.name) && otherIng.unit.equals(this.unit);

@@ -41,6 +41,7 @@ db.recipes.insertMany([
     {
         _id: ObjectId('6577660abbac733a111c9421'),
         name: "Kasza jaglana z warzywami",
+        type_of_meal: ["dinner"],
         portions: 4,
         prepare_time: 30,
         max_storage_time: 2,
@@ -56,6 +57,7 @@ db.recipes.insertMany([
     {
         _id: ObjectId('6577660abbac733a111c9422'),
         name: "Sałatka owocowa",
+        type_of_meal: ["breakfast", "supper"],
         portions: 3,
         prepare_time: 15,
         max_storage_time: 1,
@@ -71,6 +73,7 @@ db.recipes.insertMany([
     {
         _id: ObjectId('6577660abbac733a111c9423'),
         name: "Jajecznica z warzywami",
+        type_of_meal: ["breakfast"],
         portions: 2,
         prepare_time: 15,
         max_storage_time: 1,
@@ -87,6 +90,7 @@ db.recipes.insertMany([
     {
         _id: ObjectId('6577660abbac733a111c9424'),
         name: "Koktajl owocowy",
+        type_of_meal: ["breakfast", "supper"],
         portions: 1,
         prepare_time: 10,
         max_storage_time: 1,
@@ -103,6 +107,7 @@ db.recipes.insertMany([
     {
         _id: ObjectId('6577660abbac733a111c9425'),
         name: "Ryż z warzywami i kurczakiem",
+        type_of_meal: ["dinner"],
         portions: 3,
         prepare_time: 25,
         max_storage_time: 2,

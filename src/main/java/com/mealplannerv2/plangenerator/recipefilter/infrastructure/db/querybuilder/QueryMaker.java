@@ -2,6 +2,7 @@ package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuil
 
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,17 +12,45 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 @Getter
 @Component
 public class QueryMaker {
 
     List<AggregationOperation> combinedOperations = new ArrayList<>();
 
+    public void setTypeOfMeal(String typeOfMeal) {
+        if (typeOfMeal != null) {
+            Criteria dietCriteria = Criteria.where("type_of_meal").is(typeOfMeal);
+            combinedOperations.add(Aggregation.match(dietCriteria));
+        }
+        log.error("TypeOfMeal must be set.");
+    }
+
+    public void setDiet(String diet) {
+        if (diet != null) {
+            Criteria dietCriteria = Criteria.where("diet").is(diet);
+            combinedOperations.add(Aggregation.match(dietCriteria));
+        }
+    }
+
+    public void setMaxStorageTime(int daysNr) {
+        if (daysNr == 1 || daysNr == 2) {
+            Criteria maxStorageTimeCriteria = Criteria.where("max_storage_time").gte(daysNr);
+            combinedOperations.add(Aggregation.match(maxStorageTimeCriteria));
+        }
+        log.error("MaxStorageTime must be set.");
+    }
+
+    public void setPrepareTime(int time) {
+        if (time != 0) {
+            Criteria prepareTimeCriteria = Criteria.where("prepare_time").lte(time);
+            combinedOperations.add(Aggregation.match(prepareTimeCriteria));
+        }
+    }
+
     public void setIngredientsToUseFirstly(List<Ingredient> ingredients, Criteria namesAmountCriteria) {
         if (ingredients != null) {
-//            if (ingredientsToUseFirstly != null) {
-
-
             List<AggregationOperation> productsToUseAgr = Arrays.asList(
                     Aggregation.match(namesAmountCriteria),
                     Aggregation.project()
@@ -39,30 +68,7 @@ public class QueryMaker {
                     Aggregation.unwind("$recipes"),
                     Aggregation.replaceRoot("$recipes")
             );
-
             combinedOperations.addAll(productsToUseAgr);
-//            }
-        }
-    }
-
-    public void setMaxStorageTime(int daysNr) {
-        if (daysNr != 0) {
-            Criteria maxStorageTimeCriteria = Criteria.where("max_storage_time").gte(daysNr);
-            combinedOperations.add(Aggregation.match(maxStorageTimeCriteria));
-        }
-    }
-
-    public void setDiet(String diet) {
-        if (diet != null) {
-            Criteria dietCriteria = Criteria.where("diet").is(diet);
-            combinedOperations.add(Aggregation.match(dietCriteria));
-        }
-    }
-
-    public void setPrepareTime(int time) {
-        if (time != 0) {
-            Criteria prepareTimeCriteria = Criteria.where("prepare_time").lte(time);
-            combinedOperations.add(Aggregation.match(prepareTimeCriteria));
         }
     }
 

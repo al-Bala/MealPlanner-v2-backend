@@ -6,6 +6,8 @@ import com.mealplannerv2.loginandregister.infrastructure.controller.dto.Registra
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Log4j2
@@ -19,6 +21,12 @@ public class LoginAndRegisterFacade {
         return repository.findByUsername(username)
                 .map(LoginAndRegisterMapper::mapFromUserToUserDto)
                 .orElseThrow(() -> new BadCredentialsException("Username not found"));
+    }
+
+    public UserDto getAuthenticatedUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return findByUsername(username);
     }
 
     public RegistrationResultDto register(RegisterUserDto userDto) {
