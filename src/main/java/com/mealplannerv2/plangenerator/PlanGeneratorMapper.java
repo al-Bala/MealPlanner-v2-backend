@@ -1,6 +1,7 @@
 package com.mealplannerv2.plangenerator;
 
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.ProductFromUser;
+import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import org.springframework.stereotype.Component;
@@ -17,16 +18,16 @@ class PlanGeneratorMapper {
                 .toList();
     }
 
-    public List<UserProduct> mapFromProductsFromUserToUserProducts(List<ProductFromUser> productsFromUser) {
-        List<UserProduct> userProducts = new ArrayList<>();
+    public List<IngredientDto> mapFromProductsFromUserToIngredientDto(List<ProductFromUser> productsFromUser) {
+        List<IngredientDto> userIngs = new ArrayList<>();
         for(ProductFromUser p : productsFromUser){
             if(p.mainAmountUnit() == null){
-                userProducts.add(new UserProduct(p.name(), p.anyAmountUnit().amount(), p.anyAmountUnit().unit()));
+                userIngs.add(new IngredientDto(p.name(), p.anyAmountUnit().amount(), p.anyAmountUnit().unit()));
             } else {
-                userProducts.add(new UserProduct(p.name(), p.mainAmountUnit().amount(), p.mainAmountUnit().unit()));
+                userIngs.add(new IngredientDto(p.name(), p.mainAmountUnit().amount(), p.mainAmountUnit().unit()));
             }
         }
-        return userProducts;
+        return userIngs;
     }
 
 }

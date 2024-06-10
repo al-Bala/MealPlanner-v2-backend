@@ -23,7 +23,7 @@ public class IngredientDto {
         this.name = name;
         this.amount = amount;
         this.unit = unit;
-        this.openDate = LocalDate.now();
+//        this.openDate = LocalDate.now();
     }
 
     public IngredientDto(String name, String unit) {

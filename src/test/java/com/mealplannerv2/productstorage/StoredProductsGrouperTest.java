@@ -21,7 +21,7 @@ class StoredProductsGrouperTest {
     StoredProductsGrouper storedProductsGrouper;
 
     @Mock
-    ProductStorageFacade productStorageFacade;
+    StoredProductsService storedProductsService;
 
     private Set<StoredProductDto> storedProducts;
     StoredProductDto p1;
@@ -31,7 +31,7 @@ class StoredProductsGrouperTest {
 
     @BeforeEach
     void setUp() {
-        storedProductsGrouper = new StoredProductsGrouper(productStorageFacade);
+        storedProductsGrouper = new StoredProductsGrouper(storedProductsService);
 
         p1 = new StoredProductDto("name1","", 1);
         p2 = new StoredProductDto("name2","", 2);
@@ -44,7 +44,7 @@ class StoredProductsGrouperTest {
         // given
         storedProducts = new HashSet<>(List.of(p1, p2));
         // when
-        when(productStorageFacade.getStoredProducts()).thenReturn(storedProducts);
+        when(storedProductsService.getStoredProducts()).thenReturn(storedProducts);
         List<StoredProductDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getProductsWithTheFewestDaysToSpoil(1);
         // then
         List<StoredProductDto> expectedList = Arrays.asList(p1);
@@ -56,7 +56,7 @@ class StoredProductsGrouperTest {
         // given
         storedProducts = new HashSet<>(List.of(p2, p3, p4));
         // when
-        when(productStorageFacade.getStoredProducts()).thenReturn(storedProducts);
+        when(storedProductsService.getStoredProducts()).thenReturn(storedProducts);
         List<StoredProductDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getProductsWithTheFewestDaysToSpoil(1);
         // then
         List<StoredProductDto> expectedList = Arrays.asList(p2,p3);

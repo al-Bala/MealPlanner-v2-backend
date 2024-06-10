@@ -32,9 +32,10 @@ class PackingChooser {
                 smallerPackets.add(packingSize);
             } else {
                 groupedPackingSizes.setPackingSizEqualsAmountInRecipe(packingSize);
+                break;
             }
         }
-        return null;
+        return groupedPackingSizes;
     }
 
     public Result choosePacketForWhichTheLeastProductIsWasted(IngredientDto ing, GroupedPackingSizes groupedPackingSizes) {
@@ -52,11 +53,11 @@ class PackingChooser {
     }
 
     private Result getOnePacketWithTheLeastLeftovers(IngredientDto ing, List<Integer> packetsSizes) {
-        Result finalResult = new Result();
+        Result finalResult = Result.builder().leftovers(-1).build();
         for (Integer packingSize : packetsSizes) {
             Left left = countLeftovers(ing.getAmount(), packingSize, ONE_PACKET);
 
-            if(finalResult.getLeftovers() > left.leftovers()){
+            if(finalResult.getLeftovers() > left.leftovers() || finalResult.getLeftovers() == -1){
                 finalResult = Result.builder()
                         .ingredientDto(ing)
                         .chosenPacketSize(packingSize)

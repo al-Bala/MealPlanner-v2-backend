@@ -1,6 +1,7 @@
 package com.mealplannerv2.productstorage;
 
 import com.mealplannerv2.plangenerator.UserProduct;
+import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import lombok.AllArgsConstructor;
@@ -21,19 +22,19 @@ class StoredProductsService {
         return storedProducts;
     }
 
-    public List<StoredProductDto> createNewForStoredProducts(List<UserProduct> userProducts){
-        return userProducts.stream()
+    public List<StoredProductDto> createNewForStoredProducts(List<IngredientDto> userIngs){
+        return userIngs.stream()
                 .map(this::createOneNewForStoredProduct)
                 .toList();
     }
 
-    public StoredProductDto createOneNewForStoredProduct(UserProduct userProduct){
+    public StoredProductDto createOneNewForStoredProduct(IngredientDto userIng){
         return StoredProductDto.builder()
-                .name(userProduct.name())
-                .amount(userProduct.amount())
-                .unit(userProduct.unit())
+                .name(userIng.getName())
+                .amount(userIng.getAmount())
+                .unit(userIng.getUnit())
                 // wartość ustaawiana na podstwie danych z bazy o produkcie
-                .daysToSpoilAfterOpening(productFacade.getMaxDaysAfterOpeningFromDb(userProduct.name()))
+                .daysToSpoilAfterOpening(productFacade.getMaxDaysAfterOpeningFromDb(userIng.getName()))
                 .build();
     }
 
