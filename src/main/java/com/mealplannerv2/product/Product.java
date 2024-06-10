@@ -1,7 +1,6 @@
 package com.mealplannerv2.product;
 
 import lombok.Builder;
-import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,7 +13,7 @@ public record Product(
         String name,
         List<String> packingUnits,
         String mainUnit,
-        List<Integer> packingMeasures,
+        List<Integer> packingSizes,
         Integer maxDaysAfterOpening,
         Integer expireDays
 ) {

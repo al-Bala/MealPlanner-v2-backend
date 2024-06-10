@@ -3,6 +3,6 @@
     "name": "product",
     "packing_units": [["g", "dag", "kg"], ["ml", "l"], ["szt"]],
     "main_unit": "g",
-    "packing_measures": [400,1000],
+    "packing_sizes": [400,1000],
     "max_days_after_opening": 5
 }

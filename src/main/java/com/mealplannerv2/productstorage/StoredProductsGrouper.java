@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 class StoredProductsGrouper {
 
-    private final ProductStorageFacade productStorageFacade;
+    private final StoredProductsService storedProductsService;
 
     public List<StoredProductDto> getProductsWithTheFewestDaysToSpoil(int daysToSpoil){
         List<StoredProductDto> productsWithGivenDaysToExpire = getProductsWithGivenDaysToSpoil(daysToSpoil);
@@ -22,7 +22,7 @@ class StoredProductsGrouper {
     }
 
     private List<StoredProductDto> getProductsWithGivenDaysToSpoil(int daysToSpoil) {
-        List<StoredProductDto> listOfProductsInUse = new ArrayList<>(productStorageFacade.getStoredProducts());
+        List<StoredProductDto> listOfProductsInUse = new ArrayList<>(storedProductsService.getStoredProducts());
         return listOfProductsInUse.stream()
                 .filter(product -> product.getDaysToSpoilAfterOpening() == daysToSpoil)
                 .toList();

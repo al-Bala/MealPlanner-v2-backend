@@ -16,4 +16,9 @@ public class RecipeDto {
 
     public RecipeDto() {
     }
+
+    public RecipeDto(String name, List<IngredientDto> ingredients) {
+        this.name = name;
+        this.ingredients = ingredients;
+    }
 }

@@ -6,6 +6,8 @@ import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Meal;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.product.ProductFacade;
+import com.mealplannerv2.product.dto.Result;
 import com.mealplannerv2.productstorage.ProductStorageFacade;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ public class PlanGeneratorFacade {
     private final MealService mealService;
     private final PlanGeneratorMapper mapper;
     private final IngredientsCalculator ingredientsCalculator;
+    private final ProductFacade productFacade;
 
     public List<PlannedDay> createFirstDayOfPlan(PreferencesInfo preferences, DayInfo dayInfo){
 //        if(dayInfo.meals().isEmpty()){
@@ -54,6 +57,7 @@ public class PlanGeneratorFacade {
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, preferences.portions(), dataForRecipesFiltering.forHowManyDays());
+            List<Result> allNeededPackets = productFacade.choosePacketForEachIngredient(matchingRecipe);
 
             // na koniec po obliczeniu resztek i dodaniu ich do storage
             productStorageFacade.updateSpoilDatesForStoredProducts();
