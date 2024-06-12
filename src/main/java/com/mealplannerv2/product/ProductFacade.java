@@ -3,7 +3,7 @@ package com.mealplannerv2.product;
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.product.dto.GroupedPackingSizes;
-import com.mealplannerv2.product.dto.Result;
+import com.mealplannerv2.product.dto.ChosenPacket;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -19,25 +19,25 @@ public class ProductFacade {
     private final ProductRepository productRepository;
     private final PackingChooser packingChooser;
 
-    public List<Result> choosePacketForEachIngredient(RecipeDto recipeDto) {
-        List<Result> results = new ArrayList<>();
+    public List<ChosenPacket> choosePacketForEachIngredient(RecipeDto recipeDto) {
+        List<ChosenPacket> chosenPackets = new ArrayList<>();
         for(IngredientDto ing: recipeDto.getIngredients()){
             GroupedPackingSizes groupedPackingSizes = packingChooser.dividePacketsIntoSmallerAndLargerThanNeededIng(ing);
             Integer packingSizEqualsAmountInRecipe = groupedPackingSizes.getPackingSizEqualsAmountInRecipe();
             if(packingSizEqualsAmountInRecipe != null){
-                Result equalResult = Result.builder()
+                ChosenPacket equalChosenPacket = ChosenPacket.builder()
                         .ingredientDto(ing)
-                        .chosenPacketSize(packingSizEqualsAmountInRecipe)
+                        .packingSize(packingSizEqualsAmountInRecipe)
                         .packetsNumber(1)
                         .leftovers(0)
                         .build();
-                results.add(equalResult);
+                chosenPackets.add(equalChosenPacket);
                 break;
             }
-            Result result = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
-            results.add(result);
+            ChosenPacket chosenPacket = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
+            chosenPackets.add(chosenPacket);
         }
-        return results;
+        return chosenPackets;
     }
 
     public Integer getMaxDaysAfterOpeningFromDb(String userProductName){

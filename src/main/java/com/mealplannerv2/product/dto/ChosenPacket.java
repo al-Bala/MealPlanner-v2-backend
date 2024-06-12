@@ -8,13 +8,13 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class Result {
+public class ChosenPacket {
     private IngredientDto ingredientDto;
-    private int chosenPacketSize;
+    private int packingSize;
 //    String packetUnit;
     private int packetsNumber;
     private double leftovers;
 
-    public Result() {
+    public ChosenPacket() {
     }
 }

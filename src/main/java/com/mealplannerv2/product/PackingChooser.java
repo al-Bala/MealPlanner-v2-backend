@@ -2,8 +2,8 @@ package com.mealplannerv2.product;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.product.dto.GroupedPackingSizes;
-import com.mealplannerv2.product.dto.Left;
-import com.mealplannerv2.product.dto.Result;
+import com.mealplannerv2.product.dto.PacketsNrWithLeftovers;
+import com.mealplannerv2.product.dto.ChosenPacket;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,43 +38,43 @@ class PackingChooser {
         return groupedPackingSizes;
     }
 
-    public Result choosePacketForWhichTheLeastProductIsWasted(IngredientDto ing, GroupedPackingSizes groupedPackingSizes) {
-        Result big = getOnePacketWithTheLeastLeftovers(ing, groupedPackingSizes.getBiggerPackets());
-        Result small = getOnePacketWithTheLeastLeftovers(ing, groupedPackingSizes.getSmallerPackets());
+    public ChosenPacket choosePacketForWhichTheLeastProductIsWasted(IngredientDto ing, GroupedPackingSizes groupedPackingSizes) {
+        ChosenPacket biggerPack = getOnePacketWithTheLeastLeftovers(ing, groupedPackingSizes.getBiggerPackets());
+        ChosenPacket smallerPack = getOnePacketWithTheLeastLeftovers(ing, groupedPackingSizes.getSmallerPackets());
 
-        double factorBigger = big.getPacketsNumber()* big.getLeftovers();
-        double factorSmaller = small.getPacketsNumber() * small.getLeftovers();
+        double factorBigger = biggerPack.getPacketsNumber()* biggerPack.getLeftovers();
+        double factorSmaller = smallerPack.getPacketsNumber() * smallerPack.getLeftovers();
 
         if(factorSmaller < (0.7 * factorBigger)){
-            return small;
+            return smallerPack;
         } else {
-            return big;
+            return biggerPack;
         }
     }
 
-    private Result getOnePacketWithTheLeastLeftovers(IngredientDto ing, List<Integer> packetsSizes) {
-        Result finalResult = Result.builder().leftovers(-1).build();
-        for (Integer packingSize : packetsSizes) {
-            Left left = countLeftovers(ing.getAmount(), packingSize, ONE_PACKET);
+    private ChosenPacket getOnePacketWithTheLeastLeftovers(IngredientDto ing, List<Integer> packingSizes) {
+        ChosenPacket finalChosenPacket = ChosenPacket.builder().leftovers(-1).build();
+        for (Integer packingSize : packingSizes) {
+            PacketsNrWithLeftovers packetsNrWithLeftovers = countPacketsNrAndLeftovers(ing.getAmount(), packingSize, ONE_PACKET);
 
-            if(finalResult.getLeftovers() > left.leftovers() || finalResult.getLeftovers() == -1){
-                finalResult = Result.builder()
+            if(finalChosenPacket.getLeftovers() > packetsNrWithLeftovers.leftovers() || finalChosenPacket.getLeftovers() == -1){
+                finalChosenPacket = ChosenPacket.builder()
                         .ingredientDto(ing)
-                        .chosenPacketSize(packingSize)
+                        .packingSize(packingSize)
 //                        .packetUnit()
-                        .packetsNumber(left.packetsNumber())
-                        .leftovers(left.leftovers())
+                        .packetsNumber(packetsNrWithLeftovers.packetsNumber())
+                        .leftovers(packetsNrWithLeftovers.leftovers())
                         .build();;
             }
         }
-        return finalResult;
+        return finalChosenPacket;
     }
 
-    private Left countLeftovers(double amount, int packingSize, int packetsNumber){
+    private PacketsNrWithLeftovers countPacketsNrAndLeftovers(double amount, int packingSize, int packetsNumber){
         double leftovers = amount - packingSize;
         if(leftovers <= 0){
-            return new Left(Math.abs(leftovers), packetsNumber);
+            return new PacketsNrWithLeftovers(packetsNumber, Math.abs(leftovers));
         }
-        return countLeftovers(leftovers, packingSize, ++packetsNumber);
+        return countPacketsNrAndLeftovers(leftovers, packingSize, ++packetsNumber);
     }
 }

@@ -2,7 +2,7 @@ package com.mealplannerv2.product;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.product.dto.GroupedPackingSizes;
-import com.mealplannerv2.product.dto.Result;
+import com.mealplannerv2.product.dto.ChosenPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,9 +62,9 @@ class PackingChooserTest {
         IngredientDto ing = new IngredientDto("ing", 300.0, "u");
         GroupedPackingSizes groupedPackingSizes = new GroupedPackingSizes(List.of(200), List.of(450));
         // when
-        Result result = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
+        ChosenPacket chosenPacket = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
         // then
-        assertThat(result.getChosenPacketSize()).isEqualTo(450);
+        assertThat(chosenPacket.getPackingSize()).isEqualTo(450);
     }
 
     @Test
@@ -73,9 +73,9 @@ class PackingChooserTest {
         IngredientDto ing = new IngredientDto("ing", 150.0, "u");
         GroupedPackingSizes groupedPackingSizes = new GroupedPackingSizes(List.of(80), List.of(160,180,200));
         // when
-        Result result = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
+        ChosenPacket chosenPacket = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
         // then
-        assertThat(result.getChosenPacketSize()).isEqualTo(160);
+        assertThat(chosenPacket.getPackingSize()).isEqualTo(160);
     }
 
     @Test
@@ -84,9 +84,9 @@ class PackingChooserTest {
         IngredientDto ing = new IngredientDto("ing", 280.0, "u");
         GroupedPackingSizes groupedPackingSizes = new GroupedPackingSizes(List.of(100), List.of(350));
         // when
-        Result result = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
+        ChosenPacket chosenPacket = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
         // then
-        assertThat(result.getChosenPacketSize()).isEqualTo(350);
+        assertThat(chosenPacket.getPackingSize()).isEqualTo(350);
     }
 
 }

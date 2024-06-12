@@ -8,7 +8,7 @@ import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.product.ProductFacade;
-import com.mealplannerv2.product.dto.Result;
+import com.mealplannerv2.product.dto.ChosenPacket;
 import com.mealplannerv2.productstorage.ProductStorageFacade;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import lombok.AllArgsConstructor;
@@ -57,7 +57,7 @@ public class PlanGeneratorFacade {
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, preferences.portions(), dataForRecipesFiltering.forHowManyDays());
-            List<Result> allNeededPackets = productFacade.choosePacketForEachIngredient(matchingRecipe);
+            List<ChosenPacket> allNeededPackets = productFacade.choosePacketForEachIngredient(matchingRecipe);
 
             List<IngredientDto> leftovers = allNeededPackets.stream()
                     .map(packet -> new IngredientDto(packet.getIngredientDto().getName(), packet.getLeftovers(), packet.getIngredientDto().getUnit()))
