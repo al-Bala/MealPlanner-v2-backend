@@ -2,7 +2,6 @@ package com.mealplannerv2.product;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
-import com.mealplannerv2.product.dto.GroupedPackingSizes;
 import com.mealplannerv2.product.dto.ChosenPacket;
 import com.mealplannerv2.product.infrastructure.controller.WeightResponse;
 import lombok.AllArgsConstructor;
@@ -11,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mealplannerv2.product.PackingChooser.PRODUCT_BY_WEIGHT;
 
 @AllArgsConstructor
 @Log4j2
@@ -24,12 +25,12 @@ public class ProductFacade {
         List<ChosenPacket> chosenPackets = new ArrayList<>();
         for(IngredientDto ing: recipeDto.getIngredients()){
             GroupedPackingSizes groupedPackingSizes = packingChooser.dividePacketsIntoSmallerAndLargerThanNeededIng(ing);
-            Integer packingSizEqualsAmountInRecipe = groupedPackingSizes.getPackingSizEqualsAmountInRecipe();
-            if(packingSizEqualsAmountInRecipe != null){
+            Double packingSizEqualOrByWeight = groupedPackingSizes.getPackingSizEqualOrByWeight();
+            if(packingSizEqualOrByWeight != null){
                 ChosenPacket equalChosenPacket = ChosenPacket.builder()
                         .ingredientDto(ing)
-                        .packingSize(packingSizEqualsAmountInRecipe == 0 ? ing.getAmount() : packingSizEqualsAmountInRecipe)
-                        .packetsNumber(packingSizEqualsAmountInRecipe == 0 ? -2 : 1)
+                        .packingSize(packingSizEqualOrByWeight)
+                        .packetsNumber(groupedPackingSizes.getPacketsNumber())
                         .leftovers(0)
                         .build();
                 chosenPackets.add(equalChosenPacket);

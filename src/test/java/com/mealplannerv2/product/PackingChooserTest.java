@@ -1,7 +1,6 @@
 package com.mealplannerv2.product;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
-import com.mealplannerv2.product.dto.GroupedPackingSizes;
 import com.mealplannerv2.product.dto.ChosenPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,14 +45,31 @@ class PackingChooserTest {
     }
 
     @Test
-    void should_set_packingSizeEqualsAmountInRecipe() {
+    void should_set_packingSiz_which_is_equals_to_amount_in_recipe() {
         // given
         IngredientDto ing = new IngredientDto("ing", 120.0, "u");
         // when
         when(productRepository.getProductByName("ing")).thenReturn(product);
         GroupedPackingSizes groupedPackingSizes = packingChooser.dividePacketsIntoSmallerAndLargerThanNeededIng(ing);
         // then
-        assertThat(groupedPackingSizes.getPackingSizEqualsAmountInRecipe()).isEqualTo(120);
+        assertThat(groupedPackingSizes.getPackingSizEqualOrByWeight()).isEqualTo(120);
+        assertThat(groupedPackingSizes.getPacketsNumber()).isEqualTo(1);
+    }
+
+    @Test
+    void should_set_packing_by_weight() {
+        // given
+        IngredientDto ing = new IngredientDto("ing0", 120.0, "u");
+        product = Product.builder()
+                .name("ing0")
+                .packing_sizes(List.of(0))
+                .build();
+        // when
+        when(productRepository.getProductByName("ing0")).thenReturn(product);
+        GroupedPackingSizes groupedPackingSizes = packingChooser.dividePacketsIntoSmallerAndLargerThanNeededIng(ing);
+        // then
+        assertThat(groupedPackingSizes.getPackingSizEqualOrByWeight()).isEqualTo(120.0);
+        assertThat(groupedPackingSizes.getPacketsNumber()).isEqualTo(-2);
     }
 
     @Test

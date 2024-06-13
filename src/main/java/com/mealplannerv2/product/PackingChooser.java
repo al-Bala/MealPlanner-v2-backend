@@ -1,7 +1,6 @@
 package com.mealplannerv2.product;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
-import com.mealplannerv2.product.dto.GroupedPackingSizes;
 import com.mealplannerv2.product.dto.PacketsNrWithLeftovers;
 import com.mealplannerv2.product.dto.ChosenPacket;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 class PackingChooser {
-
+    static final int PRODUCT_BY_WEIGHT = 0;
+    static final int PACKING_BY_WEIGHT = -2;
     static final int ONE_PACKET = 1;
     private final ProductRepository productRepository;
 
@@ -24,8 +24,13 @@ class PackingChooser {
         GroupedPackingSizes groupedPackingSizes = new GroupedPackingSizes(new ArrayList<>(), new ArrayList<>());
 
         for(int packingSize: listOfPackingSizes){
-            if(packingSize == ingAmount || packingSize == 0){
-                groupedPackingSizes.setPackingSizEqualsAmountInRecipe(packingSize);
+            if(packingSize == PRODUCT_BY_WEIGHT){
+                groupedPackingSizes.setPackingSizEqualOrByWeight(ing.getAmount());
+                groupedPackingSizes.setPacketsNumber(PACKING_BY_WEIGHT);
+                break;
+            } else if(packingSize == ingAmount) {
+                groupedPackingSizes.setPackingSizEqualOrByWeight((double) packingSize);
+                groupedPackingSizes.setPacketsNumber(ONE_PACKET);
                 break;
             } else if (packingSize > ingAmount) {
                 List<Integer> biggerPackets = groupedPackingSizes.getBiggerPackets();
