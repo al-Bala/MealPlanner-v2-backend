@@ -1,6 +1,7 @@
-package com.mealplannerv2.product.unit;
+package com.mealplannerv2.product.unitreader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mealplannerv2.product.unitreader.dto.Units;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 @AllArgsConstructor
 @Component
-public class UnitsReader {
+public class UnitsReaderImpl implements UnitReader {
 
     private final ObjectMapper objectMapper;
 

@@ -1,4 +1,4 @@
-package com.mealplannerv2.product;
+package com.mealplannerv2.product.dto;
 
 import lombok.Data;
 
@@ -6,9 +6,6 @@ import java.util.List;
 
 @Data
 public class GroupedPackingSizes {
-
-    private static int ONE_PACKET = 1;
-
     private List<Integer> smallerPackets;
     private List<Integer> biggerPackets;
     private Double packingSizEqualOrByWeight;

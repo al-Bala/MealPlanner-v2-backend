@@ -1,0 +1,115 @@
+{
+  "units_properties": [
+    {
+      "unit": "g",
+      "group": "weight",
+      "converting": [
+        {
+          "output_unit": "dag",
+          "multiplier": 0.1
+        },
+        {
+          "output_unit": "kg",
+          "multiplier": 0.001
+        }
+      ]
+    },
+    {
+      "unit": "dag",
+      "group": "weight",
+      "converting": [
+        {
+          "output_unit": "g",
+          "multiplier": 10
+        },
+        {
+          "output_unit": "kg",
+          "multiplier": 0.01
+        }
+      ]
+    },
+    {
+      "unit": "kg",
+      "group": "weight",
+      "converting": [
+        {
+          "output_unit": "g",
+          "multiplier": 1000
+        },
+        {
+          "output_unit": "dag",
+          "multiplier": 100
+        }
+      ]
+    },
+    {
+      "unit": "ml",
+      "group": "capacity",
+      "converting": [
+        {
+          "output_unit": "l",
+          "multiplier": 0.001
+        }
+      ]
+    },
+    {
+      "unit": "l",
+      "group": "capacity",
+      "converting": [
+        {
+          "output_unit": "ml",
+          "multiplier": 1000
+        }
+      ]
+    },
+    {
+      "unit": "szt.",
+      "group": "piece",
+      "converting": []
+    },
+    {
+      "unit": "cup",
+      "group": "measuring",
+      "converting": [
+        {
+          "output_unit": "g",
+          "multiplier": 250
+        },
+        {
+          "output_unit": "l",
+          "multiplier": 250
+        }
+      ]
+    },
+    {
+      "unit": "łyżka",
+      "group": "measuring",
+      "converting": [
+        {
+          "output_unit": "g",
+          "multiplier": 15
+        },
+        {
+          "output_unit": "l",
+          "multiplier": 15
+        }
+      ]
+    },
+    {
+      "unit": "łyżeczka",
+      "group": "measuring",
+      "converting": [
+        {
+          "output_unit": "g",
+          "multiplier": 5
+        },
+        {
+          "output_unit": "l",
+          "multiplier": 5
+        }
+      ]
+    }
+  ]
+}
+
+

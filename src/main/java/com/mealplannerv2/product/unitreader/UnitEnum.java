@@ -1,4 +1,4 @@
-package com.mealplannerv2.product.unit;
+package com.mealplannerv2.product.unitreader;
 
 import lombok.Getter;
 

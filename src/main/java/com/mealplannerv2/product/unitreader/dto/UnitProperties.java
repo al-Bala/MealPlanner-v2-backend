@@ -1,6 +1,7 @@
-package com.mealplannerv2.product.unit;
+package com.mealplannerv2.product.unitreader.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mealplannerv2.product.unitreader.error.MultiplierNotFoundException;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
@@ -18,6 +19,6 @@ public record UnitProperties(
                 .filter(c -> c.output_unit().equals(outputUnit))
                 .findFirst()
                 .map(Converting::multiplier);
-        return multiplier.orElse(null);
+        return multiplier.orElseThrow(() -> new MultiplierNotFoundException("Multiplier not found."));
     }
 }

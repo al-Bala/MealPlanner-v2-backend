@@ -3,6 +3,7 @@ package com.mealplannerv2.product;
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.product.dto.ChosenPacket;
+import com.mealplannerv2.product.dto.GroupedPackingSizes;
 import com.mealplannerv2.product.infrastructure.controller.WeightResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -10,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.mealplannerv2.product.PackingChooser.PRODUCT_BY_WEIGHT;
 
 @AllArgsConstructor
 @Log4j2
