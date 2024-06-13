@@ -8,6 +8,6 @@ public record PreferencesInfo(
         int portions,
         List<String> productsToAvoid,
         List<ProductFromUser> userProducts,
-        LocalDate firstDayOfPlan
+        String firstDayOfPlan
 ) {
 }

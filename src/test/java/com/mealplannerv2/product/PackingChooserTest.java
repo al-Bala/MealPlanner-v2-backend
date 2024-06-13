@@ -29,7 +29,7 @@ class PackingChooserTest {
         packingChooser = new PackingChooser(productRepository);
         product = Product.builder()
                 .name("ing")
-                .packingSizes(List.of(80, 120, 200))
+                .packing_sizes(List.of(80, 120, 200))
                 .build();
     }
 

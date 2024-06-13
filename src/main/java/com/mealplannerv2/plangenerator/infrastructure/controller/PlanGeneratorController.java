@@ -1,27 +1,27 @@
 package com.mealplannerv2.plangenerator.infrastructure.controller;
 
 import com.mealplannerv2.loginandregister.LoginAndRegisterFacade;
-import com.mealplannerv2.loginandregister.dto.UserDto;
 import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
 import com.mealplannerv2.plangenerator.PlannedDay;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.DayInfo;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.PreferencesInfo;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.*;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Dinner;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Meal;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.MealType;
+//import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.OtherMeals;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/plan")
 class PlanGeneratorController {
 
@@ -38,18 +38,23 @@ class PlanGeneratorController {
 //    }
 
     @PostMapping("/preferences")
-    public ResponseEntity<PreferencesInfo> postInfo(@RequestBody PreferencesInfo preferencesInfo, DayInfo dayInfo){
+    public ResponseEntity<List<PlannedDay>> postInfo(@RequestBody PreferencesAndDayInfo preferencesAndDayInfo){
         // if data not saved,
         // save diet, portions and productsToAvoid in database for user
 //        UserDto user = loginAndRegisterFacade.getAuthenticatedUser();
 //        if(user.preferences() == null){
 //        }
 
-        List<PlannedDay> firstDayOfPlan = planGeneratorFacade.createFirstDayOfPlan(preferencesInfo, dayInfo);
+        DayInfoDto dayInfoDto = new DayInfoDto(new ArrayList<>());
+        for(MealInfo meal: preferencesAndDayInfo.dayInfo().mealsInfo()){
+            Meal meal2 = new Meal(meal.mealName(), meal.timeMin());
+            dayInfoDto.meals().add(meal2);
+        }
 
-        return ResponseEntity.ok(preferencesInfo);
+        List<PlannedDay> firstDayOfPlan = planGeneratorFacade.createFirstDayOfPlan(preferencesAndDayInfo.preferencesInfo(), dayInfoDto);
+
+        return ResponseEntity.ok(firstDayOfPlan);
     }
-
 
     @GetMapping("")
     public ResponseEntity<PlanResponseDto> find() {

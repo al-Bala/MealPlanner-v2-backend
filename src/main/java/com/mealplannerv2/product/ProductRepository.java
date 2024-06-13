@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
-
     Product getProductByName(String name);
+    Product getProductById(String id);
 }

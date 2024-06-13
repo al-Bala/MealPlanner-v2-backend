@@ -11,10 +11,11 @@ import java.util.List;
 public record Product(
         @Id String id,
         String name,
-        List<String> packingUnits,
-        String mainUnit,
-        List<Integer> packingSizes,
-        Integer maxDaysAfterOpening,
+        List<String> packing_units,
+        String main_unit,
+        Integer standard_weight,
+        List<Integer> packing_sizes,
+        Integer max_days_after_opening,
         Integer expireDays
 ) {
 }

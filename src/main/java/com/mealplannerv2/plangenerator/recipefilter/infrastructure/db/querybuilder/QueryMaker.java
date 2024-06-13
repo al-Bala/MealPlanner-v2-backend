@@ -23,8 +23,9 @@ public class QueryMaker {
         if (typeOfMeal != null) {
             Criteria dietCriteria = Criteria.where("type_of_meal").is(typeOfMeal);
             combinedOperations.add(Aggregation.match(dietCriteria));
+        } else {
+            log.error("TypeOfMeal must be set.");
         }
-        log.error("TypeOfMeal must be set.");
     }
 
     public void setDiet(String diet) {
@@ -38,8 +39,9 @@ public class QueryMaker {
         if (daysNr == 1 || daysNr == 2) {
             Criteria maxStorageTimeCriteria = Criteria.where("max_storage_time").gte(daysNr);
             combinedOperations.add(Aggregation.match(maxStorageTimeCriteria));
+        } else {
+            log.error("MaxStorageTime must be set.");
         }
-        log.error("MaxStorageTime must be set.");
     }
 
     public void setPrepareTime(int time) {

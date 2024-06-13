@@ -4,6 +4,7 @@ import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.product.dto.GroupedPackingSizes;
 import com.mealplannerv2.product.dto.ChosenPacket;
+import com.mealplannerv2.product.infrastructure.controller.WeightResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -27,12 +28,12 @@ public class ProductFacade {
             if(packingSizEqualsAmountInRecipe != null){
                 ChosenPacket equalChosenPacket = ChosenPacket.builder()
                         .ingredientDto(ing)
-                        .packingSize(packingSizEqualsAmountInRecipe)
-                        .packetsNumber(1)
+                        .packingSize(packingSizEqualsAmountInRecipe == 0 ? ing.getAmount() : packingSizEqualsAmountInRecipe)
+                        .packetsNumber(packingSizEqualsAmountInRecipe == 0 ? -2 : 1)
                         .leftovers(0)
                         .build();
                 chosenPackets.add(equalChosenPacket);
-                break;
+                continue;
             }
             ChosenPacket chosenPacket = packingChooser.choosePacketForWhichTheLeastProductIsWasted(ing, groupedPackingSizes);
             chosenPackets.add(chosenPacket);
@@ -42,7 +43,12 @@ public class ProductFacade {
 
     public Integer getMaxDaysAfterOpeningFromDb(String userProductName){
         Product productDb = productRepository.getProductByName(userProductName);
-        return productDb.maxDaysAfterOpening();
+        return productDb.max_days_after_opening();
+    }
+
+    public WeightResponse getStandardProductWeight(String id){
+        Product product = productRepository.getProductById(id);
+        return new WeightResponse(product.standard_weight(), product.main_unit());
     }
 
 }

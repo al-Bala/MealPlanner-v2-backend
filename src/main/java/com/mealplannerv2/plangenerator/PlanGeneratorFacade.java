@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator;
 
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.DayInfo;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.DayInfoDto;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.PreferencesInfo;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Meal;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -29,7 +30,8 @@ public class PlanGeneratorFacade {
     private final IngredientsCalculator ingredientsCalculator;
     private final ProductFacade productFacade;
 
-    public List<PlannedDay> createFirstDayOfPlan(PreferencesInfo preferences, DayInfo dayInfo){
+    public List<PlannedDay> createFirstDayOfPlan(PreferencesInfo preferences, DayInfoDto dayInfoDto){
+        List<PlannedDay> plan = new ArrayList<>();
 //        if(dayInfo.meals().isEmpty()){
 //            log.info("Skip day");
 //            return null;
@@ -43,7 +45,7 @@ public class PlanGeneratorFacade {
         List<StoredProductDto> productsWhichMustBeUsedFirstly = productStorageFacade.getProductsWhichMustBeUsedFirstly();
         List<Ingredient> ingredients = PlanGeneratorMapper.mapFromStoredProductsToIngredients(productsWhichMustBeUsedFirstly);
 
-        List<Meal> sortedMeals = mealService.sortMealsByPriority(dayInfo.meals());
+        List<Meal> sortedMeals = mealService.sortMealsByPriority(dayInfoDto.meals());
 
         for(Meal meal: sortedMeals){
             DataForRecipeFiltering dataForRecipesFiltering = DataForRecipeFiltering.builder()
@@ -57,6 +59,8 @@ public class PlanGeneratorFacade {
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, preferences.portions(), dataForRecipesFiltering.forHowManyDays());
+            plan.add(new PlannedDay("date", meal.getName(), matchingRecipe));
+
             List<ChosenPacket> allNeededPackets = productFacade.choosePacketForEachIngredient(matchingRecipe);
 
             List<IngredientDto> leftovers = allNeededPackets.stream()
@@ -67,7 +71,7 @@ public class PlanGeneratorFacade {
             productStorageFacade.updateSpoilDatesForStoredProducts();
         }
 
-        return null;
+        return plan;
     }
 
     private void addToProductStorage(List<IngredientDto> ingredients) {

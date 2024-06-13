@@ -19,20 +19,20 @@ class PackingChooser {
 
     public GroupedPackingSizes dividePacketsIntoSmallerAndLargerThanNeededIng(IngredientDto ing) {
         Product productByName = productRepository.getProductByName(ing.getName());
-        List<Integer> listOfPackingSizes = productByName.packingSizes();
+        List<Integer> listOfPackingSizes = productByName.packing_sizes();
         double ingAmount = ing.getAmount();
         GroupedPackingSizes groupedPackingSizes = new GroupedPackingSizes(new ArrayList<>(), new ArrayList<>());
 
         for(int packingSize: listOfPackingSizes){
-            if (packingSize > ingAmount) {
+            if(packingSize == ingAmount || packingSize == 0){
+                groupedPackingSizes.setPackingSizEqualsAmountInRecipe(packingSize);
+                break;
+            } else if (packingSize > ingAmount) {
                 List<Integer> biggerPackets = groupedPackingSizes.getBiggerPackets();
                 biggerPackets.add(packingSize);
             } else if (packingSize < ingAmount) {
                 List<Integer> smallerPackets = groupedPackingSizes.getSmallerPackets();
                 smallerPackets.add(packingSize);
-            } else {
-                groupedPackingSizes.setPackingSizEqualsAmountInRecipe(packingSize);
-                break;
             }
         }
         return groupedPackingSizes;
@@ -41,6 +41,12 @@ class PackingChooser {
     public ChosenPacket choosePacketForWhichTheLeastProductIsWasted(IngredientDto ing, GroupedPackingSizes groupedPackingSizes) {
         ChosenPacket biggerPack = getOnePacketWithTheLeastLeftovers(ing, groupedPackingSizes.getBiggerPackets());
         ChosenPacket smallerPack = getOnePacketWithTheLeastLeftovers(ing, groupedPackingSizes.getSmallerPackets());
+
+        if(biggerPack.getPacketsNumber() == 0){
+            return smallerPack;
+        } else if(smallerPack.getPacketsNumber() == 0){
+            return biggerPack;
+        }
 
         double factorBigger = biggerPack.getPacketsNumber()* biggerPack.getLeftovers();
         double factorSmaller = smallerPack.getPacketsNumber() * smallerPack.getLeftovers();

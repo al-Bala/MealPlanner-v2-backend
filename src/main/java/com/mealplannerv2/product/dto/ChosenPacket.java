@@ -10,7 +10,7 @@ import lombok.Data;
 @Builder
 public class ChosenPacket {
     private IngredientDto ingredientDto;
-    private int packingSize;
+    private double packingSize;
 //    String packetUnit;
     private int packetsNumber;
     private double leftovers;
