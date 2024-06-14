@@ -43,7 +43,7 @@ public class RecipeFilterRepositoryImpl implements RecipeFilterRepository {
             }
         }
         if(documents == null){
-            log.error("Nie udało się znaleźć żadnego pasującego przepisu :(");
+//            log.error("Nie udało się znaleźć żadnego pasującego przepisu :(");
         }
         return documents;
     }

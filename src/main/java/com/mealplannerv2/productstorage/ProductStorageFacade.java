@@ -31,7 +31,12 @@ public class ProductStorageFacade {
         storedProductsService.addAllUniq(newProducts);
     }
 
-    public List<IngredientDto> updateStoredProductsAndIngs(List<IngredientDto> ings){
+    public void convertAndAddToStoredProducts(List<IngredientDto> ingredients) {
+        List<StoredProductDto> convertedProductsToStore = convertIntoStoredProducts(ingredients);
+        addAllToStoredProducts(convertedProductsToStore);
+    }
+
+    public List<IngredientDto> subtractStoredProductsFromIngsInRecipe(List<IngredientDto> ings){
         return storedProductsService.remove(ings);
     }
 

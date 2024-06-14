@@ -10,7 +10,7 @@ public record DataForRecipeFiltering(
         String typeOfMeal,
         String diet,
         int forHowManyDays,
-        int timeForPrepareMin,
+        Integer timeForPrepareMin,
         List<Ingredient> ingredientsToUseFirstly,
         List<String> productsToAvoid
 ) {

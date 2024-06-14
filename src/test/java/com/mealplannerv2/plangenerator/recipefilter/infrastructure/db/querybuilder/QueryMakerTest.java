@@ -42,7 +42,7 @@ public class QueryMakerTest {
 
     @Test
     void should_not_add_prepareRime_to_list() {
-        queryMaker.setPrepareTime(0);
+        queryMaker.setPrepareTime(null);
         assertThat(combinedOperationsTest).isEmpty();
     }
 
@@ -68,7 +68,7 @@ public class QueryMakerTest {
     void should_not_add_any_of_arguments_to_list() {
         queryMaker.setMaxStorageTime(0);
         queryMaker.setDiet(null);
-        queryMaker.setPrepareTime(0);
+        queryMaker.setPrepareTime(null);
         queryMaker.setIngredientsToUseFirstly(null ,new Criteria());
         queryMaker.setProductsToAvoid(null);
 
@@ -79,7 +79,7 @@ public class QueryMakerTest {
     void should_add_only_storageTime_and_diet_to_list() {
         queryMaker.setMaxStorageTime(2);
         queryMaker.setDiet("diet");
-        queryMaker.setPrepareTime(0);
+        queryMaker.setPrepareTime(null);
         queryMaker.setIngredientsToUseFirstly(null ,new Criteria());
         queryMaker.setProductsToAvoid(null);
 

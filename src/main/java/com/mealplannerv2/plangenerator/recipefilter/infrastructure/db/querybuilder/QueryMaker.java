@@ -44,8 +44,8 @@ public class QueryMaker {
         }
     }
 
-    public void setPrepareTime(int time) {
-        if (time != 0) {
+    public void setPrepareTime(Integer time) {
+        if (time != null) {
             Criteria prepareTimeCriteria = Criteria.where("prepare_time").lte(time);
             combinedOperations.add(Aggregation.match(prepareTimeCriteria));
         }

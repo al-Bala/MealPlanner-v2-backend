@@ -4,10 +4,7 @@ import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 class StoredProductsService {
@@ -41,6 +38,7 @@ class StoredProductsService {
 
     public List<IngredientDto> remove(List<IngredientDto> ings){
         List<IngredientDto> updatedIngs = new ArrayList<>();
+
         for(IngredientDto ing: ings){
             StoredProductDto storedProductDto = storedProductsMap.get(ing.getName());
             if(storedProductDto != null){
@@ -50,12 +48,14 @@ class StoredProductsService {
 //                    ing.setAmount(newAmount);
                     storedProductsMap.remove(storedProductDto.getName());
                 } else if(newAmount < 0){
-//                    ings.remove(ing);
+//                    ings.removeIf(ings::contains);
                     storedProductDto.setAmountToUse(Math.abs(newAmount));
                 } else {
-//                    ings.remove(ing);
+//                    ings.removeIf(ings::contains);
                     storedProductsMap.remove(storedProductDto.getName());
                 }
+            } else {
+                updatedIngs.add(ing);
             }
         }
         return updatedIngs;

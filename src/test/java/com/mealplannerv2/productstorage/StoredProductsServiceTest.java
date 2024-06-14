@@ -20,6 +20,7 @@ class StoredProductsServiceTest {
     void setUp() {
         storedProductsService = new StoredProductsService();
         storedProducts = storedProductsService.getStoredProducts();
+        storedProducts.clear();
         p1 = new StoredProductDto("ing1", 100.0,"g");
         storedProducts.put(p1.getName(), p1);
     }
@@ -62,8 +63,6 @@ class StoredProductsServiceTest {
         // then
         assertThat(removed).isEmpty();
         assertThat(storedProductsService.getStoredProducts()).isEmpty();
-        System.out.println(removed);
-        System.out.println(storedProductsService.getStoredProducts());
     }
 
     @Test
@@ -77,8 +76,6 @@ class StoredProductsServiceTest {
         // then
         assertThat(removed).isEmpty();
         assertThat(storedProductsService.getStoredProducts().get(p1.getName()).getAmountToUse()).isEqualTo(70.0);
-        System.out.println(removed);
-        System.out.println(storedProductsService.getStoredProducts());
     }
 
     @Test
@@ -92,7 +89,5 @@ class StoredProductsServiceTest {
         // then
         assertThat(removed.get(0).getAmount()).isEqualTo(20.0);
         assertThat(storedProductsService.getStoredProducts()).isEmpty();
-        System.out.println(removed);
-        System.out.println(storedProductsService.getStoredProducts());
     }
 }

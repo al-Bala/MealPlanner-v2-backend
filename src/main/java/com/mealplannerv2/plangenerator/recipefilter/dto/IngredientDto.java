@@ -12,6 +12,10 @@ public class IngredientDto {
     private String unit;
 //    private LocalDate openDate;
 
+    public IngredientDto(){
+
+    }
+
     public IngredientDto(String name, Double amount, String unit) {
         this.name = name;
         this.amount = amount;

@@ -1,10 +1,8 @@
 package com.mealplannerv2.plangenerator.infrastructure.controller.dto;
 
-import java.util.Optional;
-
-public record MealInfo(
+public record MealValues(
         String mealName,
         Integer timeMin,
-        Boolean for2Days
+        Integer forHowManyDays
 ) {
 }

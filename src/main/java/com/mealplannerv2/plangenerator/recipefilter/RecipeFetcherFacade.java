@@ -23,7 +23,7 @@ public class RecipeFetcherFacade {
 
         List<Recipe> matchingIngNamesAndAmounts = mealsFilterRepository.findRecipesWithMatchingIngNamesAndAmounts(info2);
         if(matchingIngNamesAndAmounts == null){
-            log.info("Not found any recipe with matching ingredient's names and amounts.");
+            log.info("[First try] Not found any recipe with matching ingredient's names and amounts.");
             return findOnlyByIngNames(info2);
         }
         else if(matchingIngNamesAndAmounts.size() == 1){
@@ -38,7 +38,7 @@ public class RecipeFetcherFacade {
     private RecipeDto findOnlyByIngNames(DataForRecipeFiltering info){
         List<Recipe> matchingIngNames = mealsFilterRepository.findRecipesWithMatchingIngNames(info);
         if(matchingIngNames == null){
-            log.error("Not found any recipe with matching ingredient's names.");
+            log.error("[Secound try] Not found any recipe with matching ingredient's name.");
         } else if (matchingIngNames.size() == 1){
             return RecipeMapper.mapFromRecipeToRecipeDto(matchingIngNames.get(0));
         } else {
