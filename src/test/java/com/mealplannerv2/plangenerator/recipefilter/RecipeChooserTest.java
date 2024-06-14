@@ -10,10 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -26,7 +23,7 @@ class RecipeChooserTest {
 
     private RecipeChooser recipeChooser;
 
-    private Set<StoredProductDto> storedProducts;
+    private Map<String, StoredProductDto> storedProducts;
     private IngredientDto ing1;
     private IngredientDto ing2;
 
@@ -36,7 +33,9 @@ class RecipeChooserTest {
 
         StoredProductDto p1 = new StoredProductDto("name1","");
         StoredProductDto p2 = new StoredProductDto("name2", "");
-        storedProducts = new HashSet<>(List.of(p1, p2));
+        storedProducts = new HashMap<>();
+        storedProducts.put(p1.getName(), p1);
+        storedProducts.put(p2.getName(), p2);
 
         ing1 = new IngredientDto("name1","");
         ing2 = new IngredientDto("name2","");

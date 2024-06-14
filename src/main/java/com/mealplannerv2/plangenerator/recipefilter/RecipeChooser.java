@@ -24,7 +24,7 @@ class RecipeChooser {
             int count = 0;
             for(IngredientDto ing : recipe.getIngredients()){
                 StoredProductDto productToCheck = new StoredProductDto(ing.getName(), 0.0, ing.getUnit());
-                if(productStorageFacade.getStoredProducts().contains(productToCheck)){
+                if(productStorageFacade.getStoredProducts().get(productToCheck.getName()) != null){
                     count++;
                 }
             }

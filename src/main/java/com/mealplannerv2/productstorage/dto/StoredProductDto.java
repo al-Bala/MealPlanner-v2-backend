@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 @Builder
@@ -12,25 +11,17 @@ import java.util.Objects;
 @Data
 public class StoredProductDto {
     private String name;
-    private Double amount;
+    private Double amountToUse;
     private String unit;
-    private boolean isOpen;
-    private LocalDate openDate;
+//    private boolean isOpen;
+//    private LocalDate openDate;
     private int daysToSpoilAfterOpening;
-    private int daysToExpire;
+//    private int daysToExpire;
 
-    public StoredProductDto(String name, Double amount, String unit, LocalDate openDate) {
+    public StoredProductDto(String name, Double amountToUse, String unit) {
         this.name = name;
-        this.amount = amount;
+        this.amountToUse = amountToUse;
         this.unit = unit;
-        this.openDate = openDate;
-    }
-
-    public StoredProductDto(String name, Double amount, String unit) {
-        this.name = name;
-        this.amount = amount;
-        this.unit = unit;
-//        this.openDate = LocalDate.now();
     }
 
     public StoredProductDto(String name, String unit) {

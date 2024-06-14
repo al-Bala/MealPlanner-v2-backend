@@ -10,20 +10,13 @@ public class IngredientDto {
     private String name;
     private Double amount;
     private String unit;
-    private LocalDate openDate;
-
-    public IngredientDto(String name, Double amount, String unit, LocalDate openDate) {
-        this.name = name;
-        this.amount = amount;
-        this.unit = unit;
-        this.openDate = openDate;
-    }
+//    private LocalDate openDate;
 
     public IngredientDto(String name, Double amount, String unit) {
         this.name = name;
         this.amount = amount;
         this.unit = unit;
-//        this.openDate = LocalDate.now();
+//        this.openDate = openDate;
     }
 
     public IngredientDto(String name, String unit) {

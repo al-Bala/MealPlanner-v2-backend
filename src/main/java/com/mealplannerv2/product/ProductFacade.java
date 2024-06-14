@@ -20,9 +20,9 @@ public class ProductFacade {
     private final ProductRepository productRepository;
     private final PackingChooser packingChooser;
 
-    public List<ChosenPacket> choosePacketForEachIngredient(RecipeDto recipeDto) {
+    public List<ChosenPacket> choosePacketForEachIngredient(List<IngredientDto> ingredients) {
         List<ChosenPacket> chosenPackets = new ArrayList<>();
-        for(IngredientDto ing: recipeDto.getIngredients()){
+        for(IngredientDto ing: ingredients){
             GroupedPackingSizes groupedPackingSizes = packingChooser.dividePacketsIntoSmallerAndLargerThanNeededIng(ing);
             Double packingSizEqualOrByWeight = groupedPackingSizes.getPackingSizEqualOrByWeight();
             if(packingSizEqualOrByWeight != null){

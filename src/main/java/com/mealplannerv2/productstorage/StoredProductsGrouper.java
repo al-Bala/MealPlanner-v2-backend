@@ -22,7 +22,7 @@ class StoredProductsGrouper {
     }
 
     private List<StoredProductDto> getProductsWithGivenDaysToSpoil(int daysToSpoil) {
-        List<StoredProductDto> listOfProductsInUse = new ArrayList<>(storedProductsService.getStoredProducts());
+        List<StoredProductDto> listOfProductsInUse = new ArrayList<>(storedProductsService.getStoredProducts().values());
         return listOfProductsInUse.stream()
                 .filter(product -> product.getDaysToSpoilAfterOpening() == daysToSpoil)
                 .toList();

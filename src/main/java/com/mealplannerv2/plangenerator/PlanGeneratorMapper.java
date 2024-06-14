@@ -4,6 +4,7 @@ import com.mealplannerv2.plangenerator.infrastructure.controller.dto.ProductFrom
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.product.Product;
+import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.product.ProductRepository;
 import com.mealplannerv2.product.unitreader.dto.Units;
 import com.mealplannerv2.product.unitreader.UnitsReaderImpl;
@@ -22,12 +23,6 @@ class PlanGeneratorMapper {
 
     private final ProductRepository productRepository;
     private final UnitsReaderImpl unitsReaderImpl;
-
-    public static List<Ingredient> mapFromStoredProductsToIngredients(List<StoredProductDto> productsToUseFirstly){
-        return productsToUseFirstly.stream()
-                .map(product -> new Ingredient(product.getName(), product.getAmount(), product.getUnit()))
-                .toList();
-    }
 
     public List<IngredientDto> mapFromProductsFromUserToIngredientDto(List<ProductFromUser> productsFromUser) {
         List<IngredientDto> userIngs = new ArrayList<>();
@@ -48,4 +43,9 @@ class PlanGeneratorMapper {
         return userIngs;
     }
 
+    public static List<Ingredient> mapFromStoredProductsToIngredients(List<StoredProductDto> productsToUseFirstly){
+        return productsToUseFirstly.stream()
+                .map(product -> new Ingredient(product.getName(), product.getAmountToUse(), product.getUnit()))
+                .toList();
+    }
 }

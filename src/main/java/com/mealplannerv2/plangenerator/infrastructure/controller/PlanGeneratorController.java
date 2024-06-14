@@ -38,7 +38,7 @@ class PlanGeneratorController {
 //    }
 
     @PostMapping("/preferences")
-    public ResponseEntity<List<PlannedDay>> postInfo(@RequestBody PreferencesAndDayInfo preferencesAndDayInfo){
+    public ResponseEntity<PlannedDay> postInfo(@RequestBody PreferencesAndDayInfo preferencesAndDayInfo){
         // if data not saved,
         // save diet, portions and productsToAvoid in database for user
 //        UserDto user = loginAndRegisterFacade.getAuthenticatedUser();
@@ -51,7 +51,7 @@ class PlanGeneratorController {
             dayInfoDto.meals().add(meal2);
         }
 
-        List<PlannedDay> firstDayOfPlan = planGeneratorFacade.createFirstDayOfPlan(preferencesAndDayInfo.preferencesInfo(), dayInfoDto);
+        PlannedDay firstDayOfPlan = planGeneratorFacade.createFirstDayOfPlan(preferencesAndDayInfo.preferencesInfo(), dayInfoDto);
 
         return ResponseEntity.ok(firstDayOfPlan);
     }

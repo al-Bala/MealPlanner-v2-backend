@@ -1,5 +1,6 @@
 package com.mealplannerv2.plangenerator;
 
+import com.mealplannerv2.plangenerator.grocerylist.GroceryListFacade;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.DayInfoDto;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.PreferencesInfo;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Meal;
@@ -29,17 +30,16 @@ public class PlanGeneratorFacade {
     private final PlanGeneratorMapper mapper;
     private final IngredientsCalculator ingredientsCalculator;
     private final ProductFacade productFacade;
+    private final GroceryListFacade groceryListFacade;
 
-    public List<PlannedDay> createFirstDayOfPlan(PreferencesInfo preferences, DayInfoDto dayInfoDto){
-        List<PlannedDay> plan = new ArrayList<>();
+    public PlannedDay createFirstDayOfPlan(PreferencesInfo preferences, DayInfoDto dayInfoDto){
 //        if(dayInfo.meals().isEmpty()){
 //            log.info("Skip day");
 //            return null;
 //        }
-
-        List<IngredientDto> userProducts = mapper.mapFromProductsFromUserToIngredientDto(preferences.userProducts());
         // pierszy dzień kiedy productsInUse jest puste
-        addToProductStorage(userProducts);
+        List<IngredientDto> userIngs = mapper.mapFromProductsFromUserToIngredientDto(preferences.userProducts());
+        addToProductStorage(userIngs);
 
         // wybranie produktów z 1 grupy
         List<StoredProductDto> productsWhichMustBeUsedFirstly = productStorageFacade.getProductsWhichMustBeUsedFirstly();
@@ -47,6 +47,7 @@ public class PlanGeneratorFacade {
 
         List<Meal> sortedMeals = mealService.sortMealsByPriority(dayInfoDto.meals());
 
+        List<RecipeForDay> recipesForDay = new ArrayList<>();
         for(Meal meal: sortedMeals){
             DataForRecipeFiltering dataForRecipesFiltering = DataForRecipeFiltering.builder()
                     .diet(preferences.diet())
@@ -59,24 +60,33 @@ public class PlanGeneratorFacade {
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, preferences.portions(), dataForRecipesFiltering.forHowManyDays());
-            plan.add(new PlannedDay("date", meal.getName(), matchingRecipe));
+            recipesForDay.add(new RecipeForDay(meal.getName(), matchingRecipe));
 
-            List<ChosenPacket> allNeededPackets = productFacade.choosePacketForEachIngredient(matchingRecipe);
+            List<IngredientDto> ingsFromRecipe = matchingRecipe.getIngredients();
+            // update: odjęcie posiadanych już produktów
+            List<IngredientDto> updatedIngs = productStorageFacade.updateStoredProductsAndIngs(ingsFromRecipe);
+            groceryListFacade.addAllToGroceryList(updatedIngs);
 
+            List<ChosenPacket> allNeededPackets = productFacade.choosePacketForEachIngredient(updatedIngs);
             List<IngredientDto> leftovers = allNeededPackets.stream()
-                    .map(packet -> new IngredientDto(packet.getIngredientDto().getName(), packet.getLeftovers(), packet.getIngredientDto().getUnit()))
+                    .map(packet -> new IngredientDto(
+                            packet.getIngredientDto().getName(),
+                            packet.getLeftovers(),
+                            packet.getIngredientDto().getUnit()))
                     .toList();
             addToProductStorage(leftovers);
-            // na koniec po obliczeniu resztek i dodaniu ich do storage
-            productStorageFacade.updateSpoilDatesForStoredProducts();
         }
-
-        return plan;
+        // na koniec po obliczeniu resztek i dodaniu ich do storage
+        productStorageFacade.updateSpoilDatesForStoredProducts();
+        return PlannedDay.builder()
+                .date("date")
+                .recipesForDay(recipesForDay)
+                .build();
     }
 
     private void addToProductStorage(List<IngredientDto> ingredients) {
-        List<StoredProductDto> newProductsToStore = productStorageFacade.convertIntoStoredProducts(ingredients);
-        productStorageFacade.addAllToStoredProducts(newProductsToStore);
+        List<StoredProductDto> convertedProductsToStore = productStorageFacade.convertIntoStoredProducts(ingredients);
+        productStorageFacade.addAllToStoredProducts(convertedProductsToStore);
     }
 
     public PlannedDay createNextDayOfPlan(){

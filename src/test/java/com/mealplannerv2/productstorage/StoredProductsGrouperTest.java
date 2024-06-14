@@ -7,10 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -23,7 +20,7 @@ class StoredProductsGrouperTest {
     @Mock
     StoredProductsService storedProductsService;
 
-    private Set<StoredProductDto> storedProducts;
+    private Map<String, StoredProductDto> storedProducts;
     StoredProductDto p1;
     StoredProductDto p2;
     StoredProductDto p3;
@@ -42,7 +39,9 @@ class StoredProductsGrouperTest {
     @Test
     void should_return_products_with_1_day_to_spoil_after_opening() {
         // given
-        storedProducts = new HashSet<>(List.of(p1, p2));
+        storedProducts = new HashMap<>();
+        storedProducts.put(p1.getName(), p1);
+        storedProducts.put(p2.getName(), p2);
         // when
         when(storedProductsService.getStoredProducts()).thenReturn(storedProducts);
         List<StoredProductDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getProductsWithTheFewestDaysToSpoil(1);
@@ -54,7 +53,10 @@ class StoredProductsGrouperTest {
     @Test
     void should_return_products_with_2_days_to_spoil_after_opening() {
         // given
-        storedProducts = new HashSet<>(List.of(p2, p3, p4));
+        storedProducts = new HashMap<>();
+        storedProducts.put(p2.getName(), p2);
+        storedProducts.put(p3.getName(), p3);
+        storedProducts.put(p4.getName(), p4);
         // when
         when(storedProductsService.getStoredProducts()).thenReturn(storedProducts);
         List<StoredProductDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getProductsWithTheFewestDaysToSpoil(1);
