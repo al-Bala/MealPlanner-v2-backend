@@ -4,16 +4,17 @@ import com.mealplannerv2.plangenerator.infrastructure.controller.dto.ProductFrom
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.product.Product;
-import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.product.ProductRepository;
-import com.mealplannerv2.product.unitreader.dto.Units;
 import com.mealplannerv2.product.unitreader.UnitsReaderImpl;
-import com.mealplannerv2.productstorage.dto.StoredProductDto;
+import com.mealplannerv2.product.unitreader.dto.Units;
+import com.mealplannerv2.productstorage.storedleftovers.StoredLeftoverDto;
+import com.mealplannerv2.productstorage.userproducts.UserProductDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Log4j2
@@ -43,9 +44,15 @@ class PlanGeneratorMapper {
         return userIngs;
     }
 
-    public static List<Ingredient> mapFromStoredProductsToIngredients(List<StoredProductDto> productsToUseFirstly){
+    public static List<Ingredient> mapFromStoredProductsToIngredients(List<StoredLeftoverDto> productsToUseFirstly){
         return productsToUseFirstly.stream()
-                .map(product -> new Ingredient(product.getName(), product.getAmountToUse(), product.getUnit()))
+                .map(product -> new Ingredient(product.getName(), product.getAmount(), product.getUnit()))
+                .toList();
+    }
+
+    public static List<Ingredient> mapFromUserProductsToIngredients(Collection<UserProductDto> userProducts){
+        return userProducts.stream()
+                .map(product -> new Ingredient(product.getName(), product.getAmount(), product.getUnit()))
                 .toList();
     }
 }

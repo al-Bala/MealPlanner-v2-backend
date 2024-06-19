@@ -1,7 +1,6 @@
-package com.mealplannerv2.productstorage;
+package com.mealplannerv2.productstorage.storedleftovers;
 
 import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
-import com.mealplannerv2.productstorage.dto.StoredProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,18 +9,18 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StoredProductsServiceTest {
+class StoredLeftoversServiceTest {
 
-    StoredProductsService storedProductsService;
-    private Map<String, StoredProductDto> storedProducts;
-    StoredProductDto p1;
+    StoredLeftoversService storedProductsService;
+    private Map<String, StoredLeftoverDto> storedProducts;
+    StoredLeftoverDto p1;
 
     @BeforeEach
     void setUp() {
-        storedProductsService = new StoredProductsService();
+        storedProductsService = new StoredLeftoversService();
         storedProducts = storedProductsService.getStoredProducts();
         storedProducts.clear();
-        p1 = new StoredProductDto("ing1", 100.0,"g");
+        p1 = new StoredLeftoverDto("ing1", 100.0,"g");
         storedProducts.put(p1.getName(), p1);
     }
 
@@ -30,7 +29,7 @@ class StoredProductsServiceTest {
         // when
         storedProductsService.addUniq(p1);
         // then
-        assertThat(storedProducts.get(p1.getName()).getAmountToUse()).isEqualTo( 200.0);
+        assertThat(storedProducts.get(p1.getName()).getAmount()).isEqualTo( 200.0);
     }
 
     @Test
@@ -40,16 +39,16 @@ class StoredProductsServiceTest {
         // when
         storedProductsService.addUniq(p1);
         // then
-        assertThat(storedProducts.get(p1.getName()).getAmountToUse()).isEqualTo( 100.0);
+        assertThat(storedProducts.get(p1.getName()).getAmount()).isEqualTo( 100.0);
     }
 
     @Test
     void should_add_new_ingredient_when_there_are_not_the_same_ingredient_in_map() {
-        StoredProductDto p2 = new StoredProductDto("ing2", 180.0,"ml");
+        StoredLeftoverDto p2 = new StoredLeftoverDto("ing2", 180.0,"ml");
         // when
         storedProductsService.addUniq(p2);
         // then
-        assertThat(storedProducts.get(p2.getName()).getAmountToUse()).isEqualTo( 180.0);
+        assertThat(storedProducts.get(p2.getName()).getAmount()).isEqualTo( 180.0);
     }
 
     @Test
@@ -75,7 +74,7 @@ class StoredProductsServiceTest {
         List<IngredientDto> removed = storedProductsService.remove(ings);
         // then
         assertThat(removed).isEmpty();
-        assertThat(storedProductsService.getStoredProducts().get(p1.getName()).getAmountToUse()).isEqualTo(70.0);
+        assertThat(storedProductsService.getStoredProducts().get(p1.getName()).getAmount()).isEqualTo(70.0);
     }
 
     @Test

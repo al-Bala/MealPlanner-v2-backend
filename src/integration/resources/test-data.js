@@ -49,7 +49,7 @@ db.recipes.insertMany([
         ingredients: [
             { name: "kasza jaglana", amount: 200, unit: "g" },
             { name: "marchew", amount: 200, unit: "g" },
-            { name: "brokuł", amount: 150, unit: "g" },
+            { name: "brokul", amount: 150, unit: "g" },
             { name: "oliwa z oliwek", amount: 30, unit: "ml" }
         ],
         steps: ["Ugotuj kaszę", "Pokrój warzywa", "Smaż warzywa na oliwie", "Podawaj razem"]
@@ -63,9 +63,9 @@ db.recipes.insertMany([
         max_storage_time: 1,
         diet: "wegetariańska",
         ingredients: [
-            { name: "jabłko", amount: 2, unit: "szt." },
-            { name: "kiwi", amount: 3, unit: "szt." },
-            { name: "truskawki", amount: 150, unit: "g" },
+            { name: "jabłko", amount: 160, unit: "g" },
+            { name: "kiwi", amount: 150, unit: "g" },
+            { name: "truskawki", amount: 120, unit: "g" },
             { name: "miód", amount: 20, unit: "ml" }
         ],
         steps: ["Pokrój owoce", "Połącz z miodem", "Delikatnie wymieszaj", "Gotowe do podania"]
@@ -80,9 +80,9 @@ db.recipes.insertMany([
         diet: "wegetariańska",
         ingredients: [
             { name: "jajko", amount: 4, unit: "szt." },
-            { name: "papryka", amount: 1, unit: "szt." },
-            { name: "pomidor", amount: 2, unit: "szt." },
-            { name: "cebula", amount: 1, unit: "szt." },
+            { name: "papryka", amount: 140, unit: "g" },
+            { name: "pomidor", amount: 180, unit: "g" },
+            { name: "cebula", amount: 80, unit: "g" },
             { name: "oliwa z oliwek", amount: 20, unit: "ml" }
         ],
         steps: ["Ubij jajka", "Pokrój warzywa", "Smaż warzywa, dodaj jajka", "Podawaj gorące"]
@@ -96,9 +96,9 @@ db.recipes.insertMany([
         max_storage_time: 1,
         diet: "wegetariańska",
         ingredients: [
-            { name: "banan", amount: 1, unit: "szt." },
+            { name: "banan", amount: 70, unit: "g" },
             { name: "truskawki", amount: 100, unit: "g" },
-            { name: "kiwi", amount: 1, unit: "szt." },
+            { name: "kiwi", amount: 50, unit: "g" },
             { name: "sok pomarańczowy", amount: 150, unit: "ml" },
             { name: "jogurt naturalny", amount: 50, unit: "g" }
         ],
@@ -115,8 +115,8 @@ db.recipes.insertMany([
         ingredients: [
             { name: "ryż", amount: 300, unit: "g" },
             { name: "kurczak", amount: 250, unit: "g" },
-            { name: "marchew", amount: 2, unit: "szt." },
-            { name: "brokuł", amount: 150, unit: "g" },
+            { name: "marchew", amount: 200, unit: "g" },
+            { name: "brokul", amount: 150, unit: "g" },
             { name: "sos sojowy", amount: 30, unit: "ml" }
         ],
         steps: ["Ugotuj ryż", "Pokrój kurczaka i warzywa", "Smaż kurczaka i warzywa, dodaj sos sojowy", "Podawaj razem z ryżem"]
@@ -143,7 +143,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('658c088e98487458f640453d'),
-        name: "brokuł",
+        name: "brokul",
         packing_units: ["weight", "szt."],
         main_unit: "g",
         standard_weight: 150,

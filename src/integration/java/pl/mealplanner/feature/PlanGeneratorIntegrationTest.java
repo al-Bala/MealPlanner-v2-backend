@@ -1,18 +1,26 @@
 package pl.mealplanner.feature;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
 import com.mealplannerv2.plangenerator.PlannedDay;
+import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
+import java.util.Set;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
+
+    @Autowired
+    PlanGeneratorFacade planGeneratorFacade;
 
     @Test
     @WithMockUser
@@ -89,6 +97,8 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         System.out.println(perform2.andReturn().getResponse().getContentAsString());
+        Set<IngredientDto> groceryList = planGeneratorFacade.getGroceryList();
+        System.out.println("GL " + groceryList);
 
     }
 }
