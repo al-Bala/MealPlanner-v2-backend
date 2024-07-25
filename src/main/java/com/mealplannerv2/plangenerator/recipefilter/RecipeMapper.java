@@ -1,9 +1,9 @@
 package com.mealplannerv2.plangenerator.recipefilter;
 
+import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
-import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
+import com.mealplannerv2.storage.IngredientDto;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ class RecipeMapper {
 
     public static RecipeDto mapFromRecipeToRecipeDto(Recipe recipe){
         return RecipeDto.builder()
+                .id(recipe.id())
                 .name(recipe.name())
                 .portions(recipe.portions())
                 .ingredients(mapFromIngredientToIngredientDto(recipe.ingredients()))
@@ -29,9 +30,9 @@ class RecipeMapper {
                 .toList();
     }
 
-    public static List<Ingredient> mapFromIngredientDroToIngredient(List<IngredientDto> ing) {
-        return ing.stream()
-                .map(i -> new Ingredient(i.getName(), i.getAmount(), i.getUnit()))
-                .toList();
-    }
+//    public static List<Ingredient> mapFromIngredientDroToIngredient(List<IngredientDto> ing) {
+//        return ing.stream()
+//                .map(i -> new Ingredient(i.getName(), i.getAmount(), i.getUnit()))
+//                .toList();
+//    }
 }

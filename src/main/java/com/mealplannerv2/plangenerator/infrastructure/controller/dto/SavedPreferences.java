@@ -5,6 +5,6 @@ import java.util.List;
 public record SavedPreferences(
         String diet,
         int portions,
-        List<String> productsToAvoid
+        List<String> products_to_avoid
 ) {
 }

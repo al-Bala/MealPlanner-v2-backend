@@ -2,8 +2,10 @@ package pl.mealplanner.feature;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
-import com.mealplannerv2.plangenerator.PlannedDay;
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
+import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
+import com.mealplannerv2.recipe.PlannedDayDb;
+import com.mealplannerv2.recipe.RecipeRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,7 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,37 +25,78 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
     @Autowired
     PlanGeneratorFacade planGeneratorFacade;
 
+    @Autowired
+    RecipeRepository recipeRepository;
+
     @Test
-    @WithMockUser
+    @WithMockUser(username = "testUser")
     public void plan_generator_test() throws Exception {
-        // 1: użytkownik podaje preferencje i zwracany jest przepis na pierwszy dzień a resztki są zapisane w mapie
+        // step 1:
+            // a) użytkownik wypełnia wszystkie preferencje i wybiera jeden posiłek (obiad) na pierwszy dzień
+            // b) składniki użytkownika zostają zapisane
+            // c) program dla każdego posiłku:
+                // - znajduje pasujący przepis
+                // - przelicza ilość składników
+                // - dodaje przepis do listy
+                // - aktualizuje składniki w storage
+                // - dla każdego składnika wybiera opakowanie i przelicza resztki
+            // d) daty przydatności zostają zaaktualizowane
+            // e) zwracany jest przepis na pierwszy dzień
+
         // given & when
         ResultActions perform = mockMvc.perform(post("/plan/firstDay")
                 .content("""
                         {
                            "unchangingPrefers": {
                              "diet": "wegetariańska",
-                             "portions": 4,
+                             "portions": 2,
                              "productsToAvoid": [
-                               "oliwki"
+                               "brokul"
                              ]
                            },
                            "userProducts": [
                              {
                                "name": "marchew",
-                               "anyAmountUnit": {
-                                 "amount": 200,
-                                 "unit": "g"
-                               },
-                               "mainAmountUnit": null
+                               "amount": 200,
+                               "unit": "g"
                              }
                            ],
-                           "firstDayOfPlan": "2024-06-12",
+                           "date": "2024-06-12",
                            "mealsValues": [
                              {
-                               "mealName": "DINNER",
-                               "timeMin": 30,
-                               "forHowManyDays": 2
+                               "mealId": "DINNER",
+                               "timeMin": -1,
+                               "forHowManyDays": 1
+                             }
+                           ]
+                         }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        MvcResult mvcResult = perform.andExpect(status().isOk()).andReturn();
+        String jsonWithRecipe = mvcResult.getResponse().getContentAsString();
+        PlannedDayDb recipe = objectMapper.readValue(jsonWithRecipe, new TypeReference<>(){});
+
+        // TODO: przeliczanie porcji w wyświetlanym przepisie
+        List<Optional<Recipe>> list = recipe.planned_day().stream()
+                .map(r -> recipeRepository.findById(new ObjectId(r.recipeId())))
+                .toList();
+        System.out.println("Recipe: " + list);
+
+        // step 2:
+        // użytkownik wybiera jeden posiłek (obiad) na kolejny dzień
+
+        // given & when
+        ResultActions perform2 = mockMvc.perform(post("/plan/nextDay")
+                .content("""
+                        {
+                           "date": "2024-06-13",
+                           "mealsValues": [
+                             {
+                               "mealId": "DINNER",
+                               "timeMin": -1,
+                               "forHowManyDays": 1
                              }
                            ]
                          }
@@ -61,44 +105,13 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         );
 
         MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
-        String jsonWithRecipe = mvcResult2.getResponse().getContentAsString();
-        PlannedDay recipe = objectMapper.readValue(jsonWithRecipe, new TypeReference<>(){});
+        String jsonWithRecipe2 = mvcResult2.getResponse().getContentAsString();
+        PlannedDayDb recipe2 = objectMapper.readValue(jsonWithRecipe2, new TypeReference<>(){});
 
-        System.out.println(recipe);
-
-        // 2: użytkownik podaje informacje na kolejny dzień planu i
-        // zwracany jest przepis na kolejny dzień a resztki są zapisane w mapie
-        // given & when
-        ResultActions perform2 = mockMvc.perform(post("/plan/nextDay")
-                .content("""
-                        {
-                           "unchangingPrefers": {
-                             "diet": "wegetariańska",
-                             "portions": 4,
-                             "productsToAvoid": [
-                               "oliwki"
-                             ]
-                           },
-                           "firstDayOfPlan": "2024-06-13",
-                           "mealsValues": [
-                             {
-                               "mealName": "BREAKFAST",
-                               "timeMin": null,
-                               "forHowManyDays": null
-                             },
-                             {
-                               "mealName": "DINNER",
-                               "timeMin": null,
-                               "forHowManyDays": 1
-                             }
-                           ]
-                         }
-                        """.trim())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-        System.out.println(perform2.andReturn().getResponse().getContentAsString());
-        Set<IngredientDto> groceryList = planGeneratorFacade.getGroceryList();
-        System.out.println("GL " + groceryList);
+        List<Optional<Recipe>> list2 = recipe2.planned_day().stream()
+                .map(r -> recipeRepository.findById(new ObjectId(r.recipeId())))
+                .toList();
+        System.out.println("Recipe2: " + list2);
 
     }
 }

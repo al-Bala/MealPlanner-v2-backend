@@ -1,7 +1,7 @@
 package com.mealplannerv2.plangenerator;
 
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
+import com.mealplannerv2.storage.IngredientDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,41 +1,54 @@
 db = db.getSiblingDB('testDatabase');
 
-// db.users.insertMany([
-//     {
-//         id: "#",
-//         role: "USER",
-//         username: "testUser",
-//         password: "password",
-//         email: "email@email.pl",
-//         user_preferences: {
-//             portions: 2,
-//             diet: "wege",
-//             disliked_products: [""]
-//         },
-//         user_recipes: [""],
-//         plan_history: [
-//             {
-//                 day: new Date(2023, 12, 13),
-//                 recipe: {
-//                     _id: ObjectId('6577660abbac733a111c9424'),
-//                     name: "Koktajl owocowy",
-//                     portions: 1,
-//                     prepare_time: 10,
-//                     diet: "wegetariańska",
-//                     ingredients: [
-//                         { name: "banan", amount: 1, unit: "szt." },
-//                         { name: "truskawki", amount: 100, unit: "g" },
-//                         { name: "kiwi", amount: 1, unit: "szt." },
-//                         { name: "sok pomarańczowy", amount: 150, unit: "ml" },
-//                         { name: "jogurt naturalny", amount: 50, unit: "g" }
-//                     ],
-//                     steps: ["Włóż owoce do blendera", "Dodaj sok i jogurt", "Miksuj do uzyskania gładkiego koktajlu", "Gotowe do picia"]
-//                 }
-//             },
-//         ],
-//         grocery_list:[]
-//     }
-// ]);
+db.users.insertMany([
+    {
+        _id: ObjectId('6672e2e8be614a1616e7552f'),
+        // role: "USER",
+        username: "testUser",
+        password: "password",
+        email: "email@email.pl",
+        preferences: {
+            diet: null,
+            portions: 2,
+            products_to_avoid: ["oliwki"]
+        },
+        // user_recipes: [""],
+        plan_history: [
+            {
+                day: "2024-06-13",
+                planned_day: [
+                    {
+                        type_of_meal: "DINNER",
+                        recipeId: {
+                            $oid: "6577660abbac733a111c9421"
+                        }
+                        //Kasza jaglana z warzywami
+                    }
+                ]
+            },
+            {
+                day: "2024-06-14",
+                planned_day: [
+                    {
+                        type_of_meal: "BREAKFAST",
+                        recipeId: {
+                            $oid: "6577660abbac733a111c9423"
+                        }
+                        //Jajecznica z warzywami
+                    },
+                    {
+                        type_of_meal: "DINNER",
+                        recipeId: {
+                            $oid: "6577660abbac733a111c9425"
+                        }
+                        //Ryż z warzywami i kurczakiem
+                    }
+                ]
+            },
+        ],
+        // grocery_list:[]
+    }
+]);
 
 db.recipes.insertMany([
     {

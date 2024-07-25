@@ -1,9 +1,10 @@
 package com.mealplannerv2.loginandregister;
 
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPreferences;
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
+import com.mealplannerv2.recipe.PlannedDayDb;
 import lombok.Builder;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,7 +20,7 @@ import java.util.List;
 @Document(collection = "users")
 public class User implements UserDetails {
     @Id
-    String id;
+    ObjectId id;
 
     @Field("username")
     @Indexed(unique = true)
@@ -34,8 +35,11 @@ public class User implements UserDetails {
     @Field("preferences")
     SavedPreferences preferences;
 
-    @Field("products_in_use")
-    List<IngredientDto> productsInUse;
+//    @Field("products_in_use")
+//    List<IngredientDto> productsInUse;
+
+    @Field("plan_history")
+    List<PlannedDayDb> planHistory;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

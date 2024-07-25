@@ -1,6 +1,6 @@
-package com.mealplannerv2.productstorage.storedleftovers;
+package com.mealplannerv2.storage.leftovers;
 
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
+import com.mealplannerv2.storage.IngredientDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,18 +9,18 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StoredLeftoversServiceTest {
+class LeftoversServiceTest {
 
-    StoredLeftoversService storedProductsService;
-    private Map<String, StoredLeftoverDto> storedProducts;
-    StoredLeftoverDto p1;
+    LeftoversService storedProductsService;
+    private Map<String, LeftoverDto> storedProducts;
+    LeftoverDto p1;
 
     @BeforeEach
     void setUp() {
-        storedProductsService = new StoredLeftoversService();
-        storedProducts = storedProductsService.getStoredProducts();
+        storedProductsService = new LeftoversService();
+        storedProducts = storedProductsService.getLeftovers();
         storedProducts.clear();
-        p1 = new StoredLeftoverDto("ing1", 100.0,"g");
+        p1 = new LeftoverDto("ing1", 100.0,"g");
         storedProducts.put(p1.getName(), p1);
     }
 
@@ -44,7 +44,7 @@ class StoredLeftoversServiceTest {
 
     @Test
     void should_add_new_ingredient_when_there_are_not_the_same_ingredient_in_map() {
-        StoredLeftoverDto p2 = new StoredLeftoverDto("ing2", 180.0,"ml");
+        LeftoverDto p2 = new LeftoverDto("ing2", 180.0,"ml");
         // when
         storedProductsService.addUniq(p2);
         // then
@@ -61,7 +61,7 @@ class StoredLeftoversServiceTest {
         List<IngredientDto> removed = storedProductsService.remove(ings);
         // then
         assertThat(removed).isEmpty();
-        assertThat(storedProductsService.getStoredProducts()).isEmpty();
+        assertThat(storedProductsService.getLeftovers()).isEmpty();
     }
 
     @Test
@@ -74,7 +74,7 @@ class StoredLeftoversServiceTest {
         List<IngredientDto> removed = storedProductsService.remove(ings);
         // then
         assertThat(removed).isEmpty();
-        assertThat(storedProductsService.getStoredProducts().get(p1.getName()).getAmount()).isEqualTo(70.0);
+        assertThat(storedProductsService.getLeftovers().get(p1.getName()).getAmount()).isEqualTo(70.0);
     }
 
     @Test
@@ -87,6 +87,6 @@ class StoredLeftoversServiceTest {
         List<IngredientDto> removed = storedProductsService.remove(ings);
         // then
         assertThat(removed.get(0).getAmount()).isEqualTo(20.0);
-        assertThat(storedProductsService.getStoredProducts()).isEmpty();
+        assertThat(storedProductsService.getLeftovers()).isEmpty();
     }
 }

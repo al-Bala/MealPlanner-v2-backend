@@ -1,7 +1,7 @@
-package com.mealplannerv2.productstorage.storedleftovers;
+package com.mealplannerv2.storage.leftovers;
 
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
-import com.mealplannerv2.productstorage.StorageService;
+import com.mealplannerv2.storage.IngredientDto;
+import com.mealplannerv2.storage.StorageImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -9,36 +9,36 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-class StoredLeftoversService extends StorageService {
-    private static final Map<String, StoredLeftoverDto> storedProductsMap = new HashMap<>();
+class LeftoversService extends StorageImpl {
+    private static final Map<String, LeftoverDto> leftoversMap = new HashMap<>();
 
-    public Map<String, StoredLeftoverDto> getStoredProducts(){
-        return storedProductsMap;
+    public Map<String, LeftoverDto> getLeftovers(){
+        return leftoversMap;
     }
 
-    public void addAllUniq(List<StoredLeftoverDto> newProducts){
-        for(StoredLeftoverDto product: newProducts){
-            addUniq(product);
+    public void addAllUniq(List<LeftoverDto> leftovers){
+        for(LeftoverDto leftover: leftovers){
+            addUniq(leftover);
         }
     }
 
-    public void addUniq(StoredLeftoverDto product){
-        addItem(storedProductsMap, product);
+    public void addUniq(LeftoverDto leftover){
+        addItem(leftoversMap, leftover);
     }
 
-    public List<IngredientDto> remove(List<IngredientDto> ings){
-        return removeItem(storedProductsMap, ings);
+    public List<IngredientDto> remove(List<IngredientDto> ingsDto){
+        return removeItem(leftoversMap, ingsDto);
     }
 
     public void updateDaysToSpoilAfterOpening(){
-        storedProductsMap.values()
+        leftoversMap.values()
                 .forEach(this::setUpdatedDaysToSpoil);
     }
 
-    private void setUpdatedDaysToSpoil(StoredLeftoverDto product){
-        int daysToSpoilAfterOpening = product.getDaysToSpoilAfterOpening();
+    private void setUpdatedDaysToSpoil(LeftoverDto leftover){
+        int daysToSpoilAfterOpening = leftover.getDaysToSpoilAfterOpening();
         int decreasedDays = --daysToSpoilAfterOpening;
-        product.setDaysToSpoilAfterOpening(decreasedDays);
+        leftover.setDaysToSpoilAfterOpening(decreasedDays);
     }
 
 //    public void addUniq(StoredProductDto newProduct){

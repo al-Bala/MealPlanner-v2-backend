@@ -1,4 +1,4 @@
-package com.mealplannerv2.productstorage.storedleftovers;
+package com.mealplannerv2.storage.leftovers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,27 +15,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class StoredLeftoversGrouperTest {
+class LeftoversGrouperTest {
 
-    StoredLeftoversGrouper storedProductsGrouper;
+    LeftoversGrouper storedProductsGrouper;
 
     @Mock
-    StoredLeftoversService storedProductsService;
+    LeftoversService storedProductsService;
 
-    private Map<String, StoredLeftoverDto> storedProducts;
-    StoredLeftoverDto p1;
-    StoredLeftoverDto p2;
-    StoredLeftoverDto p3;
-    StoredLeftoverDto p4;
+    private Map<String, LeftoverDto> storedProducts;
+    LeftoverDto p1;
+    LeftoverDto p2;
+    LeftoverDto p3;
+    LeftoverDto p4;
 
     @BeforeEach
     void setUp() {
-        storedProductsGrouper = new StoredLeftoversGrouper(storedProductsService);
+        storedProductsGrouper = new LeftoversGrouper(storedProductsService);
 
-        p1 = new StoredLeftoverDto("name1", 1.0, "", 1);
-        p2 = new StoredLeftoverDto("name2", 2.0, "", 2);
-        p3 = new StoredLeftoverDto("name3", 2.0, "", 2);
-        p4 = new StoredLeftoverDto("name4", 3.0, "", 3);
+        p1 = new LeftoverDto("name1", 1.0, "", 1);
+        p2 = new LeftoverDto("name2", 2.0, "", 2);
+        p3 = new LeftoverDto("name3", 2.0, "", 2);
+        p4 = new LeftoverDto("name4", 3.0, "", 3);
     }
 
     @Test
@@ -45,10 +45,10 @@ class StoredLeftoversGrouperTest {
         storedProducts.put(p1.getName(), p1);
         storedProducts.put(p2.getName(), p2);
         // when
-        when(storedProductsService.getStoredProducts()).thenReturn(storedProducts);
-        List<StoredLeftoverDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getProductsWithTheFewestDaysToSpoil(1);
+        when(storedProductsService.getLeftovers()).thenReturn(storedProducts);
+        List<LeftoverDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getLeftoversWithTheFewestDaysToSpoil(1);
         // then
-        List<StoredLeftoverDto> expectedList = Arrays.asList(p1);
+        List<LeftoverDto> expectedList = Arrays.asList(p1);
         assertThat(productsWithTheFewestDaysToSpoil).containsAll(expectedList);
     }
 
@@ -60,10 +60,10 @@ class StoredLeftoversGrouperTest {
         storedProducts.put(p3.getName(), p3);
         storedProducts.put(p4.getName(), p4);
         // when
-        when(storedProductsService.getStoredProducts()).thenReturn(storedProducts);
-        List<StoredLeftoverDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getProductsWithTheFewestDaysToSpoil(1);
+        when(storedProductsService.getLeftovers()).thenReturn(storedProducts);
+        List<LeftoverDto> productsWithTheFewestDaysToSpoil = storedProductsGrouper.getLeftoversWithTheFewestDaysToSpoil(1);
         // then
-        List<StoredLeftoverDto> expectedList = Arrays.asList(p2,p3);
+        List<LeftoverDto> expectedList = Arrays.asList(p2,p3);
         assertThat(productsWithTheFewestDaysToSpoil).containsAll(expectedList);
     }
 }

@@ -52,7 +52,7 @@ public class Meal {
     }
 
     private static boolean isNamesEquals(MealValues mealVal, MealType mealType) {
-        return mealVal.mealName().equals(mealType.name());
+        return mealVal.mealId().equals(mealType.name());
     }
 
     private static List<Meal> sortMealsByPriority(List<Meal> meals){

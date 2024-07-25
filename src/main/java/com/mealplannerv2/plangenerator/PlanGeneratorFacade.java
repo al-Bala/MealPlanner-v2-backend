@@ -1,23 +1,28 @@
 package com.mealplannerv2.plangenerator;
 
 import com.mealplannerv2.grocerylist.GroceryListFacade;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.*;
+import com.mealplannerv2.loginandregister.LoginAndRegisterFacade;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.MealValues;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.Preferences;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.UnchangingPrefers;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Meal;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
-import com.mealplannerv2.plangenerator.recipefilter.dto.IngredientDto;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.product.dto.ChosenPacket;
-import com.mealplannerv2.productstorage.storedleftovers.StoredLeftoverDto;
-import com.mealplannerv2.productstorage.storedleftovers.StoredLeftoversFacade;
-import com.mealplannerv2.productstorage.userproducts.UserProductDto;
-import com.mealplannerv2.productstorage.userproducts.UserProductsFacade;
+import com.mealplannerv2.recipe.PlannedDayDb;
+import com.mealplannerv2.recipe.RecipeForDayDb;
+import com.mealplannerv2.storage.IngredientDto;
+import com.mealplannerv2.storage.StorageFacade;
+import com.mealplannerv2.storage.leftovers.LeftoversFacade;
+import com.mealplannerv2.storage.useringredients.UserIngsFacade;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Log4j2
 @AllArgsConstructor
@@ -25,87 +30,85 @@ import java.util.*;
 public class PlanGeneratorFacade {
 
     private final RecipeFetcherFacade recipeFetcherFacade;
-    private final StoredLeftoversFacade storedLeftoversFacade;
-    private final UserProductsFacade userProductsFacade;
+    private final LeftoversFacade leftoversFacade;
+    private final UserIngsFacade userIngsFacade;
     private final PlanGeneratorMapper mapper;
     private final IngredientsCalculator ingredientsCalculator;
     private final ProductFacade productFacade;
     private final GroceryListFacade groceryListFacade;
+    private final LoginAndRegisterFacade loginAndRegisterFacade;
+    private final StorageFacade storageFacade;
 
-    public PlannedDay createFirstDayOfPlan(Preferences preferences, List<ProductFromUser> productsFromUser){
-        addToUserProducts(productsFromUser);
+    public PlannedDayDb createFirstDayOfPlan(Preferences preferences, List<IngredientDto> ingsFromUser){
+        userIngsFacade.addAllToUserIngs(ingsFromUser);
         return createDay(preferences);
     }
 
-    public PlannedDay createNextDayOfPlan(Preferences preferences){
+    public PlannedDayDb createNextDayOfPlan(Preferences preferences){
         if (isNoMealSelected(preferences.mealsValues())){
             return null;
         }
         return createDay(preferences);
     }
 
-    public PlannedDay createDay(Preferences preferences){
+    private PlannedDayDb createDay(Preferences preferences){
+        System.out.println("UserIngs1: " + userIngsFacade.getUserIngs());
+        System.out.println("Leftovers1: " + leftoversFacade.getLeftovers());
+
         UnchangingPrefers unchangingPrefers = preferences.unchangingPrefers();
         List<MealValues> mealValues = preferences.mealsValues();
-        List<RecipeForDay> recipesForDay = new ArrayList<>();
+        List<RecipeForDayDb> recipesForDay = new ArrayList<>();
 
         List<Meal> meals = Meal.getAllMeals(mealValues);
         for(Meal meal: meals){
-
-            List<Ingredient> ingredients;
-            if(!userProductsFacade.getUserProducts().isEmpty()){
-                Collection<UserProductDto> values = userProductsFacade.getUserProducts().values();
-                ingredients = PlanGeneratorMapper.mapFromUserProductsToIngredients(values);
-            } else {
-                // wybranie produktów z 1 grupy
-                List<StoredLeftoverDto> productsWhichMustBeUsedFirstly = storedLeftoversFacade.getProductsWhichMustBeUsedFirstly();
-                ingredients = PlanGeneratorMapper.mapFromStoredProductsToIngredients(productsWhichMustBeUsedFirstly);
-            }
+            System.out.println("Ings to use firstly: " + storageFacade.getIngsToUseFirstly());
 
             DataForRecipeFiltering dataForRecipesFiltering = DataForRecipeFiltering.builder()
                     .diet(unchangingPrefers.diet())
                     .typeOfMeal(meal.getName())
                     .forHowManyDays(meal.getForHowManyDays())
                     .timeForPrepareMin(meal.getTimeMin())
-                    .ingredientsToUseFirstly(ingredients)
+                    .ingredientsToUseFirstly(storageFacade.getIngsToUseFirstly())
                     .productsToAvoid(unchangingPrefers.productsToAvoid())
                     .build();
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, unchangingPrefers.portions(), dataForRecipesFiltering.forHowManyDays());
-            recipesForDay.add(new RecipeForDay(meal.getName(), matchingRecipe));
+            recipesForDay.add(new RecipeForDayDb(meal.getName(), matchingRecipe.getId().toString()));
 
             List<IngredientDto> ingsInRecipe = matchingRecipe.getIngredients();
-            // update: odjęcie posiadanych już produktów
-            List<IngredientDto> ingsToBuy = userProductsFacade.subtractUserProductsFromIngsInRecipe(ingsInRecipe);
-            storedLeftoversFacade.updateStoredLeftovers(ingsToBuy);
-            groceryListFacade.addAllToGroceryList(ingsToBuy);
+            System.out.println("Ings in recipe: " + ingsInRecipe);
+            List<IngredientDto> ingsToBuy = storageFacade.updateStorageAndAddToGroceryList(ingsInRecipe);
+            System.out.println("Ings to buy: " + ingsToBuy);
 
             choosePacketsAndSaveLeftovers(ingsToBuy);
         }
+        System.out.println("LeftoversBeforeSpoil: " + leftoversFacade.getLeftovers());
         // na koniec po obliczeniu resztek i dodaniu ich do storage
-        storedLeftoversFacade.updateSpoilDatesForStoredProducts();
-        return PlannedDay.builder()
-                .date(preferences.date())
-                .recipesForDay(recipesForDay)
+        leftoversFacade.updateSpoilDatesForLeftovers();
+
+        PlannedDayDb plannedDay = PlannedDayDb.builder()
+                .day(preferences.date())
+                .planned_day(recipesForDay)
                 .build();
+//        List<PlannedDayDb> plannedDayDbs = loginAndRegisterFacade.saveGeneratedRecipe(plannedDay);
+//        System.out.println(plannedDayDbs);
+        System.out.println("UserIngs2: " + userIngsFacade.getUserIngs());
+        System.out.println("Leftovers2: " + leftoversFacade.getLeftovers());
+        return plannedDay;
     }
 
     private void choosePacketsAndSaveLeftovers(List<IngredientDto> updatedIngs) {
         List<ChosenPacket> allNeededPackets = productFacade.choosePacketForEachIngredient(updatedIngs);
         List<IngredientDto> leftovers = allNeededPackets.stream()
+                .filter(packet -> packet.getLeftovers() > 0)
                 .map(packet -> new IngredientDto(
                         packet.getIngredientDto().getName(),
                         packet.getLeftovers(),
                         packet.getIngredientDto().getUnit()))
-                .filter(ing -> ing.getAmount() > 0)
+//                .filter(ing -> ing.getAmount() > 0)
                 .toList();
-        storedLeftoversFacade.convertAndAddToStoredProducts(leftovers);
-    }
-
-    private void addToUserProducts(List<ProductFromUser> productsFromUsers) {
-        List<IngredientDto> userIngs = mapper.mapFromProductsFromUserToIngredientDto(productsFromUsers);
-        userProductsFacade.convertAndAddToUserProducts(userIngs);
+        leftoversFacade.convertAndAddToLeftovers(leftovers);
     }
 
     private static boolean isNoMealSelected(List<MealValues> mealsValues) {

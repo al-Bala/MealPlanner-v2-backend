@@ -6,7 +6,7 @@ import com.mealplannerv2.plangenerator.infrastructure.controller.dto.UnchangingP
 import java.util.List;
 
 public record NextDayRequest(
-        UnchangingPrefers unchangingPrefers,
+//        UnchangingPrefers unchangingPrefers,
         String date,
         List<MealValues> mealsValues
 ) {

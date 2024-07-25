@@ -22,8 +22,8 @@ public class LoginUserDetailsService implements UserDetailsService {
 
     private org.springframework.security.core.userdetails.User getUser(UserDto userDto) {
         return new org.springframework.security.core.userdetails.User(
-                userDto.username(),
-                userDto.password(),
+                userDto.getUsername(),
+                userDto.getPassword(),
                 Collections.emptyList());
     }
 }

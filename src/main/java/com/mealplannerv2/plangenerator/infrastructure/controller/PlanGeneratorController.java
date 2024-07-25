@@ -2,14 +2,15 @@ package com.mealplannerv2.plangenerator.infrastructure.controller;
 
 import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
-import com.mealplannerv2.plangenerator.PlannedDay;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.Preferences;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.ProductFromUser;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.UnchangingPrefers;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.FirstDayRequest;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.NextDayRequest;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.recipe.PlannedDayDb;
+import com.mealplannerv2.storage.IngredientDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,25 +26,32 @@ class PlanGeneratorController {
     private final RecipeFetcherFacade recipeFetcherFacade;
 
     @PostMapping("/firstDay")
-    public ResponseEntity<PlannedDay> firstPlanDay(@RequestBody FirstDayRequest firstDayRequest){
+    public ResponseEntity<PlannedDayDb> firstPlanDay(@RequestBody FirstDayRequest firstDayRequest){
+        System.out.println("Object: " + firstDayRequest);
         Preferences preferences = Preferences.builder()
                 .unchangingPrefers(firstDayRequest.unchangingPrefers())
                 .date(firstDayRequest.date())
                 .mealsValues(firstDayRequest.mealsValues())
                 .build();
-        List<ProductFromUser> userProducts = firstDayRequest.userProducts();
-        PlannedDay firstDayOfPlan = planGeneratorFacade.createFirstDayOfPlan(preferences, userProducts);
+        List<IngredientDto> userIngs = firstDayRequest.userProducts();
+        PlannedDayDb firstDayOfPlan = planGeneratorFacade.createFirstDayOfPlan(preferences, userIngs);
+        System.out.println("RESULT: " + firstDayOfPlan);
         return ResponseEntity.ok(firstDayOfPlan);
     }
 
     @PostMapping("/nextDay")
-    public ResponseEntity<PlannedDay> nextPlanDay(@RequestBody NextDayRequest nextDayRequest){
+    public ResponseEntity<PlannedDayDb> nextPlanDay(@RequestBody NextDayRequest nextDayRequest){
+        UnchangingPrefers unchangingPrefers = new UnchangingPrefers(
+                "wegetariańska",
+                2,
+                List.of("brokul")
+        );
         Preferences preferences = Preferences.builder()
-                .unchangingPrefers(nextDayRequest.unchangingPrefers())
+                .unchangingPrefers(unchangingPrefers)
                 .date(nextDayRequest.date())
                 .mealsValues(nextDayRequest.mealsValues())
                 .build();
-        PlannedDay nextDayOfPlan = planGeneratorFacade.createNextDayOfPlan(preferences);
+        PlannedDayDb nextDayOfPlan = planGeneratorFacade.createNextDayOfPlan(preferences);
         return ResponseEntity.ok(nextDayOfPlan);
     }
 

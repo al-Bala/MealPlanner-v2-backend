@@ -1,8 +1,14 @@
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017
+#      database: mealplanner
+
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017
-      database: nmealplanner
+      uri: mongodb://admin:admin@localhost:27018/mealplanner
+#      database: mealplanner
 
 auth:
   jwt:
