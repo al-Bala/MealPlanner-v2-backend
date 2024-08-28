@@ -44,7 +44,7 @@ class PlanGeneratorController {
         UnchangingPrefers unchangingPrefers = new UnchangingPrefers(
                 "wegetariańska",
                 2,
-                List.of("brokul")
+                List.of("kiwi")
         );
         Preferences preferences = Preferences.builder()
                 .unchangingPrefers(unchangingPrefers)
@@ -53,6 +53,11 @@ class PlanGeneratorController {
                 .build();
         PlannedDayDb nextDayOfPlan = planGeneratorFacade.createNextDayOfPlan(preferences);
         return ResponseEntity.ok(nextDayOfPlan);
+    }
+
+    @PostMapping("/changeDay")
+    public ResponseEntity<PlannedDayDb> changeDay(@RequestBody NextDayRequest nextDayRequest){
+        return null;
     }
 
     @GetMapping("")
@@ -74,4 +79,8 @@ class PlanGeneratorController {
         return ResponseEntity.ok(new PlanResponseDto(result));
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "Correct ";
+    }
 }

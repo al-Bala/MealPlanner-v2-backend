@@ -12,6 +12,9 @@ public class OnlyNamesCriteria implements NACriteriaBuilder {
 
     @Override
     public Criteria getCriteria(List<Ingredient> userProducts) {
+        if(userProducts == null){
+            return null;
+        }
         return Criteria.where("ingredients").elemMatch(
                 new Criteria().orOperator(getCriteriaList(userProducts)));
     }

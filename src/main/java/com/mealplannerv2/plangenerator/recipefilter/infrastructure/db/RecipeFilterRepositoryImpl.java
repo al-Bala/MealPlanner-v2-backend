@@ -42,9 +42,9 @@ public class RecipeFilterRepositoryImpl implements RecipeFilterRepository {
                 break;
             }
         }
-        if(documents == null){
+//        if(documents == null){
 //            log.error("Nie udało się znaleźć żadnego pasującego przepisu :(");
-        }
+//        }
         return documents;
     }
 

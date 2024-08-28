@@ -1,5 +1,6 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
+import com.mealplannerv2.ChosenRecipesList;
 import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -40,6 +41,7 @@ public class Director {
         queryMaker.setTypeOfMeal(info.typeOfMeal());
         queryMaker.setMaxStorageTime(info.forHowManyDays());
         queryMaker.setDiet(info.diet());
+        queryMaker.setUsedRecipes(ChosenRecipesList.chosenRecipes);
         return queryMaker.getAggregation();
     }
 

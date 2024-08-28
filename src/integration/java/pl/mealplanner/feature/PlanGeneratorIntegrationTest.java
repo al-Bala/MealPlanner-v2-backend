@@ -51,7 +51,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
                              "diet": "wegetariańska",
                              "portions": 2,
                              "productsToAvoid": [
-                               "brokul"
+                               "kiwi"
                              ]
                            },
                            "userProducts": [
@@ -104,7 +104,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
-        MvcResult mvcResult2 = perform.andExpect(status().isOk()).andReturn();
+        MvcResult mvcResult2 = perform2.andExpect(status().isOk()).andReturn();
         String jsonWithRecipe2 = mvcResult2.getResponse().getContentAsString();
         PlannedDayDb recipe2 = objectMapper.readValue(jsonWithRecipe2, new TypeReference<>(){});
 

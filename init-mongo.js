@@ -11,6 +11,32 @@ db.createUser(
     }
 )
 
+db.users.insertMany([
+    {
+        _id: ObjectId('222222222222222222222222'),
+        username: 'admin',
+        email: 'admin@admin.pl',
+        password: '$2a$10$tR8zusPyujdG.PgOg6ikM.DGxc//Y1F3GnqVMrjUQhF702iZSLDd6',
+        preferences: {
+            diet: '',
+            portions: 0,
+            products_to_avoid: ['']
+        },
+        plan_history: [
+            {
+                day: '',
+                planned_day: [
+                    {
+                        type_of_meal: '',
+                        recipeId: '',
+                        portions_for_recipe: 0
+                    }
+                ]
+            }
+        ]
+    }
+])
+
 db.units.insertMany([
     {
         _id: ObjectId('66696fb85a17b49d3cbfa102'),
@@ -35,6 +61,17 @@ db.units.insertMany([
 ])
 
 db.recipes.insertMany([
+    {
+        _id: ObjectId('111111111111111111111111'),
+        name: "Recipe not found",
+        type_of_meal: ["BREAKFAST", "DINNER", "SUPPER"],
+        portions: 1,
+        prepare_time: 1000000,
+        max_storage_time: 1000000,
+        diet: "",
+        ingredients: [],
+        steps: []
+    },
     {
         _id: ObjectId('6577660abbac733a111c9421'),
         name: "Kasza jaglana z warzywami",
@@ -117,10 +154,54 @@ db.recipes.insertMany([
             { name: "sos sojowy", amount: 30, unit: "ml" }
         ],
         steps: ["Ugotuj ryż", "Pokrój kurczaka i warzywa", "Smaż kurczaka i warzywa, dodaj sos sojowy", "Podawaj razem z ryżem"]
+    },
+    {
+        _id: ObjectId('6577660abbac733a111c9427'),
+        name: "Makaron z warzywami i pesto",
+        type_of_meal: ["DINNER"],
+        portions: 4,
+        prepare_time: 20,
+        max_storage_time: 3,
+        diet: "wegetariańska",
+        ingredients: [
+            { name: "makaron", amount: 400, unit: "g" },
+            { name: "cukinia", amount: 1, unit: "szt" },
+            { name: "papryka", amount: 120, unit: "g" },
+            { name: "cebula", amount: 80, unit: "g" },
+            // { name: "czosnek", amount: 2, unit: "ząbki" },
+            { name: "pesto bazyliowe", amount: 100, unit: "g" },
+            { name: "oliwa z oliwek", amount: 30, unit: "ml" }
+        ],
+        steps: ["Ugotuj makaron al dente", "Pokrój cukinię, paprykę i cebulę", "Smaż cebulę i czosnek na oliwie, dodaj warzywa", "Dodaj pomidorki koktajlowe i smaż chwilę", "Wymieszaj warzywa z makaronem i pesto", "Podawaj natychmiast"]
     }
 ]);
 
 db.products.insertMany([
+    {
+        _id: ObjectId('66a50ea4bdacf34ef3f53655'),
+        name: "makaron",
+        packing_units: ["weight"],
+        main_unit: "g",
+        packing_sizes: [500,1000],
+        max_days_after_opening: 30
+    },
+    {
+        _id: ObjectId('66a50ebfbdacf34ef3f53657'),
+        name: "cukinia",
+        packing_units: ["weight", "szt."],
+        main_unit: "g",
+        standard_weight: 300,
+        packing_sizes: [0],
+        max_days_after_opening: 3
+    },
+    {
+        _id: ObjectId('66a50ebfbdacf34ef3f53658'),
+        name: "pesto bazyliowe",
+        packing_units: ["weight"],
+        main_unit: "g",
+        packing_sizes: [250,500],
+        max_days_after_opening: 10
+    },
     {
         _id: ObjectId('658c088e98487458f640453b'),
         name: "kasza jaglana",

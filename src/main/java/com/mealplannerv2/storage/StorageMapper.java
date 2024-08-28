@@ -45,6 +45,9 @@ class StorageMapper {
 //    }
 
     public static List<Ingredient> mapFromLeftoversToIngredients(List<LeftoverDto> productsToUseFirstly){
+        if(productsToUseFirstly == null){
+            return null;
+        }
         return productsToUseFirstly.stream()
                 .map(product -> new Ingredient(product.getName(), product.getAmount(), product.getUnit()))
                 .toList();

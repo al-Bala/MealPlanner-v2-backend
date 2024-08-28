@@ -6,8 +6,10 @@ import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.RecipeFilt
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -45,7 +47,11 @@ public class RecipeFetcherFacade {
             List<RecipeDto> recipesDto = RecipeMapper.mapFromRecipeListToRecipeDtoList(matchingIngNames);
             return recipeChooser.getRecipeWithTheMostMatchingOtherIngredients(recipesDto);
         }
-        return null;
+        return new RecipeDto(
+                new ObjectId("111111111111111111111111"),
+                "Recipe not found",
+                1,
+                Collections.emptyList());
     }
 
 }

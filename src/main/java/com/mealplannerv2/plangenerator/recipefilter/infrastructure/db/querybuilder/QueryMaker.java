@@ -19,6 +19,13 @@ public class QueryMaker {
 
     List<AggregationOperation> combinedOperations = new ArrayList<>();
 
+    public void setUsedRecipes(List<String> usedRecipes) {
+        if (!usedRecipes.isEmpty()) {
+            Criteria usedRecipesCriteria = Criteria.where("name").nin(usedRecipes);
+            combinedOperations.add(Aggregation.match(usedRecipesCriteria));
+        }
+    }
+
     public void setTypeOfMeal(String typeOfMeal) {
         if (typeOfMeal != null) {
             Criteria dietCriteria = Criteria.where("type_of_meal").is(typeOfMeal);
@@ -29,7 +36,7 @@ public class QueryMaker {
     }
 
     public void setDiet(String diet) {
-        if (diet != null) {
+        if (!diet.isEmpty()) {
             Criteria dietCriteria = Criteria.where("diet").is(diet);
             combinedOperations.add(Aggregation.match(dietCriteria));
         }
@@ -75,7 +82,7 @@ public class QueryMaker {
     }
 
     public void setProductsToAvoid(List<String> productsToAvoid) {
-        if (productsToAvoid != null) {
+        if (!productsToAvoid.isEmpty()) {
             Criteria productsToAvoidCriteria = Criteria.where("ingredients.name").nin(productsToAvoid);
             combinedOperations.add(Aggregation.match(productsToAvoidCriteria));
         }

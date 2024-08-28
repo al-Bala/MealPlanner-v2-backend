@@ -1,7 +1,8 @@
 package com.mealplannerv2.plangenerator;
 
+import com.mealplannerv2.ChosenRecipesList;
 import com.mealplannerv2.grocerylist.GroceryListFacade;
-import com.mealplannerv2.loginandregister.LoginAndRegisterFacade;
+import com.mealplannerv2.auth.AuthFacade;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.MealValues;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.Preferences;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.UnchangingPrefers;
@@ -36,7 +37,6 @@ public class PlanGeneratorFacade {
     private final IngredientsCalculator ingredientsCalculator;
     private final ProductFacade productFacade;
     private final GroceryListFacade groceryListFacade;
-    private final LoginAndRegisterFacade loginAndRegisterFacade;
     private final StorageFacade storageFacade;
 
     public PlannedDayDb createFirstDayOfPlan(Preferences preferences, List<IngredientDto> ingsFromUser){
@@ -74,7 +74,8 @@ public class PlanGeneratorFacade {
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, unchangingPrefers.portions(), dataForRecipesFiltering.forHowManyDays());
-            recipesForDay.add(new RecipeForDayDb(meal.getName(), matchingRecipe.getId().toString()));
+            recipesForDay.add(new RecipeForDayDb(meal.getName(), matchingRecipe.getId().toString(), matchingRecipe.getName()));
+            ChosenRecipesList.chosenRecipes.add(matchingRecipe.getName());
 
             List<IngredientDto> ingsInRecipe = matchingRecipe.getIngredients();
             System.out.println("Ings in recipe: " + ingsInRecipe);
