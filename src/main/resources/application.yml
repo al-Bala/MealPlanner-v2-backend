@@ -12,6 +12,9 @@ spring:
 
 auth:
   jwt:
-    expiration-days: 30
+#    access-expiration-min: 1
+    access-expiration-min: 5
+#    refresh-expiration-days: 7
+    refresh-expiration-days: 5
     secret: ${JWT_SECRET}
     issuer: meal-planner-backend

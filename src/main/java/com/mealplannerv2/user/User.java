@@ -1,4 +1,4 @@
-package com.mealplannerv2.loginandregister;
+package com.mealplannerv2.user;
 
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPreferences;
 import com.mealplannerv2.recipe.PlannedDayDb;

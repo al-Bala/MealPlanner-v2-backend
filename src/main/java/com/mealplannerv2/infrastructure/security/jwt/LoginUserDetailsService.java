@@ -1,7 +1,7 @@
 package com.mealplannerv2.infrastructure.security.jwt;
 
-import com.mealplannerv2.loginandregister.LoginAndRegisterFacade;
-import com.mealplannerv2.loginandregister.dto.UserDto;
+import com.mealplannerv2.auth.dto.UserDto;
+import com.mealplannerv2.user.UserFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,13 +10,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.Collections;
 
 @AllArgsConstructor
-public class LoginUserDetailsService implements UserDetailsService {
+class LoginUserDetailsService implements UserDetailsService {
 
-    private final LoginAndRegisterFacade loginAndRegisterFacade;
+    private final UserFacade userFacade;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws BadCredentialsException {
-        UserDto userDto = loginAndRegisterFacade.findByUsername(username);
+        UserDto userDto = userFacade.findByUsername(username);
         return getUser(userDto);
     }
 

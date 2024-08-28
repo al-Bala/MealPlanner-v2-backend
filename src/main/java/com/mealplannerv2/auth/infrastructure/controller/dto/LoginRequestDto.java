@@ -1,8 +1,8 @@
-package com.mealplannerv2.loginandregister.infrastructure.controller.dto;
+package com.mealplannerv2.auth.infrastructure.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record TokenRequestDto(
+public record LoginRequestDto(
         @NotBlank
         String username,
 

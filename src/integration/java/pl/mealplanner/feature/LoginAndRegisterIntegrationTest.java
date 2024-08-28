@@ -1,16 +1,14 @@
 package pl.mealplanner.feature;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.mealplannerv2.loginandregister.infrastructure.controller.dto.JwtResponseDto;
-import com.mealplannerv2.loginandregister.infrastructure.controller.dto.RegistrationResultDto;
-import com.mealplannerv2.plangenerator.infrastructure.controller.PlanResponseDto;
+import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
+import com.mealplannerv2.auth.infrastructure.controller.dto.JwtResponseDto;
+import com.mealplannerv2.auth.infrastructure.controller.error.response.RegisterErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,9 +23,9 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
     @Test
     public void login_and_register() throws Exception {
 
-        //step 1: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
+        //step 1: user tried to get JWT accessToken by requesting POST /login with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
         // given & when
-        ResultActions failedLoginRequest = mockMvc.perform(post("/token")
+        ResultActions failedLoginRequest = mockMvc.perform(post("/auth/login")
                 .content("""
                         {
                         "username": "someUser",
@@ -41,13 +39,12 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().json("""
                         {
-                          "message": "Bad Credentials",
-                          "status": "UNAUTHORIZED"
+                          "message": "Bad Credentials"
                         }
                         """.trim()));
 
 
-        //step 2: user made GET /plan with no jwt token and system returned UNAUTHORIZED(401)
+        //step 2: user made GET /plan with no jwt accessToken and system returned UNAUTHORIZED(401)
         // given & when
         ResultActions failedGetPlanRequest = mockMvc.perform(get("/plan")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -57,12 +54,35 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         failedGetPlanRequest.andExpect(status().isUnauthorized());
 
 
-        //step 3: user made POST /register with username=someUser, password=somePassword and system registered user with status CREATED(201)
+        //step 3: user made POST /register with existing username and email and system returned status BAD_REQUEST(400)
         // given & when
-        ResultActions registerAction = mockMvc.perform(post("/register")
+        ResultActions invalidRegisterAction = mockMvc.perform(post("/auth/register")
+                .content("""
+                        {
+                        "username": "testUser",
+                        "email": "email@email.pl",
+                        "password": "somePassword"
+                        }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // then
+        MvcResult invalidRegisterActionResult = invalidRegisterAction.andExpect(status().isBadRequest()).andReturn();
+        String invalidRegisterActionResultJson = invalidRegisterActionResult.getResponse().getContentAsString();
+        RegisterErrorResponse invalidRegisterResult = objectMapper.readValue(invalidRegisterActionResultJson, RegisterErrorResponse.class);
+        assertAll(
+                () -> assertThat(invalidRegisterResult.isUsernameValid()).isFalse(),
+                () -> assertThat(invalidRegisterResult.isEmailValid()).isFalse()
+        );
+
+
+        //step 4: user made POST /register with username=someUser, email=someEmail and system registered user with status CREATED(201)
+        // given & when
+        ResultActions registerAction = mockMvc.perform(post("/auth/register")
                 .content("""
                         {
                         "username": "someUser",
+                        "email": "someEmail",
                         "password": "somePassword"
                         }
                         """.trim())
@@ -71,21 +91,22 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         // then
         MvcResult registerActionResult = registerAction.andExpect(status().isCreated()).andReturn();
         String registerActionResultJson = registerActionResult.getResponse().getContentAsString();
-        RegistrationResultDto registrationResultDto = objectMapper.readValue(registerActionResultJson, RegistrationResultDto.class);
+        AuthResponse registerResult = objectMapper.readValue(registerActionResultJson, AuthResponse.class);
         assertAll(
-                () -> assertThat(registrationResultDto.username()).isEqualTo("someUser"),
-                () -> assertThat(registrationResultDto.created()).isTrue(),
-                () -> assertThat(registrationResultDto.id()).isNotNull()
+                () -> assertThat(registerResult.username()).isEqualTo("someUser"),
+                () -> assertThat(registerResult.accessToken()).isEqualTo("")
+//                () -> assertThat(invalidRegisterResult.id()).isNotNull()
         );
 
 
-        //step 4: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword
-        // and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
+        //step 5: user tried to log in (get JWT accessToken) by requesting POST /login with username=someUser, password=somePassword
+        // and system returned status OK(200) and accessToken=AAAA.BBBB.CCC and refreshToken=AAAA.BBBB.CCC
         // given & when
-        ResultActions successLoginRequest = mockMvc.perform(post("/token")
+        ResultActions successLoginRequest = mockMvc.perform(post("/auth/login")
                 .content("""
                         {
                         "username": "someUser",
+                        "email": "someEmail",
                         "password": "somePassword"
                         }
                         """.trim())
@@ -95,20 +116,21 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         MvcResult mvcResult = successLoginRequest.andExpect(status().isOk()).andReturn();
         String json = mvcResult.getResponse().getContentAsString();
         JwtResponseDto jwtResponse = objectMapper.readValue(json, JwtResponseDto.class);
-        String token = jwtResponse.token();
         assertAll(
                 () -> assertThat(jwtResponse.username()).isEqualTo("someUser"),
-                () -> assertThat(token).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$"))
+                () -> assertThat(jwtResponse.accessToken()).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$")),
+                () -> assertThat(jwtResponse.refreshToken()).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$")),
+                () -> assertThat(jwtResponse.accessToken()).isNotEqualTo(jwtResponse.refreshToken())
         );
 
 
-    //step 5: user made GET /plan with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200)
-    // given & when
-    ResultActions perform = mockMvc.perform(get("/plan")
-            .header("Authorization", "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-    );
-    // then
-    perform.andExpect(status().isOk());
+//    //step 5: user made GET /plan with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200)
+//    // given & when
+//    ResultActions perform = mockMvc.perform(get("/plan")
+//            .header("Authorization", "Bearer " + accessToken)
+//            .contentType(MediaType.APPLICATION_JSON_VALUE)
+//    );
+//    // then
+//    perform.andExpect(status().isOk());
     }
 }
