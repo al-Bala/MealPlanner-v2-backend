@@ -33,7 +33,7 @@ public class AuthFacade {
         return authService.saveUser(user);
     }
 
-    public AuthResponse login(LoginRequestDto loginCredentials, HttpServletResponse response) {
+    public LoginTokens login(LoginRequestDto loginCredentials) {
         JwtResponseDto jwtResponseDto = jwtAuthenticatorService.authenticateAndGenerateToken(loginCredentials);
         Token accessToken = new Token(
                 jwtResponseDto.accessToken(),
@@ -45,19 +45,16 @@ public class AuthFacade {
                 jwtResponseDto.username(),
                 TokenType.REFRESH
         );
-        response.setHeader("Set-Cookie",
-                String.format("%s=%s; Path=%s; HttpOnly; SameSite=%s",
-                        "refreshToken", jwtResponseDto.refreshToken(), "/", "Strict"));
-
         LoginTokens loginTokens = LoginTokens.builder()
                 .username(jwtResponseDto.username())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-        return tokenService.updateAllTokens(loginTokens);
+        tokenService.updateAllTokens(loginTokens);
+        return loginTokens;
     }
 
-    public AuthResponse refreshToken(String refreshToken) {
+    public String refreshToken(String refreshToken) {
         DecodedJWT decodedJWT = tokenDecoder.getDecodedJWT(refreshToken, "RefreshToken");
         String username = decodedJWT.getSubject();
         String newAccessToken = jwtAuthenticatorService.createAccessToken(username);
@@ -66,6 +63,13 @@ public class AuthFacade {
                 username,
                 TokenType.ACCESS
         );
-        return tokenService.updateAccessTokens(dbAccessToken);
+        tokenService.updateAccessTokens(dbAccessToken);
+        return newAccessToken;
+    }
+
+    public void setCookie(String tokenName, String tokenValue, HttpServletResponse response){
+        response.addHeader("Set-Cookie",
+                String.format("%s=%s; Path=%s; HttpOnly; Secure; SameSite=%s",
+                        tokenName, tokenValue, "/", "Strict"));
     }
 }

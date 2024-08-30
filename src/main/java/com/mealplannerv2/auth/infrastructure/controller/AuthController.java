@@ -3,8 +3,8 @@ package com.mealplannerv2.auth.infrastructure.controller;
 import com.mealplannerv2.auth.AuthFacade;
 import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
 import com.mealplannerv2.auth.infrastructure.controller.dto.LoginRequestDto;
+import com.mealplannerv2.auth.infrastructure.controller.dto.LoginTokens;
 import com.mealplannerv2.auth.infrastructure.controller.dto.RegisterRequest;
-import com.mealplannerv2.user.UserFacade;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthFacade authFacade;
-    private final UserFacade userFacade;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
@@ -27,17 +26,22 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<String> login(
             @Valid @RequestBody LoginRequestDto tokenRequest,
             HttpServletResponse response
     ) {
-        AuthResponse loginResponse = authFacade.login(tokenRequest, response);
-        return ResponseEntity.ok(loginResponse);
+        LoginTokens loginAuth = authFacade.login(tokenRequest);
+        authFacade.setCookie("accessToken", loginAuth.accessToken().getToken(), response);
+        authFacade.setCookie("refreshToken", loginAuth.refreshToken().getToken(), response);
+        return ResponseEntity.ok(loginAuth.username());
     }
 
     @GetMapping("/refresh-token")
-    public ResponseEntity<AuthResponse> refreshToken(@CookieValue(value = "refreshToken") String token) {
-        AuthResponse tokenResponse = authFacade.refreshToken(token);
-        return ResponseEntity.ok(tokenResponse);
+    public void refreshToken(
+            @CookieValue(value = "refreshToken") String token,
+            HttpServletResponse response
+    ) {
+        String newAccessToken = authFacade.refreshToken(token);
+        authFacade.setCookie("accessToken", newAccessToken, response);
     }
 }

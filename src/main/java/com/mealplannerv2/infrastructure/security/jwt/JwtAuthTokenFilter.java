@@ -5,6 +5,7 @@ import com.mealplannerv2.auth.token.TokenService;
 import com.mealplannerv2.infrastructure.security.jwt.error.InvalidJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,20 @@ class JwtAuthTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+        Cookie[] cookies = request.getCookies();
+        String token = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("accessToken")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+            if(token == null){
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
-        String token = authHeader.substring(7);
         final DecodedJWT decodedJWT;
         try {
             decodedJWT = tokenDecoder.getDecodedJWT(token, "Filter");

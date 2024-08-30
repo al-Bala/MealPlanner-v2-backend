@@ -1,6 +1,5 @@
 package com.mealplannerv2.auth.token;
 
-import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
 import com.mealplannerv2.auth.infrastructure.controller.dto.LoginTokens;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,22 +12,14 @@ public class TokenService {
 
     final private TokenRepository tokenRepository;
 
-    public AuthResponse updateAllTokens(LoginTokens loginTokens) {
+    public void updateAllTokens(LoginTokens loginTokens) {
         revokeAllUserTokens(loginTokens.username());
         tokenRepository.saveAll(List.of(loginTokens.accessToken(), loginTokens.refreshToken()));
-        return AuthResponse.builder()
-                .username(loginTokens.username())
-                .accessToken(loginTokens.accessToken().getToken())
-                .build();
     }
 
-    public AuthResponse updateAccessTokens(Token dbAccessToken) {
+    public void updateAccessTokens(Token dbAccessToken) {
         revokeAllUserAccessTokens(dbAccessToken.getUsername());
         tokenRepository.save(dbAccessToken);
-        return AuthResponse.builder()
-                .username(dbAccessToken.getUsername())
-                .accessToken(dbAccessToken.getToken())
-                .build();
     }
 
     public boolean isTokenValid(String token) {

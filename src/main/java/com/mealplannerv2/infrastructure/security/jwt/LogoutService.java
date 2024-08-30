@@ -2,6 +2,8 @@ package com.mealplannerv2.infrastructure.security.jwt;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mealplannerv2.auth.token.TokenService;
+import com.mealplannerv2.infrastructure.security.jwt.error.InvalidJwtException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -20,16 +22,27 @@ class LogoutService implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("accessToken")) {
+                    String token = cookie.getValue();
+                    try{
+                        DecodedJWT jwt = tokenDecoder.getDecodedJWT(token, "Logout");
+                        tokenService.revokeAllUserTokens(jwt.getSubject());
+                    } catch (InvalidJwtException e) {
+                        deleteCookie("accessToken", response);
+                        deleteCookie("refreshToken", response);
+                    }
+                    break;
+                }
+            }
         }
-        String token = authHeader.substring(7);
-        DecodedJWT jwt = tokenDecoder.getDecodedJWT(token, "Logout");
-        tokenService.revokeAllUserTokens(jwt.getSubject());
+    }
 
-        response.setHeader("Set-Cookie",
-                String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d; SameSite=%s",
-                        "refreshToken", "", "/", 0, "Strict"));
+    private void deleteCookie(String tokenName, HttpServletResponse response) {
+        response.addHeader("Set-Cookie",
+                String.format("%s=%s; Path=%s; HttpOnly; Secure; Max-Age=%d; SameSite=%s",
+                        tokenName, "", "/", 0, "Strict"));
     }
 }
