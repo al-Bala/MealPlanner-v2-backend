@@ -16,7 +16,7 @@ class LoginUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws BadCredentialsException {
-        UserDto userDto = userFacade.findByUsername(username);
+        UserDto userDto = userFacade.getByUsername(username);
         return getUser(userDto);
     }
 

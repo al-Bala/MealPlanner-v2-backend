@@ -10,11 +10,20 @@ spring:
       uri: mongodb://admin:admin@localhost:27018/mealplanner
 #      database: mealplanner
 
+history:
+  scheduler:
+#    occurrence: "0 0 1 * * *"   #every day at 01:00 AM
+    occurrence: "0 * * ? * *"   #every minute
+#    occurrence: "0 */5 * ? * *"   #every 5 minutes
+
+scheduling:
+  enabled: true
+
 auth:
   jwt:
 #    access-expiration-min: 1
-    access-expiration-min: 30
-#    refresh-expiration-days: 7
+    access-expiration-min: 310
+#    refresh-expiration-plans: 7
     refresh-expiration-days: 5
     secret: ${JWT_SECRET}
     issuer: meal-planner-backend

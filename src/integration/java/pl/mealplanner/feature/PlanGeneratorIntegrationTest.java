@@ -1,11 +1,10 @@
 package pl.mealplanner.feature;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.auth0.jwt.JWT;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
-import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
-import com.mealplannerv2.recipe.PlannedDayDb;
 import com.mealplannerv2.recipe.RecipeRepository;
-import org.bson.types.ObjectId;
+import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,9 +13,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
-import java.util.List;
-import java.util.Optional;
-
+import static com.auth0.jwt.algorithms.Algorithm.HMAC256;
+import static com.mealplannerv2.plangenerator.PlanGeneratorFacade.tempPlan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +25,14 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     RecipeRepository recipeRepository;
+
+    String token;
+
+    @BeforeEach
+    public void setup() throws Exception {
+        token = JWT.create().sign(HMAC256("secret"));
+    }
+
 
     @Test
     @WithMockUser(username = "testUser")
@@ -45,6 +51,8 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 
         // given & when
         ResultActions perform = mockMvc.perform(post("/plan/firstDay")
+                .servletPath("/plan/firstDay")
+                .cookie(new Cookie("accessToken", token))
                 .content("""
                         {
                            "unchangingPrefers": {
@@ -76,19 +84,19 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 
         MvcResult mvcResult = perform.andExpect(status().isOk()).andReturn();
         String jsonWithRecipe = mvcResult.getResponse().getContentAsString();
-        PlannedDayDb recipe = objectMapper.readValue(jsonWithRecipe, new TypeReference<>(){});
+        System.out.println(jsonWithRecipe);
 
+        System.out.println("TempPlan: ");
+        tempPlan.days().forEach(t -> System.out.println(t.getDate() + " " + t.getPlanned_day()));
         // TODO: przeliczanie porcji w wyświetlanym przepisie
-        List<Optional<Recipe>> list = recipe.planned_day().stream()
-                .map(r -> recipeRepository.findById(new ObjectId(r.recipeId())))
-                .toList();
-        System.out.println("Recipe: " + list);
 
         // step 2:
         // użytkownik wybiera jeden posiłek (obiad) na kolejny dzień
 
         // given & when
         ResultActions perform2 = mockMvc.perform(post("/plan/nextDay")
+                .servletPath("/plan/nextDay")
+                .cookie(new Cookie("accessToken", token))
                 .content("""
                         {
                            "date": "2024-06-13",
@@ -106,12 +114,9 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 
         MvcResult mvcResult2 = perform2.andExpect(status().isOk()).andReturn();
         String jsonWithRecipe2 = mvcResult2.getResponse().getContentAsString();
-        PlannedDayDb recipe2 = objectMapper.readValue(jsonWithRecipe2, new TypeReference<>(){});
-
-        List<Optional<Recipe>> list2 = recipe2.planned_day().stream()
-                .map(r -> recipeRepository.findById(new ObjectId(r.recipeId())))
-                .toList();
-        System.out.println("Recipe2: " + list2);
+        System.out.println(jsonWithRecipe2);
+        System.out.println("TempPlan: ");
+        tempPlan.days().forEach(t -> System.out.println(t.getDate() + " " + t.getPlanned_day()));
 
     }
 }

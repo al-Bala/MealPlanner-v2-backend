@@ -5,7 +5,7 @@ db.users.insertMany([
         _id: ObjectId('6672e2e8be614a1616e7552f'),
         // role: "USER",
         username: "testUser",
-        password: "password",
+        password: "$2a$10$jqMDdOlw8P60m686b1Q.GeLjpdPncHUVJiXZUSq0QNFxoyMe74q86",
         email: "email@email.pl",
         preferences: {
             diet: null,
@@ -13,39 +13,61 @@ db.users.insertMany([
             products_to_avoid: ["oliwki"]
         },
         // user_recipes: [""],
-        plan_history: [
-            {
-                day: "2024-06-13",
-                planned_day: [
-                    {
-                        type_of_meal: "DINNER",
-                        recipeId: {
-                            $oid: "6577660abbac733a111c9421"
+        history: {
+            plans: [
+                {
+                    days: [
+                        {
+                            date: "2024-09-09",
+                            planned_day: [
+                                {
+                                    type_of_meal: "DINNER",
+                                    recipeId: {
+                                        $oid: "6577660abbac733a111c9421"
+                                    },
+                                    recipeName: "Kasza jaglana z warzywami"
+                                }
+                            ]
+                        },
+                        {
+                            date: "2024-09-10",
+                            planned_day: [
+                                {
+                                    type_of_meal: "BREAKFAST",
+                                    recipeId: {
+                                        $oid: "6577660abbac733a111c9423"
+                                    },
+                                    recipeName: "Jajecznica z warzywami"
+                                },
+                                {
+                                    type_of_meal: "DINNER",
+                                    recipeId: {
+                                        $oid: "6577660abbac733a111c9425"
+                                    },
+                                    recipeName: "Ryż z warzywami i kurczakiem"
+                                }
+                            ]
                         }
-                        //Kasza jaglana z warzywami
-                    }
-                ]
-            },
-            {
-                day: "2024-06-14",
-                planned_day: [
-                    {
-                        type_of_meal: "BREAKFAST",
-                        recipeId: {
-                            $oid: "6577660abbac733a111c9423"
+                    ],
+                },
+                {
+                    days: [
+                        {
+                            date: "2024-09-11",
+                            planned_day: [
+                                {
+                                    type_of_meal: "DINNER",
+                                    recipeId: {
+                                        $oid: "6577660abbac733a111c9421"
+                                    },
+                                    recipeName: "Kasza jaglana z warzywami"
+                                }
+                            ]
                         }
-                        //Jajecznica z warzywami
-                    },
-                    {
-                        type_of_meal: "DINNER",
-                        recipeId: {
-                            $oid: "6577660abbac733a111c9425"
-                        }
-                        //Ryż z warzywami i kurczakiem
-                    }
-                ]
-            },
-        ],
+                    ],
+                },
+            ],
+        }
         // grocery_list:[]
     }
 ]);
@@ -60,10 +82,10 @@ db.recipes.insertMany([
         max_storage_time: 2,
         diet: "wegetariańska",
         ingredients: [
-            { name: "kasza jaglana", amount: 200, unit: "g" },
-            { name: "marchew", amount: 200, unit: "g" },
-            { name: "brokul", amount: 150, unit: "g" },
-            { name: "oliwa z oliwek", amount: 30, unit: "ml" }
+            {name: "kasza jaglana", amount: 200, unit: "g"},
+            {name: "marchew", amount: 200, unit: "g"},
+            {name: "brokul", amount: 150, unit: "g"},
+            {name: "oliwa z oliwek", amount: 30, unit: "ml"}
         ],
         steps: ["Ugotuj kaszę", "Pokrój warzywa", "Smaż warzywa na oliwie", "Podawaj razem"]
     },
@@ -76,10 +98,10 @@ db.recipes.insertMany([
         max_storage_time: 1,
         diet: "wegetariańska",
         ingredients: [
-            { name: "jabłko", amount: 160, unit: "g" },
-            { name: "kiwi", amount: 150, unit: "g" },
-            { name: "truskawki", amount: 120, unit: "g" },
-            { name: "miód", amount: 20, unit: "ml" }
+            {name: "jabłko", amount: 160, unit: "g"},
+            {name: "kiwi", amount: 150, unit: "g"},
+            {name: "truskawki", amount: 120, unit: "g"},
+            {name: "miód", amount: 20, unit: "ml"}
         ],
         steps: ["Pokrój owoce", "Połącz z miodem", "Delikatnie wymieszaj", "Gotowe do podania"]
     },
@@ -92,11 +114,11 @@ db.recipes.insertMany([
         max_storage_time: 1,
         diet: "wegetariańska",
         ingredients: [
-            { name: "jajko", amount: 4, unit: "szt." },
-            { name: "papryka", amount: 140, unit: "g" },
-            { name: "pomidor", amount: 180, unit: "g" },
-            { name: "cebula", amount: 80, unit: "g" },
-            { name: "oliwa z oliwek", amount: 20, unit: "ml" }
+            {name: "jajko", amount: 4, unit: "szt."},
+            {name: "papryka", amount: 140, unit: "g"},
+            {name: "pomidor", amount: 180, unit: "g"},
+            {name: "cebula", amount: 80, unit: "g"},
+            {name: "oliwa z oliwek", amount: 20, unit: "ml"}
         ],
         steps: ["Ubij jajka", "Pokrój warzywa", "Smaż warzywa, dodaj jajka", "Podawaj gorące"]
     },
@@ -109,11 +131,11 @@ db.recipes.insertMany([
         max_storage_time: 1,
         diet: "wegetariańska",
         ingredients: [
-            { name: "banan", amount: 70, unit: "g" },
-            { name: "truskawki", amount: 100, unit: "g" },
-            { name: "kiwi", amount: 50, unit: "g" },
-            { name: "sok pomarańczowy", amount: 150, unit: "ml" },
-            { name: "jogurt naturalny", amount: 50, unit: "g" }
+            {name: "banan", amount: 70, unit: "g"},
+            {name: "truskawki", amount: 100, unit: "g"},
+            {name: "kiwi", amount: 50, unit: "g"},
+            {name: "sok pomarańczowy", amount: 150, unit: "ml"},
+            {name: "jogurt naturalny", amount: 50, unit: "g"}
         ],
         steps: ["Włóż owoce do blendera", "Dodaj sok i jogurt", "Miksuj do uzyskania gładkiego koktajlu", "Gotowe do picia"]
     },
@@ -126,11 +148,11 @@ db.recipes.insertMany([
         max_storage_time: 2,
         diet: "mięsna",
         ingredients: [
-            { name: "ryż", amount: 300, unit: "g" },
-            { name: "kurczak", amount: 250, unit: "g" },
-            { name: "marchew", amount: 200, unit: "g" },
-            { name: "brokul", amount: 150, unit: "g" },
-            { name: "sos sojowy", amount: 30, unit: "ml" }
+            {name: "ryż", amount: 300, unit: "g"},
+            {name: "kurczak", amount: 250, unit: "g"},
+            {name: "marchew", amount: 200, unit: "g"},
+            {name: "brokul", amount: 150, unit: "g"},
+            {name: "sos sojowy", amount: 30, unit: "ml"}
         ],
         steps: ["Ugotuj ryż", "Pokrój kurczaka i warzywa", "Smaż kurczaka i warzywa, dodaj sos sojowy", "Podawaj razem z ryżem"]
     },
@@ -143,13 +165,13 @@ db.recipes.insertMany([
         max_storage_time: 3,
         diet: "wegetariańska",
         ingredients: [
-            { name: "makaron", amount: 400, unit: "g" },
-            { name: "cukinia", amount: 1, unit: "szt" },
-            { name: "papryka", amount: 120, unit: "g" },
-            { name: "cebula", amount: 80, unit: "g" },
+            {name: "makaron", amount: 400, unit: "g"},
+            {name: "cukinia", amount: 1, unit: "szt"},
+            {name: "papryka", amount: 120, unit: "g"},
+            {name: "cebula", amount: 80, unit: "g"},
             // { name: "czosnek", amount: 2, unit: "ząbki" },
-            { name: "pesto bazyliowe", amount: 100, unit: "g" },
-            { name: "oliwa z oliwek", amount: 30, unit: "ml" }
+            {name: "pesto bazyliowe", amount: 100, unit: "g"},
+            {name: "oliwa z oliwek", amount: 30, unit: "ml"}
         ],
         steps: ["Ugotuj makaron al dente", "Pokrój cukinię, paprykę i cebulę", "Smaż cebulę i czosnek na oliwie, dodaj warzywa", "Dodaj pomidorki koktajlowe i smaż chwilę", "Wymieszaj warzywa z makaronem i pesto", "Podawaj natychmiast"]
     }
@@ -162,7 +184,7 @@ db.products.insertMany([
         name: "makaron",
         packing_units: ["weight"],
         main_unit: "g",
-        packing_sizes: [500,1000],
+        packing_sizes: [500, 1000],
         max_days_after_opening: 30
     },
     {
@@ -179,7 +201,7 @@ db.products.insertMany([
         name: "pesto bazyliowe",
         packing_units: ["weight"],
         main_unit: "g",
-        packing_sizes: [250,500],
+        packing_sizes: [250, 500],
         max_days_after_opening: 10
     },
     {
@@ -187,7 +209,7 @@ db.products.insertMany([
         name: "kasza jaglana",
         packing_units: ["weight", "measuring"],
         main_unit: "g",
-        packing_sizes: [400,1000],
+        packing_sizes: [400, 1000],
         max_days_after_opening: 30
     },
     {
@@ -213,7 +235,7 @@ db.products.insertMany([
         name: "oliwa z oliwek",
         packing_units: ["capacity", "measuring"],
         main_unit: "ml",
-        packing_sizes: [50,250,1000],
+        packing_sizes: [50, 250, 1000],
         max_days_after_opening: 30
     },
     {
@@ -280,7 +302,7 @@ db.products.insertMany([
         name: "jajko",
         packing_units: ["szt."],
         main_unit: "szt.",
-        packing_sizes: [6,10],
+        packing_sizes: [6, 10],
         max_days_after_opening: 1
     },
     {

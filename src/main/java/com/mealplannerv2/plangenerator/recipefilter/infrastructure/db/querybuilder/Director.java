@@ -1,7 +1,8 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
-import com.mealplannerv2.ChosenRecipesList;
+import com.mealplannerv2.ChangedRecipesList;
 import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
+import com.mealplannerv2.user.UserFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ public class Director {
     private final NACriteriaBuilder namesAmountsCriteria = new NamesAmountsCriteria();
     private final NACriteriaBuilder onlyNamesCriteria = new OnlyNamesCriteria();
     private final List<Aggregation> aggregations = new ArrayList<>();
+    private final UserFacade userFacade;
 
     public List<Aggregation> namesAndAmounts(DataForRecipeFiltering info){
         aggregations.clear();
@@ -41,7 +43,8 @@ public class Director {
         queryMaker.setTypeOfMeal(info.typeOfMeal());
         queryMaker.setMaxStorageTime(info.forHowManyDays());
         queryMaker.setDiet(info.diet());
-        queryMaker.setUsedRecipes(ChosenRecipesList.chosenRecipes);
+        queryMaker.setChangedRecipes(ChangedRecipesList.changedRecipes);
+        queryMaker.setRecipesFromHistory(userFacade.getRecipesNames());
         return queryMaker.getAggregation();
     }
 

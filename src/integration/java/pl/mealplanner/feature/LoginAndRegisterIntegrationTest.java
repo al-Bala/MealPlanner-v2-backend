@@ -1,8 +1,8 @@
 package pl.mealplanner.feature;
 
 import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
-import com.mealplannerv2.auth.infrastructure.controller.dto.JwtResponseDto;
 import com.mealplannerv2.auth.infrastructure.controller.error.response.RegisterErrorResponse;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,6 +26,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         //step 1: user tried to get JWT accessToken by requesting POST /login with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
         // given & when
         ResultActions failedLoginRequest = mockMvc.perform(post("/auth/login")
+                .servletPath("/auth/login")
                 .content("""
                         {
                         "username": "someUser",
@@ -57,6 +58,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         //step 3: user made POST /register with existing username and email and system returned status BAD_REQUEST(400)
         // given & when
         ResultActions invalidRegisterAction = mockMvc.perform(post("/auth/register")
+                .servletPath("/auth/register")
                 .content("""
                         {
                         "username": "testUser",
@@ -79,6 +81,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         //step 4: user made POST /register with username=someUser, email=someEmail and system registered user with status CREATED(201)
         // given & when
         ResultActions registerAction = mockMvc.perform(post("/auth/register")
+                .servletPath("/auth/register")
                 .content("""
                         {
                         "username": "someUser",
@@ -103,6 +106,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         // and system returned status OK(200) and accessToken=AAAA.BBBB.CCC and refreshToken=AAAA.BBBB.CCC
         // given & when
         ResultActions successLoginRequest = mockMvc.perform(post("/auth/login")
+                .servletPath("/auth/login")
                 .content("""
                         {
                         "username": "someUser",
@@ -114,13 +118,14 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         );
         // then
         MvcResult mvcResult = successLoginRequest.andExpect(status().isOk()).andReturn();
-        String json = mvcResult.getResponse().getContentAsString();
-        JwtResponseDto jwtResponse = objectMapper.readValue(json, JwtResponseDto.class);
+        Cookie accessToken = mvcResult.getResponse().getCookie("accessToken");
+        Cookie refreshToken = mvcResult.getResponse().getCookie("refreshToken");
+        String username = mvcResult.getResponse().getContentAsString();
         assertAll(
-                () -> assertThat(jwtResponse.username()).isEqualTo("someUser"),
-                () -> assertThat(jwtResponse.accessToken()).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$")),
-                () -> assertThat(jwtResponse.refreshToken()).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$")),
-                () -> assertThat(jwtResponse.accessToken()).isNotEqualTo(jwtResponse.refreshToken())
+                () -> assertThat(username).isEqualTo("someUser"),
+                () -> assertThat(accessToken.getValue()).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$")),
+                () -> assertThat(refreshToken.getValue()).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$")),
+                () -> assertThat(accessToken.getValue()).isNotEqualTo(refreshToken.getValue())
         );
 
 

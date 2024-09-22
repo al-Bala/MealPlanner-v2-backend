@@ -15,17 +15,27 @@ import java.util.List;
 @Log4j2
 @Getter
 @Component
-public class QueryMaker {
+public class QueryMaker implements QueryInterface{
 
     List<AggregationOperation> combinedOperations = new ArrayList<>();
 
-    public void setUsedRecipes(List<String> usedRecipes) {
-        if (!usedRecipes.isEmpty()) {
-            Criteria usedRecipesCriteria = Criteria.where("name").nin(usedRecipes);
+    @Override
+    public void setRecipesFromHistory(List<String> recipesHistory) {
+        if (!recipesHistory.isEmpty()) {
+            Criteria recipesHistoryCriteria = Criteria.where("name").nin(recipesHistory);
+            combinedOperations.add(Aggregation.match(recipesHistoryCriteria));
+        }
+    }
+
+    @Override
+    public void setChangedRecipes(List<String> changedRecipes) {
+        if (!changedRecipes.isEmpty()) {
+            Criteria usedRecipesCriteria = Criteria.where("name").nin(changedRecipes);
             combinedOperations.add(Aggregation.match(usedRecipesCriteria));
         }
     }
 
+    @Override
     public void setTypeOfMeal(String typeOfMeal) {
         if (typeOfMeal != null) {
             Criteria dietCriteria = Criteria.where("type_of_meal").is(typeOfMeal);
@@ -35,6 +45,7 @@ public class QueryMaker {
         }
     }
 
+    @Override
     public void setDiet(String diet) {
         if (!diet.isEmpty()) {
             Criteria dietCriteria = Criteria.where("diet").is(diet);
@@ -42,6 +53,7 @@ public class QueryMaker {
         }
     }
 
+    @Override
     public void setMaxStorageTime(int daysNr) {
         if (daysNr == 1 || daysNr == 2) {
             Criteria maxStorageTimeCriteria = Criteria.where("max_storage_time").gte(daysNr);
@@ -51,6 +63,7 @@ public class QueryMaker {
         }
     }
 
+    @Override
     public void setPrepareTime(Integer time) {
         if (time != -1) {
             Criteria prepareTimeCriteria = Criteria.where("prepare_time").lte(time);
@@ -58,6 +71,7 @@ public class QueryMaker {
         }
     }
 
+    @Override
     public void setIngredientsToUseFirstly(List<Ingredient> ingredients, Criteria namesAmountCriteria) {
         if (ingredients != null) {
             List<AggregationOperation> productsToUseAgr = Arrays.asList(
@@ -81,6 +95,7 @@ public class QueryMaker {
         }
     }
 
+    @Override
     public void setProductsToAvoid(List<String> productsToAvoid) {
         if (!productsToAvoid.isEmpty()) {
             Criteria productsToAvoidCriteria = Criteria.where("ingredients.name").nin(productsToAvoid);
@@ -88,10 +103,12 @@ public class QueryMaker {
         }
     }
 
+    @Override
     public Aggregation getAggregation() {
         return Aggregation.newAggregation(combinedOperations);
     }
 
+    @Override
     public void clearOperationsList() {
         combinedOperations.clear();
     }

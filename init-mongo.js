@@ -69,7 +69,9 @@ db.recipes.insertMany([
         prepare_time: 1000000,
         max_storage_time: 1000000,
         diet: "",
-        ingredients: [],
+        ingredients: [{
+            name: "ing", amount: 100, unit: "g"
+        }],
         steps: []
     },
     {
@@ -177,6 +179,14 @@ db.recipes.insertMany([
 ]);
 
 db.products.insertMany([
+    {
+        _id: ObjectId('66ef164c13cafc00077199f1'),
+        name: "ing",
+        packing_units: ["weight"],
+        main_unit: "g",
+        packing_sizes: [100],
+        max_days_after_opening: 30
+    },
     {
         _id: ObjectId('66a50ea4bdacf34ef3f53655'),
         name: "makaron",

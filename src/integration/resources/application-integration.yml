@@ -3,3 +3,10 @@ auth:
     expiration-days: 30
     secret: secret
     issuer: meal-planner-backend
+
+history:
+  scheduler:
+    occurrence: "*/2 * * * * *"    #every 2 seconds
+
+scheduling:
+  enabled: false

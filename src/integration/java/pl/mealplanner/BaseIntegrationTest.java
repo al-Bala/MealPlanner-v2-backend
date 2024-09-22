@@ -16,7 +16,7 @@ import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 @SpringBootTest(classes = MealPlannerV2Application.class)
-@ActiveProfiles("integration")
+@ActiveProfiles("integration")  // uwzglednia testowe application.yml
 @AutoConfigureMockMvc
 @Testcontainers
 public class BaseIntegrationTest {

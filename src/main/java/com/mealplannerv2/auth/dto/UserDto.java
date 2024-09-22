@@ -1,7 +1,7 @@
 package com.mealplannerv2.auth.dto;
 
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPreferences;
-import com.mealplannerv2.recipe.PlannedDayDb;
+import com.mealplannerv2.recipe.History;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -16,5 +16,5 @@ public class UserDto {
     private String email;
     private String password;
     private SavedPreferences preferences;
-    List<PlannedDayDb> plan;
+    History history;
 }

@@ -11,7 +11,7 @@ public class UserMapper {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .preferences(user.getPreferences())
-                .plan(user.getPlanHistory())
+                .history(user.getHistory())
                 .build();
     }
 }

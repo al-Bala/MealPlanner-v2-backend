@@ -1,8 +1,7 @@
 package com.mealplannerv2.plangenerator;
 
-import com.mealplannerv2.ChosenRecipesList;
+import com.mealplannerv2.ChangedRecipesList;
 import com.mealplannerv2.grocerylist.GroceryListFacade;
-import com.mealplannerv2.auth.AuthFacade;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.MealValues;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.Preferences;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.UnchangingPrefers;
@@ -11,12 +10,14 @@ import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.product.dto.ChosenPacket;
-import com.mealplannerv2.recipe.PlannedDayDb;
-import com.mealplannerv2.recipe.RecipeForDayDb;
+import com.mealplannerv2.recipe.DayPlan;
+import com.mealplannerv2.recipe.Plan;
+import com.mealplannerv2.recipe.RecipeDay;
 import com.mealplannerv2.storage.IngredientDto;
 import com.mealplannerv2.storage.StorageFacade;
 import com.mealplannerv2.storage.leftovers.LeftoversFacade;
 import com.mealplannerv2.storage.useringredients.UserIngsFacade;
+import com.mealplannerv2.user.UserFacade;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -25,11 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.mealplannerv2.ChangedRecipesList.changedRecipes;
+
 @Log4j2
 @AllArgsConstructor
 @Component
 public class PlanGeneratorFacade {
 
+    public final static Plan tempPlan = new Plan(new ArrayList<>());
     private final RecipeFetcherFacade recipeFetcherFacade;
     private final LeftoversFacade leftoversFacade;
     private final UserIngsFacade userIngsFacade;
@@ -38,26 +42,29 @@ public class PlanGeneratorFacade {
     private final ProductFacade productFacade;
     private final GroceryListFacade groceryListFacade;
     private final StorageFacade storageFacade;
+    private final UserFacade userFacade;
 
-    public PlannedDayDb createFirstDayOfPlan(Preferences preferences, List<IngredientDto> ingsFromUser){
+    public DayPlan createFirstDayOfPlan(Preferences preferences, List<IngredientDto> ingsFromUser){
+        changedRecipes.clear();
+        tempPlan.days().clear();
         userIngsFacade.addAllToUserIngs(ingsFromUser);
         return createDay(preferences);
     }
 
-    public PlannedDayDb createNextDayOfPlan(Preferences preferences){
+    public DayPlan createNextDayOfPlan(Preferences preferences){
         if (isNoMealSelected(preferences.mealsValues())){
             return null;
         }
         return createDay(preferences);
     }
 
-    private PlannedDayDb createDay(Preferences preferences){
+    private DayPlan createDay(Preferences preferences){
         System.out.println("UserIngs1: " + userIngsFacade.getUserIngs());
         System.out.println("Leftovers1: " + leftoversFacade.getLeftovers());
 
         UnchangingPrefers unchangingPrefers = preferences.unchangingPrefers();
         List<MealValues> mealValues = preferences.mealsValues();
-        List<RecipeForDayDb> recipesForDay = new ArrayList<>();
+        List<RecipeDay> recipesForDay = new ArrayList<>();
 
         List<Meal> meals = Meal.getAllMeals(mealValues);
         for(Meal meal: meals){
@@ -74,8 +81,8 @@ public class PlanGeneratorFacade {
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(dataForRecipesFiltering);
             ingredientsCalculator.setCalculatedIngredients(matchingRecipe, unchangingPrefers.portions(), dataForRecipesFiltering.forHowManyDays());
-            recipesForDay.add(new RecipeForDayDb(meal.getName(), matchingRecipe.getId().toString(), matchingRecipe.getName()));
-            ChosenRecipesList.chosenRecipes.add(matchingRecipe.getName());
+            recipesForDay.add(new RecipeDay(meal.getName(), matchingRecipe.getId().toString(), matchingRecipe.getName()));
+            ChangedRecipesList.changedRecipes.add(matchingRecipe.getName());
 
             List<IngredientDto> ingsInRecipe = matchingRecipe.getIngredients();
             System.out.println("Ings in recipe: " + ingsInRecipe);
@@ -88,14 +95,17 @@ public class PlanGeneratorFacade {
         // na koniec po obliczeniu resztek i dodaniu ich do storage
         leftoversFacade.updateSpoilDatesForLeftovers();
 
-        PlannedDayDb plannedDay = PlannedDayDb.builder()
-                .day(preferences.date())
+        DayPlan plannedDay = DayPlan.builder()
+                .date(preferences.date())
                 .planned_day(recipesForDay)
                 .build();
 //        List<PlannedDayDb> plannedDayDbs = loginAndRegisterFacade.saveGeneratedRecipe(plannedDay);
 //        System.out.println(plannedDayDbs);
         System.out.println("UserIngs2: " + userIngsFacade.getUserIngs());
         System.out.println("Leftovers2: " + leftoversFacade.getLeftovers());
+
+        tempPlan.days().add(plannedDay);
+        // TODO: return tempPlan --> zmiana odczytu na froncie
         return plannedDay;
     }
 
@@ -120,8 +130,17 @@ public class PlanGeneratorFacade {
         return false;
     }
 
-    public PlannedDay changeLastDay(PlannedDay dayToChange){
-        return null;
+    public DayPlan changeLastDay(Preferences preferences){
+        // TODO: zachowywanie zmienionych przepisów tylko dla jednego dnia a nie całego planu
+        int tempSize = tempPlan.days().size();
+        DayPlan lastDay = tempPlan.days().remove(tempSize - 1);
+        List<String> lastDayRecipesNames = userFacade.getRecipesNames(lastDay);
+        changedRecipes.addAll(lastDayRecipesNames);
+        return createNextDayOfPlan(preferences);
+    }
+
+    public void savePlan(){
+        userFacade.saveNewPlan(tempPlan);
     }
 
     public Set<IngredientDto> getGroceryList(){
