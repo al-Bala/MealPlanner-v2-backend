@@ -13,7 +13,7 @@ public class TokenService {
     final private TokenRepository tokenRepository;
 
     public void updateAllTokens(LoginTokens loginTokens) {
-        revokeAllUserTokens(loginTokens.username());
+        revokeAllUserTokens(loginTokens.userId());
         tokenRepository.saveAll(List.of(loginTokens.accessToken(), loginTokens.refreshToken()));
     }
 

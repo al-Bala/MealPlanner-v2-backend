@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator.recipefilter;
 
-import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
+import com.mealplannerv2.plangenerator.RecipeFilters;
 import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.RecipeFilterRepositoryImpl;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
@@ -21,7 +21,7 @@ public class RecipeFetcherFacade {
     private final RecipeFilterRepositoryImpl mealsFilterRepository;
     private final RecipeChooser recipeChooser;
 
-    public RecipeDto fetchRecipeByPreferences(DataForRecipeFiltering info2){
+    public RecipeDto fetchRecipeByPreferences(RecipeFilters info2){
 
         List<Recipe> matchingIngNamesAndAmounts = mealsFilterRepository.findRecipesWithMatchingIngNamesAndAmounts(info2);
         if(matchingIngNamesAndAmounts == null){
@@ -37,7 +37,7 @@ public class RecipeFetcherFacade {
         }
     }
 
-    private RecipeDto findOnlyByIngNames(DataForRecipeFiltering info){
+    private RecipeDto findOnlyByIngNames(RecipeFilters info){
         List<Recipe> matchingIngNames = mealsFilterRepository.findRecipesWithMatchingIngNames(info);
         if(matchingIngNames == null){
             log.error("[Secound try] Not found any recipe with matching ingredient's name.");

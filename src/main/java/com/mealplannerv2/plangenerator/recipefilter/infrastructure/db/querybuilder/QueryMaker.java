@@ -97,7 +97,8 @@ public class QueryMaker implements QueryInterface{
 
     @Override
     public void setProductsToAvoid(List<String> productsToAvoid) {
-        if (!productsToAvoid.isEmpty()) {
+//        if (!productsToAvoid.isEmpty()) {
+        if (productsToAvoid != null) {
             Criteria productsToAvoidCriteria = Criteria.where("ingredients.name").nin(productsToAvoid);
             combinedOperations.add(Aggregation.match(productsToAvoidCriteria));
         }

@@ -22,16 +22,22 @@ db.users.insertMany([
             portions: 0,
             products_to_avoid: ['']
         },
-        plan_history: [
+        plans: [
             {
-                day: '',
-                planned_day: [
+                days: [
                     {
-                        type_of_meal: '',
-                        recipeId: '',
-                        portions_for_recipe: 0
+                        date: '',
+                        planned_day: [
+                            {
+                                type_of_meal: '',
+                                recipeId: {
+                                    $oid: ''
+                                },
+                                recipeName: ''
+                            }
+                        ]
                     }
-                ]
+                ],
             }
         ]
     }

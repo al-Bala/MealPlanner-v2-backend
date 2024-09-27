@@ -1,7 +1,7 @@
 package com.mealplannerv2.user;
 
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPreferences;
-import com.mealplannerv2.recipe.History;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
+import com.mealplannerv2.recipe.Plan;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -34,13 +34,10 @@ public class User implements UserDetails {
     String password;
 
     @Field("preferences")
-    SavedPreferences preferences;
+    SavedPrefers preferences;
 
-//    @Field("products_in_use")
-//    List<IngredientDto> productsInUse;
-
-    @Field("history")
-    History history;
+    @Field("plans")
+    List<Plan> plans;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

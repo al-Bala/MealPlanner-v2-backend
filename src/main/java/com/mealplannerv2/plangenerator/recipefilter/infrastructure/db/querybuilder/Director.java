@@ -1,7 +1,7 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
 import com.mealplannerv2.ChangedRecipesList;
-import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
+import com.mealplannerv2.plangenerator.RecipeFilters;
 import com.mealplannerv2.user.UserFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -20,7 +20,7 @@ public class Director {
     private final List<Aggregation> aggregations = new ArrayList<>();
     private final UserFacade userFacade;
 
-    public List<Aggregation> namesAndAmounts(DataForRecipeFiltering info){
+    public List<Aggregation> namesAndAmounts(RecipeFilters info){
         aggregations.clear();
         aggregations.add(firstTry(info, namesAmountsCriteria));
         aggregations.add(secondTry(info, namesAmountsCriteria));
@@ -29,7 +29,7 @@ public class Director {
         return aggregations;
     }
 
-    public List<Aggregation> names(DataForRecipeFiltering info){
+    public List<Aggregation> names(RecipeFilters info){
         aggregations.clear();
         aggregations.add(firstTry(info, onlyNamesCriteria));
         aggregations.add(secondTry(info, onlyNamesCriteria));
@@ -38,29 +38,29 @@ public class Director {
         return aggregations;
     }
 
-    Aggregation fourthTry(DataForRecipeFiltering info){
+    Aggregation fourthTry(RecipeFilters info){
         queryMaker.clearOperationsList();
         queryMaker.setTypeOfMeal(info.typeOfMeal());
         queryMaker.setMaxStorageTime(info.forHowManyDays());
         queryMaker.setDiet(info.diet());
-        queryMaker.setChangedRecipes(ChangedRecipesList.changedRecipes);
+        queryMaker.setChangedRecipes(ChangedRecipesList.usedRecipes);
         queryMaker.setRecipesFromHistory(userFacade.getRecipesNames());
         return queryMaker.getAggregation();
     }
 
-    Aggregation thirdTry(DataForRecipeFiltering info, NACriteriaBuilder criteria){
+    Aggregation thirdTry(RecipeFilters info, NACriteriaBuilder criteria){
         fourthTry(info);
         queryMaker.setIngredientsToUseFirstly(info.ingredientsToUseFirstly(), criteria.getCriteria(info.ingredientsToUseFirstly()));
         return queryMaker.getAggregation();
     }
 
-    Aggregation secondTry(DataForRecipeFiltering info, NACriteriaBuilder criteria){
+    Aggregation secondTry(RecipeFilters info, NACriteriaBuilder criteria){
         thirdTry(info, criteria);
         queryMaker.setPrepareTime(info.timeForPrepareMin());
         return queryMaker.getAggregation();
     }
 
-    Aggregation firstTry(DataForRecipeFiltering info, NACriteriaBuilder criteria){
+    Aggregation firstTry(RecipeFilters info, NACriteriaBuilder criteria){
         secondTry(info, criteria);
         queryMaker.setProductsToAvoid(info.productsToAvoid());
         return queryMaker.getAggregation();

@@ -17,7 +17,8 @@ history:
 #    occurrence: "0 */5 * ? * *"   #every 5 minutes
 
 scheduling:
-  enabled: true
+#  enabled: true
+  enabled: false
 
 auth:
   jwt:

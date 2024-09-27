@@ -1,11 +1,10 @@
 package com.mealplannerv2.user;
 
 import com.mealplannerv2.auth.dto.UserDto;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
 import com.mealplannerv2.recipe.DayPlan;
-import com.mealplannerv2.recipe.History;
 import com.mealplannerv2.recipe.Plan;
 import com.mealplannerv2.recipe.RecipeDay;
-import com.mealplannerv2.user.planhistory.error.DuplicatePlanException;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,10 +14,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import static java.lang.Math.abs;
 
@@ -38,17 +38,35 @@ public class UserFacade {
                 .orElseThrow(() -> new BadCredentialsException("Username not found"));
     }
 
-    public History getHistory() {
+    public List<Plan> getUserPlans() {
         User user = getUser();
-        return user.getHistory();
+        if(user.getPlans() == null){
+            return new ArrayList<>();
+        }
+        return user.getPlans();
+    }
+
+    public SavedPrefers getSavedPrefers(String userId) {
+        UserDto userDto = getById(userId);
+        return userDto.getPreferences();
+    }
+
+    public void updateSavedPrefers(String userId, SavedPrefers savedPrefers) {
+        UserDto userDto = getById(userId);
+        // TODO: null
+        if(!userDto.getPreferences().equals(savedPrefers)){
+            userDto.setPreferences(savedPrefers);
+            User user = UserMapper.mapFromUserDtoToUser(userDto);
+            repository.save(user);
+        }
     }
 
     public List<String> getRecipesNames() {
-        History history = getHistory();
-        if (history == null || history.plans().isEmpty()) {
+        List<Plan> plans = getUserPlans();
+        if (plans == null || plans.isEmpty()) {
             return Collections.emptyList();
         }
-        return history.plans().stream()
+        return plans.stream()
                 .flatMap(plan -> plan.days().stream())
                 .map(DayPlan::getPlanned_day)
                 .flatMap(List::stream)
@@ -62,26 +80,17 @@ public class UserFacade {
                 .toList();
     }
 
-    public void saveNewPlan(Plan tempPlan) {
-        User user = getUser();
-        History history = user.getHistory();
-        if(history == null){
-            history = new History(new ArrayList<>());
+    public void saveNewPlan(String userId, List<DayPlan> tempDays) {
+        UserDto userDto = getById(userId);
+        List<Plan> plans = userDto.getPlans();
+        if(plans == null){
+            plans = new ArrayList<>();
         }
-        for(Plan plan : history.plans()){
-            Set<LocalDate> dates = plan.days().stream()
-                    .map(DayPlan::getDate)
-                    .collect(Collectors.toSet());
-            Set<LocalDate> tempDates = tempPlan.days().stream()
-                    .map(DayPlan::getDate)
-                    .collect(Collectors.toSet());
-            if(dates.containsAll(tempDates) && plan.days().size() == tempPlan.days().size()){
-                throw new DuplicatePlanException("There is a duplicate plan in history.");
-            }
-        }
-        history.plans().add(tempPlan);
-        history.plans().sort(Comparator.comparing(plan -> plan.days().get(0).getDate()));
-        user.setHistory(history);
+        Plan newPlan = new Plan(tempDays);
+        plans.add(newPlan);
+        plans.sort(Comparator.comparing(plan -> plan.days().get(0).getDate()));
+        userDto.setPlans(plans);
+        User user = UserMapper.mapFromUserDtoToUser(userDto);
         repository.save(user);
     }
 
@@ -89,30 +98,36 @@ public class UserFacade {
 //        System.out.println("UserFacade clock: " + ZonedDateTime.now(clock));
         List<User> all = repository.findAll();
         for(User user : all) {
-            History newHistory = new History(new ArrayList<>());
-            History history = user.getHistory();
-            if(history != null){
-                for(Plan plan : history.plans()){
+            List<Plan> newPlans = new ArrayList<>();
+            List<Plan> plans = user.getPlans();
+            if(plans != null){
+                for(Plan plan : plans){
                     int lastDayIndex = plan.days().size() - 1;
                     long between = abs(ChronoUnit.DAYS.between(
                             LocalDate.now(clock),
                             plan.days().get(lastDayIndex).getDate()
                     ));
                     if(between <= 7){
-                        newHistory.plans().add(plan);
+                        newPlans.add(plan);
                     }
                 }
-                user.setHistory(newHistory);
+                user.setPlans(newPlans);
                 repository.save(user);
             }
         }
-//        System.out.println("UserFacade: history clearing finished.");
+//        System.out.println("UserFacade: plans clearing finished.");
     }
 
     public UserDto getByUsername(String username) {
         return repository.findByUsername(username)
                 .map(UserMapper::mapFromUserToUserDto)
                 .orElseThrow(() -> new BadCredentialsException("Username not found"));
+    }
+
+    public UserDto getById(String id) {
+        return repository.findById(id)
+                .map(UserMapper::mapFromUserToUserDto)
+                .orElseThrow(() -> new BadCredentialsException("User with id " + id + " not found"));
     }
 
     private User getUser() {

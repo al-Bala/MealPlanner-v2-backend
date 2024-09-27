@@ -37,16 +37,16 @@ public class AuthFacade {
         JwtResponseDto jwtResponseDto = jwtAuthenticatorService.authenticateAndGenerateToken(loginCredentials);
         Token accessToken = new Token(
                 jwtResponseDto.accessToken(),
-                jwtResponseDto.username(),
+                jwtResponseDto.userId(),
                 TokenType.ACCESS
         );
         Token refreshToken = new Token(
                 jwtResponseDto.refreshToken(),
-                jwtResponseDto.username(),
+                jwtResponseDto.userId(),
                 TokenType.REFRESH
         );
         LoginTokens loginTokens = LoginTokens.builder()
-                .username(jwtResponseDto.username())
+                .userId(jwtResponseDto.userId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

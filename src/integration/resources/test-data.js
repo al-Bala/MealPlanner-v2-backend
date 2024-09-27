@@ -8,66 +8,64 @@ db.users.insertMany([
         password: "$2a$10$jqMDdOlw8P60m686b1Q.GeLjpdPncHUVJiXZUSq0QNFxoyMe74q86",
         email: "email@email.pl",
         preferences: {
-            diet: null,
+            diet: "miesna",
             portions: 2,
             products_to_avoid: ["oliwki"]
         },
         // user_recipes: [""],
-        history: {
-            plans: [
-                {
-                    days: [
-                        {
-                            date: "2024-09-09",
-                            planned_day: [
-                                {
-                                    type_of_meal: "DINNER",
-                                    recipeId: {
-                                        $oid: "6577660abbac733a111c9421"
-                                    },
-                                    recipeName: "Kasza jaglana z warzywami"
-                                }
-                            ]
-                        },
-                        {
-                            date: "2024-09-10",
-                            planned_day: [
-                                {
-                                    type_of_meal: "BREAKFAST",
-                                    recipeId: {
-                                        $oid: "6577660abbac733a111c9423"
-                                    },
-                                    recipeName: "Jajecznica z warzywami"
+        plans: [
+            {
+                days: [
+                    {
+                        date: "2024-09-12",
+                        planned_day: [
+                            {
+                                type_of_meal: "DINNER",
+                                recipeId: {
+                                    $oid: "6577660abbac733a111c9421"
                                 },
-                                {
-                                    type_of_meal: "DINNER",
-                                    recipeId: {
-                                        $oid: "6577660abbac733a111c9425"
-                                    },
-                                    recipeName: "Ryż z warzywami i kurczakiem"
-                                }
-                            ]
-                        }
-                    ],
-                },
-                {
-                    days: [
-                        {
-                            date: "2024-09-11",
-                            planned_day: [
-                                {
-                                    type_of_meal: "DINNER",
-                                    recipeId: {
-                                        $oid: "6577660abbac733a111c9421"
-                                    },
-                                    recipeName: "Kasza jaglana z warzywami"
-                                }
-                            ]
-                        }
-                    ],
-                },
-            ],
-        }
+                                recipeName: "Kasza jaglana z warzywami"
+                            }
+                        ]
+                    },
+                    {
+                        date: "2024-09-13",
+                        planned_day: [
+                            {
+                                type_of_meal: "BREAKFAST",
+                                recipeId: {
+                                    $oid: "6577660abbac733a111c9423"
+                                },
+                                recipeName: "Jajecznica z warzywami"
+                            },
+                            {
+                                type_of_meal: "DINNER",
+                                recipeId: {
+                                    $oid: "6577660abbac733a111c9425"
+                                },
+                                recipeName: "Ryż z warzywami i kurczakiem"
+                            }
+                        ]
+                    }
+                ],
+            },
+            {
+                days: [
+                    {
+                        date: "2024-09-14",
+                        planned_day: [
+                            {
+                                type_of_meal: "DINNER",
+                                recipeId: {
+                                    $oid: "6577660abbac733a111c9421"
+                                },
+                                recipeName: "Kasza jaglana z warzywami"
+                            }
+                        ]
+                    }
+                ],
+            },
+        ],
         // grocery_list:[]
     }
 ]);

@@ -11,7 +11,7 @@ public class PlanHistoryScheduler {
 
     private final UserFacade userFacade;
 
-//    @Scheduled(fixedDelayString = "${history.scheduler.request.delay}")
+//    @Scheduled(fixedDelayString = "${plans.scheduler.request.delay}")
 //    @Scheduled(cron = "0 1 * * * *") // at 01:00 AM
     @Scheduled(cron = "${history.scheduler.occurrence}")
     public void clearHistory(){

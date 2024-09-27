@@ -1,13 +1,12 @@
 package com.mealplannerv2.plangenerator;
 
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
-import com.mealplannerv2.storage.IngredientDto;
 import lombok.Builder;
 
 import java.util.List;
 
 @Builder
-public record DataForRecipeFiltering(
+public record RecipeFilters(
         String typeOfMeal,
         String diet,
         int forHowManyDays,

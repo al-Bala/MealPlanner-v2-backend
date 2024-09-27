@@ -2,9 +2,12 @@ package com.mealplannerv2.infrastructure.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.mealplannerv2.auth.dto.UserDto;
 import com.mealplannerv2.auth.infrastructure.controller.dto.JwtResponseDto;
 import com.mealplannerv2.auth.infrastructure.controller.dto.LoginRequestDto;
+import com.mealplannerv2.user.UserFacade;
 import lombok.AllArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,16 +23,18 @@ public class JwtAuthenticatorService {
     private final JwtConfigurationProperties properties;
     private final AuthenticationManager authenticationManager;
     private final Clock clock;
+    private final UserFacade userFacade;
 
     public JwtResponseDto authenticateAndGenerateToken(LoginRequestDto tokenRequest){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(tokenRequest.username(), tokenRequest.password()));
         User user = (User) authentication.getPrincipal();
         String username = user.getUsername();
+        String userId = userFacade.getByUsername(username).getId().toString();
         String accessToken = createAccessToken(username);
         String refreshToken = createRefreshToken(username);
         return JwtResponseDto.builder()
-                .username(username)
+                .userId(userId)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

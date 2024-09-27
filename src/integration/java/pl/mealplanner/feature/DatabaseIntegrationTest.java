@@ -1,6 +1,6 @@
 package pl.mealplanner.feature;
 
-import com.mealplannerv2.plangenerator.DataForRecipeFiltering;
+import com.mealplannerv2.plangenerator.RecipeFilters;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.RecipeFilterRepositoryImpl;
 import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
 import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
@@ -28,7 +28,7 @@ public class DatabaseIntegrationTest extends BaseIntegrationTest {
 //                        new IngredientDto("marchew", 2.0, "")))
 //                .productsToAvoid(List.of("brokuł"))
 //                .build();
-        DataForRecipeFiltering info = DataForRecipeFiltering.builder()
+        RecipeFilters info = RecipeFilters.builder()
                 .forHowManyDays(2)
                 .diet("mięsna")
                 .timeForPrepareMin(20)

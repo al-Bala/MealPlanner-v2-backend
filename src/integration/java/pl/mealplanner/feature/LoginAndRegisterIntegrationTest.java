@@ -23,7 +23,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
     @Test
     public void login_and_register() throws Exception {
 
-        //step 1: user tried to get JWT accessToken by requesting POST /login with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
+        //step 1: user tried to get JWT accessToken by requesting POST /login with userId=someUser, password=somePassword and system returned UNAUTHORIZED(401)
         // given & when
         ResultActions failedLoginRequest = mockMvc.perform(post("/auth/login")
                 .servletPath("/auth/login")
@@ -55,7 +55,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         failedGetPlanRequest.andExpect(status().isUnauthorized());
 
 
-        //step 3: user made POST /register with existing username and email and system returned status BAD_REQUEST(400)
+        //step 3: user made POST /register with existing userId and email and system returned status BAD_REQUEST(400)
         // given & when
         ResultActions invalidRegisterAction = mockMvc.perform(post("/auth/register")
                 .servletPath("/auth/register")
@@ -78,7 +78,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         );
 
 
-        //step 4: user made POST /register with username=someUser, email=someEmail and system registered user with status CREATED(201)
+        //step 4: user made POST /register with userId=someUser, email=someEmail and system registered user with status CREATED(201)
         // given & when
         ResultActions registerAction = mockMvc.perform(post("/auth/register")
                 .servletPath("/auth/register")
@@ -102,7 +102,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         );
 
 
-        //step 5: user tried to log in (get JWT accessToken) by requesting POST /login with username=someUser, password=somePassword
+        //step 5: user tried to log in (get JWT accessToken) by requesting POST /login with userId=someUser, password=somePassword
         // and system returned status OK(200) and accessToken=AAAA.BBBB.CCC and refreshToken=AAAA.BBBB.CCC
         // given & when
         ResultActions successLoginRequest = mockMvc.perform(post("/auth/login")

@@ -4,5 +4,5 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChangedRecipesList {
-    public static final List<String> changedRecipes = new ArrayList<>();
+    public static final List<String> usedRecipes = new ArrayList<>();
 }

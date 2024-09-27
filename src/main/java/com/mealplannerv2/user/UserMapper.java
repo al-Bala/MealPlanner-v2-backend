@@ -11,7 +11,18 @@ public class UserMapper {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .preferences(user.getPreferences())
-                .history(user.getHistory())
+                .plans(user.getPlans())
+                .build();
+    }
+
+    public static User mapFromUserDtoToUser(UserDto userDto) {
+        return User.builder()
+                .id(userDto.getId())
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .preferences(userDto.getPreferences())
+                .plans(userDto.getPlans())
                 .build();
     }
 }

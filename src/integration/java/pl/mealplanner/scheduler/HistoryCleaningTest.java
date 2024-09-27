@@ -28,23 +28,23 @@ public class HistoryCleaningTest extends BaseIntegrationTest {
     @WithMockUser(username = "testUser")
     public void should_remove_plans_ending_more_than_7_days_earlier_when_scheduler_run_each_day() {
 
-        // 1 day: nothing changed in history
+        // 1 day: nothing changed in plans
         LocalDate startDate = LocalDate.of(2024, 9, 17);
         setClockDate(startDate);
         planHistoryScheduler.clearHistory();
-        assertThat(userFacade.getHistory().plans().size()).isEqualTo(2);
+        assertThat(userFacade.getUserPlans().size()).isEqualTo(2);
 
         // 2 day: one plan left
         LocalDate day2 = LocalDate.now(clock).plusDays(1);
         setClockDate(day2);
         planHistoryScheduler.clearHistory();
-        assertThat(userFacade.getHistory().plans().size()).isEqualTo(1);
+        assertThat(userFacade.getUserPlans().size()).isEqualTo(1);
 
-        // 3 day: history is empty
+        // 3 day: plans is empty
         LocalDate day3 = LocalDate.now(clock).plusDays(1);
         setClockDate(day3);
         planHistoryScheduler.clearHistory();
-        assertThat(userFacade.getHistory().plans()).isEmpty();
+        assertThat(userFacade.getUserPlans()).isEmpty();
     }
 
     private void setClockDate(LocalDate startDate) {

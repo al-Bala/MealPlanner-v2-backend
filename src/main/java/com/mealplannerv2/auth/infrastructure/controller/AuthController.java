@@ -33,7 +33,7 @@ public class AuthController {
         LoginTokens loginAuth = authFacade.login(tokenRequest);
         authFacade.setCookie("accessToken", loginAuth.accessToken().getToken(), response);
         authFacade.setCookie("refreshToken", loginAuth.refreshToken().getToken(), response);
-        return ResponseEntity.ok(loginAuth.username());
+        return ResponseEntity.ok(loginAuth.userId());
     }
 
     @GetMapping("/refresh-token")

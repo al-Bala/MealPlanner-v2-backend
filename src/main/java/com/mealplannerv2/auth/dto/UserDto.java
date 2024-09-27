@@ -1,7 +1,7 @@
 package com.mealplannerv2.auth.dto;
 
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPreferences;
-import com.mealplannerv2.recipe.History;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
+import com.mealplannerv2.recipe.Plan;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -15,6 +15,6 @@ public class UserDto {
     private String username;
     private String email;
     private String password;
-    private SavedPreferences preferences;
-    History history;
+    private SavedPrefers preferences;
+    private List<Plan> plans;
 }
