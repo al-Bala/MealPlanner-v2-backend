@@ -41,6 +41,7 @@ public class UserController {
     @GetMapping("/{userId}/prefs")
     public ResponseEntity<SavedPrefers> getSavedPreferences(@PathVariable String userId){
         SavedPrefers savedPrefers = userFacade.getSavedPrefers(userId);
+        System.out.println("Fetched prefs: " + savedPrefers);
         return ResponseEntity.ok(savedPrefers);
     }
 
@@ -50,6 +51,7 @@ public class UserController {
             @RequestBody SavedPrefers savedPrefers
     ){
         userFacade.updateSavedPrefers(userId, savedPrefers);
+        System.out.println("SavedPrefers updated for " + userId);
     }
 
     @PostMapping("/{userId}/plans")

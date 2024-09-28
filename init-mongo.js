@@ -66,6 +66,21 @@ db.units.insertMany([
     },
 ])
 
+db.diets.insertMany([
+    {
+        _id: ObjectId('66f7f86a326bd5fde1b7f775'),
+        name: "wegetariańska"
+    },
+    {
+        _id: ObjectId('66f7f876326bd5fde1b7f777'),
+        name: "wegańska"
+    },
+    {
+        _id: ObjectId('66f7f883326bd5fde1b7f779'),
+        name: "mięsna"
+    },
+])
+
 db.recipes.insertMany([
     {
         _id: ObjectId('111111111111111111111111'),

@@ -51,14 +51,11 @@ public class UserFacade {
         return userDto.getPreferences();
     }
 
-    public void updateSavedPrefers(String userId, SavedPrefers savedPrefers) {
+    public void updateSavedPrefers(String userId, SavedPrefers newPrefers) {
         UserDto userDto = getById(userId);
-        // TODO: null
-        if(!userDto.getPreferences().equals(savedPrefers)){
-            userDto.setPreferences(savedPrefers);
-            User user = UserMapper.mapFromUserDtoToUser(userDto);
-            repository.save(user);
-        }
+        userDto.setPreferences(newPrefers);
+        User user = UserMapper.mapFromUserDtoToUser(userDto);
+        repository.save(user);
     }
 
     public List<String> getRecipesNames() {
