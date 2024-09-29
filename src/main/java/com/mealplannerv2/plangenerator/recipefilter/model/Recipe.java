@@ -16,7 +16,7 @@ public record Recipe(
         @Field("portions") int portions,
         @Field("prepare_time") int prepareTimeMin,
         @Field("max_storage_time") int maxStorageTimeDays,
-        @Field("diet") String diet,
+        @Field("dietId") String dietId,
         @Field("ingredients") List<Ingredient> ingredients,
         @Field("steps") List<String> steps
 ) {

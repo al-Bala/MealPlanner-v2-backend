@@ -21,7 +21,7 @@ public class DatabaseIntegrationTest extends BaseIntegrationTest {
         // given
 //        InfoForFiltering info = InfoForFiltering.builder()
 //                .forHowManyDays(2)
-//                .diet("wegetariańska")
+//                .dietId("wegetariańska")
 //                .timeForPrepareMin(5)
 //                .ingredientsToUseFirstly(List.of(
 //                        new IngredientDto("ryż", 300.0, ""),
@@ -30,7 +30,7 @@ public class DatabaseIntegrationTest extends BaseIntegrationTest {
 //                .build();
         RecipeFilters info = RecipeFilters.builder()
                 .forHowManyDays(2)
-                .diet("mięsna")
+                .dietId("66f7f883326bd5fde1b7f779")
                 .timeForPrepareMin(20)
                 .ingredientsToUseFirstly(List.of(
                         new Ingredient("truskawki", 80.0, "g"),

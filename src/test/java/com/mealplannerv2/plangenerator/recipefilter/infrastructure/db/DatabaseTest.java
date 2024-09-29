@@ -41,7 +41,7 @@ public class DatabaseTest {
     @Test
     void find_diet() {
         // given
-        Criteria criteria = Criteria.where("diet").is("mięsna");
+        Criteria criteria = Criteria.where("dietId").is("66f7f883326bd5fde1b7f779");
         // when
         List<RecipeTest> queryResult = makeQuery(criteria);
         List<String> names = getRecipeNames(queryResult);

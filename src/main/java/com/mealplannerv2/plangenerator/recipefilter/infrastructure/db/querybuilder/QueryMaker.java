@@ -46,9 +46,9 @@ public class QueryMaker implements QueryInterface{
     }
 
     @Override
-    public void setDiet(String diet) {
-        if (!diet.isEmpty()) {
-            Criteria dietCriteria = Criteria.where("diet").is(diet);
+    public void setDietId(String dietId) {
+        if (!dietId.isEmpty()) {
+            Criteria dietCriteria = Criteria.where("dietId").is(dietId);
             combinedOperations.add(Aggregation.match(dietCriteria));
         }
     }
@@ -77,7 +77,7 @@ public class QueryMaker implements QueryInterface{
             List<AggregationOperation> productsToUseAgr = Arrays.asList(
                     Aggregation.match(namesAmountCriteria),
                     Aggregation.project()
-                            .andInclude("name", "portions", "prepare_time", "max_storage_time", "diet", "ingredients", "steps")
+                            .andInclude("name", "portions", "prepare_time", "max_storage_time", "dietId", "ingredients", "steps")
                             .and(ArrayOperators.arrayOf(
                                     SetOperators.SetIntersection.arrayAsSet("ingredients")
                                             .intersects(LiteralOperators.Literal.asLiteral(ingredients))

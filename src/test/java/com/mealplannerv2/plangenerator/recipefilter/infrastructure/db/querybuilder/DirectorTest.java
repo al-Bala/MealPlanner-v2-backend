@@ -23,7 +23,7 @@
 //    void setUp(){
 //        info = InfoForFiltering.builder()
 //                .forHowManyDays(1)
-//                .diet("diet")
+//                .dietId("dietId")
 //                .timeForPrepareMin(1)
 //                .userProducts(List.of(new IngredientDto("productU", 0.0, "")))
 //                .productsToAvoid(List.of("productA"))
@@ -36,7 +36,7 @@
 //        Aggregation agrFirstType = director.firstTry(info, namesAmountsCriteria);
 //        Aggregation agrSecoundType = director.firstTry(info, onlyNamesCriteria);
 //        // then
-//        List<String> expectedValues = List.of("max_storage_time", "diet", "productU", "prepare_time", "productA");
+//        List<String> expectedValues = List.of("max_storage_time", "dietId", "productU", "prepare_time", "productA");
 //
 //        System.out.println(agrFirstType);
 //        assertThat(agrFirstType.toString()).contains(expectedValues);
@@ -49,7 +49,7 @@
 //        Aggregation agrFirstType = director.secondTry(info, namesAmountsCriteria);
 //        Aggregation agrSecoundType = director.secondTry(info, onlyNamesCriteria);
 //        // then
-//        List<String> expectedValues = List.of("max_storage_time", "diet", "productU", "prepare_time");
+//        List<String> expectedValues = List.of("max_storage_time", "dietId", "productU", "prepare_time");
 //
 //        assertThat(agrFirstType.toString()).contains(expectedValues);
 //        assertThat(agrFirstType.toString()).doesNotContain("productA");
@@ -64,7 +64,7 @@
 //        Aggregation agrFirstType = director.thirdTry(info, namesAmountsCriteria);
 //        Aggregation agrSecoundType = director.thirdTry(info, onlyNamesCriteria);
 //        // then
-//        List<String> expectedValues = List.of("max_storage_time", "diet", "productU");
+//        List<String> expectedValues = List.of("max_storage_time", "dietId", "productU");
 //
 //        assertThat(agrFirstType.toString()).contains(expectedValues);
 //        assertThat(agrFirstType.toString()).doesNotContain("productA");
@@ -81,7 +81,7 @@
 //        Aggregation agrFirstType = director.fourthTry(info);
 //        Aggregation agrSecoundType = director.fourthTry(info);
 //        // then
-//        List<String> expectedValues = List.of("max_storage_time", "diet");
+//        List<String> expectedValues = List.of("max_storage_time", "dietId");
 //
 //        assertThat(agrFirstType.toString()).contains(expectedValues);
 //        assertThat(agrFirstType.toString()).doesNotContain(List.of("productA", "prepare_time", "productU"));

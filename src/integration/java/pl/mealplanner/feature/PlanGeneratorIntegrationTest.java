@@ -62,7 +62,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         String jsonWithPrefers = getPrefsResult.getResponse().getContentAsString();
         SavedPrefers savedPrefersResult = objectMapper.readValue(jsonWithPrefers, SavedPrefers.class);
         assertAll(
-                () -> assertThat(savedPrefersResult.getDiet()).isEqualTo("miesna"),
+                () -> assertThat(savedPrefersResult.getDietId()).isEqualTo("66f7f883326bd5fde1b7f779"),
                 () -> assertThat(savedPrefersResult.getPortions()).isEqualTo(2),
                 () -> assertThat(savedPrefersResult.getProducts_to_avoid()).containsOnly("oliwki")
         );
@@ -90,7 +90,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         );
         // then
         SavedPrefers testUserPrefs = userFacade.getByUsername("testUser").getPreferences();
-        assertThat(testUserPrefs.getDiet()).isEqualTo("wegetarianska");
+        assertThat(testUserPrefs.getDietId()).isEqualTo("66f7f86a326bd5fde1b7f775");
         log.info("[2]: {}", testUserPrefs);
 //        System.out.println("[2] -- " + testUserPrefs);
 
@@ -139,7 +139,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 //                .content("""
 //                        {
 //                           "savedPrefers": {
-//                             "diet": "wegetariańska",
+//                             "dietId": "wegetariańska",
 //                             "portions": 2,
 //                             "products_to_avoid": [
 //                               "kiwi"

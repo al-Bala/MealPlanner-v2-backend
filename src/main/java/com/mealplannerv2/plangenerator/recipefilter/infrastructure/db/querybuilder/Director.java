@@ -42,7 +42,7 @@ public class Director {
         queryMaker.clearOperationsList();
         queryMaker.setTypeOfMeal(info.typeOfMeal());
         queryMaker.setMaxStorageTime(info.forHowManyDays());
-        queryMaker.setDiet(info.diet());
+        queryMaker.setDietId(info.dietId());
         queryMaker.setChangedRecipes(ChangedRecipesList.usedRecipes);
         queryMaker.setRecipesFromHistory(userFacade.getRecipesNames());
         return queryMaker.getAggregation();

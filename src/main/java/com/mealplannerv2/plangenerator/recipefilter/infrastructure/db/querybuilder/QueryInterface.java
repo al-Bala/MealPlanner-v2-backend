@@ -10,7 +10,7 @@ public interface QueryInterface {
     void setRecipesFromHistory(List<String> recipesFromHistory);
     void setChangedRecipes(List<String> usedRecipes);
     void setTypeOfMeal(String typeOfMeal);
-    void setDiet(String diet);
+    void setDietId(String diet);
     void setMaxStorageTime(int daysNr);
     void setPrepareTime(Integer time);
     void setIngredientsToUseFirstly(List<Ingredient> ingredients, Criteria namesAmountCriteria);

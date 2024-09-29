@@ -18,7 +18,7 @@ db.users.insertMany([
         email: 'admin@admin.pl',
         password: '$2a$10$tR8zusPyujdG.PgOg6ikM.DGxc//Y1F3GnqVMrjUQhF702iZSLDd6',
         preferences: {
-            diet: '',
+            dietId: '',
             portions: 0,
             products_to_avoid: ['']
         },
@@ -89,7 +89,7 @@ db.recipes.insertMany([
         portions: 1,
         prepare_time: 1000000,
         max_storage_time: 1000000,
-        diet: "",
+        dietId: "",
         ingredients: [{
             name: "ing", amount: 100, unit: "g"
         }],
@@ -102,7 +102,7 @@ db.recipes.insertMany([
         portions: 2,
         prepare_time: 30,
         max_storage_time: 2,
-        diet: "wegetariańska",
+        dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
             { name: "kasza jaglana", amount: 200, unit: "g" },
             { name: "marchew", amount: 200, unit: "g" },
@@ -118,7 +118,7 @@ db.recipes.insertMany([
         portions: 3,
         prepare_time: 15,
         max_storage_time: 1,
-        diet: "wegetariańska",
+        dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
             { name: "jabłko", amount: 160, unit: "g" },
             { name: "kiwi", amount: 150, unit: "g" },
@@ -134,7 +134,7 @@ db.recipes.insertMany([
         portions: 2,
         prepare_time: 15,
         max_storage_time: 1,
-        diet: "wegetariańska",
+        dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
             { name: "jajko", amount: 4, unit: "piece" },
             { name: "papryka", amount: 140, unit: "g" },
@@ -151,7 +151,7 @@ db.recipes.insertMany([
         portions: 1,
         prepare_time: 10,
         max_storage_time: 1,
-        diet: "wegetariańska",
+        dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
             { name: "banan", amount: 70, unit: "g" },
             { name: "truskawki", amount: 100, unit: "g" },
@@ -168,7 +168,7 @@ db.recipes.insertMany([
         portions: 3,
         prepare_time: 25,
         max_storage_time: 2,
-        diet: "mięsna",
+        dietId: "66f7f883326bd5fde1b7f779",
         ingredients: [
             { name: "ryż", amount: 300, unit: "g" },
             { name: "kurczak", amount: 250, unit: "g" },
@@ -185,7 +185,7 @@ db.recipes.insertMany([
         portions: 4,
         prepare_time: 20,
         max_storage_time: 3,
-        diet: "wegetariańska",
+        dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
             { name: "makaron", amount: 400, unit: "g" },
             { name: "cukinia", amount: 1, unit: "szt" },

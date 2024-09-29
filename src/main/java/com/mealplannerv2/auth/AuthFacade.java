@@ -7,11 +7,14 @@ import com.mealplannerv2.auth.token.TokenService;
 import com.mealplannerv2.auth.token.TokenType;
 import com.mealplannerv2.infrastructure.security.jwt.JwtAuthenticatorService;
 import com.mealplannerv2.infrastructure.security.jwt.TokenDecoder;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
 import com.mealplannerv2.user.User;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Log4j2
 @AllArgsConstructor
@@ -29,6 +32,8 @@ public class AuthFacade {
                 .username(userDto.username())
                 .email(userDto.email())
                 .password(authService.encodePassword(userDto.password()))
+                .preferences(new SavedPrefers())
+                .plans(new ArrayList<>())
                 .build();
         return authService.saveUser(user);
     }

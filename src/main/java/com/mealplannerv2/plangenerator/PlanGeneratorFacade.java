@@ -81,7 +81,7 @@ public class PlanGeneratorFacade {
             System.out.println("Ings to use firstly: " + storageFacade.getIngsToUseFirstly());
 
             RecipeFilters recipeFilters = RecipeFilters.builder()
-                    .diet(savedPrefers.getDiet().getName())
+                    .dietId(savedPrefers.getDietId())
                     .typeOfMeal(meal.getName())
                     .forHowManyDays(meal.getForHowManyDays())
                     .timeForPrepareMin(meal.getTimeMin())
