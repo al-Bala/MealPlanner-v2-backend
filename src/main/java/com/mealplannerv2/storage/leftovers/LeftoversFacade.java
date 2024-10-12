@@ -18,6 +18,10 @@ public class LeftoversFacade {
     private final LeftoversGrouper leftoversGrouper;
     private final LeftoversMapper mapper;
 
+    public void clearLeftovers(){
+        leftoversService.clear();
+    }
+
     public Map<String, LeftoverDto> getLeftovers(){
         return leftoversService.getLeftovers();
     }

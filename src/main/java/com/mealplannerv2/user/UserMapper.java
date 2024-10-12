@@ -1,6 +1,7 @@
 package com.mealplannerv2.user;
 
 import com.mealplannerv2.auth.dto.UserDto;
+import com.mealplannerv2.user.model.User;
 
 public class UserMapper {
 

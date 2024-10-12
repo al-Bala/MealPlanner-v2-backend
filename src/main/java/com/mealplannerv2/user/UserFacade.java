@@ -1,10 +1,11 @@
 package com.mealplannerv2.user;
 
 import com.mealplannerv2.auth.dto.UserDto;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
-import com.mealplannerv2.recipe.DayPlan;
-import com.mealplannerv2.recipe.Plan;
-import com.mealplannerv2.recipe.RecipeDay;
+import com.mealplannerv2.user.model.SavedPrefers;
+import com.mealplannerv2.user.model.PlannedRecipe;
+import com.mealplannerv2.user.model.User;
+import com.mealplannerv2.user.model.PlannedDay;
+import com.mealplannerv2.user.model.Plan;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -64,20 +65,20 @@ public class UserFacade {
             return Collections.emptyList();
         }
         return plans.stream()
-                .flatMap(plan -> plan.days().stream())
-                .map(DayPlan::getPlanned_day)
+                .flatMap(plan -> plan.plannedDays().stream())
+                .map(PlannedDay::getPlannedRecipes)
                 .flatMap(List::stream)
-                .map(RecipeDay::recipeName)
+                .map(PlannedRecipe::recipeName)
                 .toList();
     }
 
-    public List<String> getRecipesNames(DayPlan plannedDay) {
-        return plannedDay.getPlanned_day().stream()
-                .map(RecipeDay::recipeName)
+    public List<String> getRecipesNames(PlannedDay plannedDay) {
+        return plannedDay.getPlannedRecipes().stream()
+                .map(PlannedRecipe::recipeName)
                 .toList();
     }
 
-    public void saveNewPlan(String userId, List<DayPlan> tempDays) {
+    public void saveNewPlan(String userId, List<PlannedDay> tempDays) {
         UserDto userDto = getById(userId);
         List<Plan> plans = userDto.getPlans();
         if(plans == null){
@@ -85,7 +86,7 @@ public class UserFacade {
         }
         Plan newPlan = new Plan(tempDays);
         plans.add(newPlan);
-        plans.sort(Comparator.comparing(plan -> plan.days().get(0).getDate()));
+        plans.sort(Comparator.comparing(plan -> plan.plannedDays().get(0).getDate()));
         userDto.setPlans(plans);
         User user = UserMapper.mapFromUserDtoToUser(userDto);
         repository.save(user);
@@ -99,10 +100,10 @@ public class UserFacade {
             List<Plan> plans = user.getPlans();
             if(plans != null){
                 for(Plan plan : plans){
-                    int lastDayIndex = plan.days().size() - 1;
+                    int lastDayIndex = plan.plannedDays().size() - 1;
                     long between = abs(ChronoUnit.DAYS.between(
                             LocalDate.now(clock),
-                            plan.days().get(lastDayIndex).getDate()
+                            plan.plannedDays().get(lastDayIndex).getDate()
                     ));
                     if(between <= 7){
                         newPlans.add(plan);

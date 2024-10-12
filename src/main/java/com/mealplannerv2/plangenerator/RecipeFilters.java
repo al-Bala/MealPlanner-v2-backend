@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator;
 
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.recipe.model.Ingredient;
 import lombok.Builder;
 
 import java.util.List;

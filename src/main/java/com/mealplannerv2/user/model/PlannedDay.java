@@ -1,4 +1,4 @@
-package com.mealplannerv2.recipe;
+package com.mealplannerv2.user.model;
 
 import lombok.*;
 
@@ -10,9 +10,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DayPlan {
+public class PlannedDay {
     private LocalDate date;
-    private List<RecipeDay> planned_day;
+    private List<PlannedRecipe> plannedRecipes;
 
     @Override
     public boolean equals(Object other) {
@@ -22,10 +22,10 @@ public class DayPlan {
         if (other == null) {
             return false;
         }
-        if (!(other instanceof DayPlan otherDayPlan)) {
+        if (!(other instanceof PlannedDay otherPlannedDay)) {
             return false;
         }
-        return otherDayPlan.date.equals(this.date);
+        return otherPlannedDay.date.equals(this.date);
     }
 
     @Override

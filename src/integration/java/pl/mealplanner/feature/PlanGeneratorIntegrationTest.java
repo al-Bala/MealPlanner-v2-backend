@@ -2,8 +2,8 @@ package pl.mealplanner.feature;
 
 import com.auth0.jwt.JWT;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
-import com.mealplannerv2.recipe.Plan;
+import com.mealplannerv2.user.model.SavedPrefers;
+import com.mealplannerv2.user.model.Plan;
 import com.mealplannerv2.recipe.RecipeRepository;
 import com.mealplannerv2.user.UserFacade;
 import jakarta.servlet.http.Cookie;
@@ -97,7 +97,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         // 6) user wybiera jeden posiłek (obiad) na pierwszy dzień --> system wyświetla wygenerowane przepisy
 
         ResultActions createFirstDayAction = mockMvc.perform(post("/generator/days/first")
-                .servletPath("/generator/days/first")
+                .servletPath("/generator/plannedDays/first")
                 .cookie(new Cookie("accessToken", token))
                 .content("""
                         {
@@ -162,7 +162,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         // 10) user zatwierdza przepisy na dany dzień
 
         ResultActions saveDayInTempPlanAction = mockMvc.perform(post("/users/6672e2e8be614a1616e7552f/temp-plan/days")
-                .servletPath("/users/6672e2e8be614a1616e7552f/temp-plan/days")
+                .servletPath("/users/6672e2e8be614a1616e7552f/temp-plan/plannedDays")
                 .cookie(new Cookie("accessToken", token))
                 .content(jsonWithFirstDayRecipe)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -175,7 +175,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         // 11) user wybiera jeden posiłek (obiad) na kolejny dzień --> system wyświetla wygenerowane przepisy
 
         ResultActions createNextDayAction = mockMvc.perform(post("/generator/days/next")
-                .servletPath("/generator/days/next")
+                .servletPath("/generator/plannedDays/next")
                 .cookie(new Cookie("accessToken", token))
                 .content("""
                         {
@@ -205,7 +205,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         // 10) user zatwierdza przepisy na kolejny dzień
 
         ResultActions saveNextDayInTempPlanAction = mockMvc.perform(post("/users/6672e2e8be614a1616e7552f/temp-plan/days")
-                .servletPath("/users/6672e2e8be614a1616e7552f/temp-plan/days")
+                .servletPath("/users/6672e2e8be614a1616e7552f/temp-plan/plannedDays")
                 .cookie(new Cookie("accessToken", token))
                 .content(jsonWithFirstDayRecipe)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -245,7 +245,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 //        System.out.println("[8a] -- History");
 //        plans2.forEach(p -> {
 //            System.out.println("Plan: ");
-//            p.days().forEach(d -> System.out.println(d.getDate() + " " + d.getPlanned_day()));
+//            p.plannedDays().forEach(d -> System.out.println(d.getDate() + " " + d.getPlanned_day()));
 //        });
         log.info(userPlans());
 
@@ -259,7 +259,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         plans.forEach(p -> {
             logMessage.append("\n");
             logMessage.append("Plan ").append(" (dates): ");
-            p.days().forEach(d -> logMessage.append(" | ").append(d.getDate()));
+            p.plannedDays().forEach(d -> logMessage.append(" | ").append(d.getDate()));
         });
         return logMessage;
     }

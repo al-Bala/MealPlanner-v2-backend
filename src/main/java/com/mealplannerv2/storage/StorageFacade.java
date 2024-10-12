@@ -1,7 +1,7 @@
 package com.mealplannerv2.storage;
 
 import com.mealplannerv2.grocerylist.GroceryListFacade;
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.recipe.model.Ingredient;
 import com.mealplannerv2.storage.leftovers.LeftoverDto;
 import com.mealplannerv2.storage.leftovers.LeftoversFacade;
 import com.mealplannerv2.storage.useringredients.UserIngsFacade;

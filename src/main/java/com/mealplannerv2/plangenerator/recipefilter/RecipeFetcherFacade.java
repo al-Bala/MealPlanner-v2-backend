@@ -1,7 +1,8 @@
 package com.mealplannerv2.plangenerator.recipefilter;
 
 import com.mealplannerv2.plangenerator.RecipeFilters;
-import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
+import com.mealplannerv2.plangenerator.recipefilter.error.NotFoundMatchingRecipeException;
+import com.mealplannerv2.recipe.model.Recipe;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.RecipeFilterRepositoryImpl;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import lombok.AllArgsConstructor;
@@ -41,17 +42,15 @@ public class RecipeFetcherFacade {
         List<Recipe> matchingIngNames = mealsFilterRepository.findRecipesWithMatchingIngNames(info);
         if(matchingIngNames == null){
             log.error("[Secound try] Not found any recipe with matching ingredient's name.");
+//            return null;
+            throw new NotFoundMatchingRecipeException("Not found any matching recipe.");
         } else if (matchingIngNames.size() == 1){
             return RecipeMapper.mapFromRecipeToRecipeDto(matchingIngNames.get(0));
         } else {
             List<RecipeDto> recipesDto = RecipeMapper.mapFromRecipeListToRecipeDtoList(matchingIngNames);
             return recipeChooser.getRecipeWithTheMostMatchingOtherIngredients(recipesDto);
         }
-        return new RecipeDto(
-                new ObjectId("111111111111111111111111"),
-                "Recipe not found",
-                1,
-                Collections.emptyList());
+
     }
 
 }

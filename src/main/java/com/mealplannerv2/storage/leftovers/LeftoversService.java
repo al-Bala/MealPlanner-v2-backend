@@ -12,6 +12,10 @@ import java.util.Map;
 class LeftoversService extends StorageImpl {
     private static final Map<String, LeftoverDto> leftoversMap = new HashMap<>();
 
+    public void clear(){
+        leftoversMap.clear();
+    }
+
     public Map<String, LeftoverDto> getLeftovers(){
         return leftoversMap;
     }

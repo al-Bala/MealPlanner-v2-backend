@@ -41,14 +41,14 @@ public class JwtAuthenticatorService {
     }
 
     public String createAccessToken(String username){
-//        Duration expiration = Duration.ofMinutes(properties.accessExpirationMin());
-        Duration expiration = Duration.ofSeconds(properties.accessExpirationMin());
+        Duration expiration = Duration.ofMinutes(properties.accessExpirationMin());
+//        Duration expiration = Duration.ofSeconds(properties.accessExpirationMin());
         return buildToken(username, expiration);
     }
 
     private String createRefreshToken(String username){
-//        Duration expiration = Duration.ofDays(properties.refreshExpirationDays());
-        Duration expiration = Duration.ofMinutes(properties.refreshExpirationDays());
+        Duration expiration = Duration.ofDays(properties.refreshExpirationDays());
+//        Duration expiration = Duration.ofMinutes(properties.refreshExpirationDays());
         return buildToken(username, expiration);
     }
 

@@ -2,8 +2,8 @@ package pl.mealplanner.feature;
 
 import com.mealplannerv2.plangenerator.RecipeFilters;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.RecipeFilterRepositoryImpl;
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
-import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
+import com.mealplannerv2.recipe.model.Ingredient;
+import com.mealplannerv2.recipe.model.Recipe;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.mealplanner.BaseIntegrationTest;

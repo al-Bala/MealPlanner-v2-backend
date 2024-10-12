@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.recipe.model.Ingredient;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;

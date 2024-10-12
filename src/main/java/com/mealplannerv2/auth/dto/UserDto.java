@@ -1,7 +1,7 @@
 package com.mealplannerv2.auth.dto;
 
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
-import com.mealplannerv2.recipe.Plan;
+import com.mealplannerv2.user.model.SavedPrefers;
+import com.mealplannerv2.user.model.Plan;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;

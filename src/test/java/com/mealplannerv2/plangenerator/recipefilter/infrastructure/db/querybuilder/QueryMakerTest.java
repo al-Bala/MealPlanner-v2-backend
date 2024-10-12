@@ -1,7 +1,7 @@
 package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder;
 
 
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.recipe.model.Ingredient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;

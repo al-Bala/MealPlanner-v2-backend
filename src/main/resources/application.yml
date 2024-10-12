@@ -22,9 +22,9 @@ scheduling:
 
 auth:
   jwt:
-#    access-expiration-min: 1
-    access-expiration-min: 310
-#    refresh-expiration-plans: 7
-    refresh-expiration-days: 5
+    access-expiration-min: 15
+#    access-expiration-min: 310
+    refresh-expiration-days: 7
+#    refresh-expiration-plannedDays: 5
     secret: ${JWT_SECRET}
     issuer: meal-planner-backend

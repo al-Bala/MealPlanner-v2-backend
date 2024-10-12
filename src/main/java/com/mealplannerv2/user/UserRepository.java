@@ -1,5 +1,6 @@
 package com.mealplannerv2.user;
 
+import com.mealplannerv2.user.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

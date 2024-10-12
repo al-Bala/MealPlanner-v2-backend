@@ -4,7 +4,7 @@ import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
 import com.mealplannerv2.auth.infrastructure.controller.dto.RegisterRequest;
 import com.mealplannerv2.auth.infrastructure.controller.error.RegisterErrors;
 import com.mealplannerv2.auth.infrastructure.controller.error.exception.RegisterValidationException;
-import com.mealplannerv2.user.User;
+import com.mealplannerv2.user.model.User;
 import com.mealplannerv2.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;

@@ -1,6 +1,6 @@
 package com.mealplannerv2.storage;
 
-import com.mealplannerv2.plangenerator.recipefilter.model.Ingredient;
+import com.mealplannerv2.recipe.model.Ingredient;
 import com.mealplannerv2.product.ProductRepository;
 import com.mealplannerv2.product.unitreader.UnitsReaderImpl;
 import com.mealplannerv2.storage.leftovers.LeftoverDto;

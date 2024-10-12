@@ -1,4 +1,4 @@
-package com.mealplannerv2.plangenerator.infrastructure.controller.dto;
+package com.mealplannerv2.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+// TODO: create SavedPrefersDto
 @Data
 @AllArgsConstructor
 public class SavedPrefers {

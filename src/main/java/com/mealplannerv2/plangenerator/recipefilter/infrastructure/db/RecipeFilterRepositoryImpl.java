@@ -2,8 +2,9 @@ package com.mealplannerv2.plangenerator.recipefilter.infrastructure.db;
 
 import com.mealplannerv2.plangenerator.RecipeFilters;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFilterRepository;
+import com.mealplannerv2.plangenerator.recipefilter.error.NotFoundMatchingRecipeException;
 import com.mealplannerv2.plangenerator.recipefilter.infrastructure.db.querybuilder.Director;
-import com.mealplannerv2.plangenerator.recipefilter.model.Recipe;
+import com.mealplannerv2.recipe.model.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -43,7 +44,8 @@ public class RecipeFilterRepositoryImpl implements RecipeFilterRepository {
             }
         }
 //        if(documents == null){
-//            log.error("Nie udało się znaleźć żadnego pasującego przepisu :(");
+//            throw new NotFoundMatchingRecipeException("Not found any matching recipe.");
+////            log.error("Nie udało się znaleźć żadnego pasującego przepisu :(");
 //        }
         return documents;
     }

@@ -2,8 +2,8 @@
 //
 //import com.mealplannerv2.auth.dto.UserDto;
 //import com.mealplannerv2.recipe.DayPlan;
-//import com.mealplannerv2.recipe.History;
-//import com.mealplannerv2.recipe.Plan;
+//import com.mealplannerv2.user.model.History;
+//import com.mealplannerv2.user.model.Plan;
 //import com.mealplannerv2.recipe.RecipeDay;
 //import com.mealplannerv2.user.planhistory.error.DuplicatePlanException;
 //import org.bson.types.ObjectId;
@@ -180,14 +180,14 @@
 //    }
 //
 //    private LocalDate getStartDate(int planIndex) {
-//        return user.getHistory().plans().get(planIndex).days().get(0).getDate();
+//        return user.getHistory().plans().get(planIndex).plannedDays().get(0).getDate();
 //    }
 //
 //    private static void printPlan(UserDto user) {
 //        user.getHistory().plans()
 //                .forEach(p -> {
 //                    System.out.println("Plan: ");
-//                    p.days()
+//                    p.plannedDays()
 //                            .forEach(d -> System.out.println(d.getDate() + " " + d.getPlanned_day()));
 //                });
 //    }

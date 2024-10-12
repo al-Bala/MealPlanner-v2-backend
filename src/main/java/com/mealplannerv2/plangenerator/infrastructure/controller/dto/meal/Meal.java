@@ -1,6 +1,6 @@
 package com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal;
 
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.MealValues;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.MealValues;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 

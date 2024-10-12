@@ -1,5 +1,6 @@
 package com.mealplannerv2.user;
 
+import com.mealplannerv2.user.model.User;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

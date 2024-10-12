@@ -2,26 +2,28 @@ package com.mealplannerv2.plangenerator;
 
 import com.mealplannerv2.ChangedRecipesList;
 import com.mealplannerv2.grocerylist.GroceryListFacade;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.MealValues;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.Preferences;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.SavedPrefers;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.TempRecipe;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.MealValues;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.PreferencesDto;
+import com.mealplannerv2.user.model.SavedPrefers;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.meal.Meal;
 import com.mealplannerv2.plangenerator.recipefilter.RecipeFetcherFacade;
 import com.mealplannerv2.plangenerator.recipefilter.dto.RecipeDto;
 import com.mealplannerv2.product.ProductFacade;
 import com.mealplannerv2.product.dto.ChosenPacket;
-import com.mealplannerv2.recipe.DayPlan;
-import com.mealplannerv2.recipe.RecipeDay;
-import com.mealplannerv2.recipe.RecipeFacade;
+import com.mealplannerv2.recipe.*;
 import com.mealplannerv2.storage.IngredientDto;
 import com.mealplannerv2.storage.StorageFacade;
 import com.mealplannerv2.storage.leftovers.LeftoversFacade;
 import com.mealplannerv2.storage.useringredients.UserIngsFacade;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.DayResult;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.RecipeResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -39,42 +41,35 @@ public class PlanGeneratorFacade {
     private final RecipeFacade recipeFacade;
 
 
-    public DayPlan createFirstDayOfPlan(Preferences preferences, List<IngredientDto> ingsFromUser){
+    public DayResult createFirstDayOfPlan(PreferencesDto preferencesDto, List<IngredientDto> ingsFromUser){
+        leftoversFacade.clearLeftovers();
         ChangedRecipesList.usedRecipes.clear();
         userIngsFacade.addAllToUserIngs(ingsFromUser);
-        return findMatchingRecipes(preferences);
+        return findMatchingRecipes(preferencesDto);
     }
 
-    public DayPlan createNextDayOfPlan(Preferences preferences, List<DayPlan> tempDays){
-        List<String> usedRecipes = tempDays.stream()
-                .flatMap(day -> day.getPlanned_day().stream())
-                .map(RecipeDay::recipeName)
-                .toList();
-
+    public DayResult createNextDayOfPlan(PreferencesDto preferencesDto, List<String> usedRecipesNames){
         //TODO: czy tak to przechowywać?
-        ChangedRecipesList.usedRecipes.addAll(usedRecipes);
+        ChangedRecipesList.usedRecipes.addAll(usedRecipesNames);
 
-        if (isNoMealSelected(preferences.mealsValues())){
-            return null;
+        if (isNoMealSelected(preferencesDto.mealsValues())){
+            return new DayResult(Collections.emptyList());
         }
-        return findMatchingRecipes(preferences);
+        return findMatchingRecipes(preferencesDto);
     }
 
-    public DayPlan changeLastDay(Preferences preferences, List<RecipeDay> dayToChange){
-        List<String> recipesToChange = dayToChange.stream()
-                .map(RecipeDay::recipeName)
-                .toList();
-        ChangedRecipesList.usedRecipes.addAll(recipesToChange);
-        return findMatchingRecipes(preferences);
+    public DayResult changeLastDay(PreferencesDto preferencesDto, List<String> recipesNamesToChange){
+        ChangedRecipesList.usedRecipes.addAll(recipesNamesToChange);
+        return findMatchingRecipes(preferencesDto);
     }
 
-    private DayPlan findMatchingRecipes(Preferences preferences){
+    private DayResult findMatchingRecipes(PreferencesDto preferencesDto){
         System.out.println("UserIngs1: " + userIngsFacade.getUserIngs());
         System.out.println("Leftovers1: " + leftoversFacade.getLeftovers());
 
-        SavedPrefers savedPrefers = preferences.savedPrefers();
-        List<MealValues> mealValues = preferences.mealsValues();
-        List<RecipeDay> recipesForDay = new ArrayList<>();
+        SavedPrefers savedPrefers = preferencesDto.savedPrefers();
+        List<MealValues> mealValues = preferencesDto.mealsValues();
+        List<RecipeResult> recipesForDay = new ArrayList<>();
 
         List<Meal> meals = Meal.getAllMeals(mealValues);
         for(Meal meal: meals){
@@ -90,25 +85,25 @@ public class PlanGeneratorFacade {
                     .build();
 
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(recipeFilters);
-            recipesForDay.add(new RecipeDay(
-                    meal.getName(),
-                    matchingRecipe.getId().toString(),
-                    matchingRecipe.getName(),
-                    recipeFilters.forHowManyDays()
-            ));
+            recipesForDay.add(RecipeResult.builder()
+                    .typeOfMeal(meal.getName())
+                    .recipeId(matchingRecipe.getId().toString())
+                    .recipeName(matchingRecipe.getName())
+                    .build()
+            );
         }
-        DayPlan plannedDay = DayPlan.builder()
-                .planned_day(recipesForDay)
+        DayResult plannedResult = DayResult.builder()
+                .recipesResult(recipesForDay)
                 .build();
 
         System.out.println("UserIngs2: " + userIngsFacade.getUserIngs());
         System.out.println("Leftovers2: " + leftoversFacade.getLeftovers());
 
-        return plannedDay;
+        return plannedResult;
     }
 
-    public void processLeftoversAndGroceryList(int portions, List<RecipeDay> tempDay){
-        for(RecipeDay recipe : tempDay){
+    public void processLeftoversAndGroceryList(int portions, List<TempRecipe> plannedRecipes){
+        for(TempRecipe recipe : plannedRecipes){
             RecipeDto recipeDto = recipeFacade.getById(recipe.recipeId());
             List<IngredientDto> calculatedIngs = ingredientsCalculator.calculateIngredients(recipeDto, portions, recipe.forHowManyDays());
             List<IngredientDto> ingsToBuy = storageFacade.updateStorageAndAddToGroceryList(calculatedIngs);

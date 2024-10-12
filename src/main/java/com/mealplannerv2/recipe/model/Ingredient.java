@@ -1,4 +1,4 @@
-package com.mealplannerv2.plangenerator.recipefilter.model;
+package com.mealplannerv2.recipe.model;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 

@@ -1,4 +1,4 @@
-package com.mealplannerv2.plangenerator.recipefilter.model;
+package com.mealplannerv2.recipe.model;
 
 import lombok.Builder;
 import org.bson.types.ObjectId;
