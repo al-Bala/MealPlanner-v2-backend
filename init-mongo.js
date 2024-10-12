@@ -69,15 +69,15 @@ db.units.insertMany([
 db.diets.insertMany([
     {
         _id: ObjectId('66f7f86a326bd5fde1b7f775'),
-        name: "wegetariańska"
+        name: "vegetarian"
     },
     {
         _id: ObjectId('66f7f876326bd5fde1b7f777'),
-        name: "wegańska"
+        name: "vegan"
     },
     {
         _id: ObjectId('66f7f883326bd5fde1b7f779'),
-        name: "mięsna"
+        name: "with meat"
     },
 ])
 
@@ -97,105 +97,117 @@ db.recipes.insertMany([
     },
     {
         _id: ObjectId('6577660abbac733a111c9421'),
-        name: "Kasza jaglana z warzywami",
+        // name: "Kasza jaglana z warzywami",
+        name: "Millet groats with vegetables",
         type_of_meal: ["DINNER"],
         portions: 2,
         prepare_time: 30,
         max_storage_time: 2,
         dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
-            { name: "kasza jaglana", amount: 200, unit: "g" },
-            { name: "marchew", amount: 200, unit: "g" },
-            { name: "brokul", amount: 150, unit: "g" },
-            { name: "oliwa z oliwek", amount: 30, unit: "ml" }
+            { name: "millet groats", amount: 200, unit: "g" },
+            { name: "carrot", amount: 200, unit: "g" },
+            { name: "broccoli", amount: 150, unit: "g" },
+            { name: "olive oil", amount: 30, unit: "ml" }
         ],
-        steps: ["Ugotuj kaszę", "Pokrój warzywa", "Smaż warzywa na oliwie", "Podawaj razem"]
+        // steps: ["Ugotuj kaszę", "Pokrój warzywa", "Smaż warzywa na oliwie", "Podawaj razem"]
+        steps: []
     },
     {
         _id: ObjectId('6577660abbac733a111c9422'),
-        name: "Sałatka owocowa",
+        // name: "Sałatka owocowa",
+        name: "Fruit salad",
         type_of_meal: ["BREAKFAST", "SUPPER"],
         portions: 3,
         prepare_time: 15,
         max_storage_time: 1,
         dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
-            { name: "jabłko", amount: 160, unit: "g" },
+            { name: "apple", amount: 160, unit: "g" },
             { name: "kiwi", amount: 150, unit: "g" },
-            { name: "truskawki", amount: 120, unit: "g" },
-            { name: "miód", amount: 20, unit: "ml" }
+            { name: "strawberry", amount: 120, unit: "g" },
+            { name: "honey", amount: 20, unit: "ml" }
         ],
-        steps: ["Pokrój owoce", "Połącz z miodem", "Delikatnie wymieszaj", "Gotowe do podania"]
+        // steps: ["Pokrój owoce", "Połącz z miodem", "Delikatnie wymieszaj", "Gotowe do podania"]
+        steps: []
     },
     {
         _id: ObjectId('6577660abbac733a111c9423'),
-        name: "Jajecznica z warzywami",
+        // name: "Jajecznica z warzywami",
+        name: "Scrambled eggs with vegetables",
         type_of_meal: ["BREAKFAST"],
         portions: 2,
         prepare_time: 15,
         max_storage_time: 1,
         dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
-            { name: "jajko", amount: 4, unit: "piece" },
-            { name: "papryka", amount: 140, unit: "g" },
-            { name: "pomidor", amount: 180, unit: "g" },
-            { name: "cebula", amount: 80, unit: "g" },
-            { name: "oliwa z oliwek", amount: 20, unit: "ml" }
+            { name: "egg", amount: 4, unit: "piece" },
+            { name: "pepper", amount: 140, unit: "g" },
+            { name: "tomato", amount: 180, unit: "g" },
+            { name: "onion", amount: 80, unit: "g" },
+            { name: "olive oil", amount: 20, unit: "ml" }
         ],
-        steps: ["Ubij jajka", "Pokrój warzywa", "Smaż warzywa, dodaj jajka", "Podawaj gorące"]
+        // steps: ["Ubij jajka", "Pokrój warzywa", "Smaż warzywa, dodaj jajka", "Podawaj gorące"]
+        steps: []
     },
     {
         _id: ObjectId('6577660abbac733a111c9424'),
-        name: "Koktajl owocowy",
+        // name: "Koktajl owocowy",
+        name: "Fruit cocktail",
         type_of_meal: ["BREAKFAST", "SUPPER"],
         portions: 1,
         prepare_time: 10,
         max_storage_time: 1,
         dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
-            { name: "banan", amount: 70, unit: "g" },
-            { name: "truskawki", amount: 100, unit: "g" },
+            { name: "banana", amount: 70, unit: "g" },
+            { name: "strawberry", amount: 100, unit: "g" },
             { name: "kiwi", amount: 50, unit: "g" },
-            { name: "sok pomarańczowy", amount: 150, unit: "ml" },
-            { name: "jogurt naturalny", amount: 50, unit: "g" }
+            { name: "orange juice", amount: 150, unit: "ml" },
+            { name: "natural yoghurt", amount: 50, unit: "g" }
         ],
-        steps: ["Włóż owoce do blendera", "Dodaj sok i jogurt", "Miksuj do uzyskania gładkiego koktajlu", "Gotowe do picia"]
+        // steps: ["Włóż owoce do blendera", "Dodaj sok i jogurt", "Miksuj do uzyskania gładkiego koktajlu", "Gotowe do picia"]
+        steps: []
     },
     {
         _id: ObjectId('6577660abbac733a111c9425'),
-        name: "Ryż z warzywami i kurczakiem",
+        // name: "Ryż z warzywami i kurczakiem",
+        name: "Rice with vegetables and chicken",
         type_of_meal: ["DINNER"],
         portions: 3,
         prepare_time: 25,
         max_storage_time: 2,
         dietId: "66f7f883326bd5fde1b7f779",
         ingredients: [
-            { name: "ryż", amount: 300, unit: "g" },
-            { name: "kurczak", amount: 250, unit: "g" },
-            { name: "marchew", amount: 200, unit: "g" },
-            { name: "brokul", amount: 150, unit: "g" },
-            { name: "sos sojowy", amount: 30, unit: "ml" }
+            { name: "rice", amount: 300, unit: "g" },
+            { name: "chicken", amount: 250, unit: "g" },
+            { name: "carrot", amount: 200, unit: "g" },
+            { name: "broccoli", amount: 150, unit: "g" },
+            { name: "soy sauce", amount: 30, unit: "ml" }
         ],
-        steps: ["Ugotuj ryż", "Pokrój kurczaka i warzywa", "Smaż kurczaka i warzywa, dodaj sos sojowy", "Podawaj razem z ryżem"]
+        // steps: ["Ugotuj ryż", "Pokrój kurczaka i warzywa", "Smaż kurczaka i warzywa, dodaj sos sojowy", "Podawaj razem z ryżem"]
+        steps: []
     },
     {
         _id: ObjectId('6577660abbac733a111c9427'),
-        name: "Makaron z warzywami i pesto",
+        // name: "Makaron z warzywami i pesto",
+        name: "Pasta with vegetables and pesto",
         type_of_meal: ["DINNER"],
         portions: 4,
         prepare_time: 20,
         max_storage_time: 3,
         dietId: "66f7f86a326bd5fde1b7f775",
         ingredients: [
-            { name: "makaron", amount: 400, unit: "g" },
-            { name: "cukinia", amount: 1, unit: "szt" },
-            { name: "papryka", amount: 120, unit: "g" },
-            { name: "cebula", amount: 80, unit: "g" },
+            { name: "pasta", amount: 400, unit: "g" },
+            { name: "zucchini", amount: 1, unit: "szt" },
+            { name: "pepper", amount: 120, unit: "g" },
+            { name: "onion", amount: 80, unit: "g" },
             // { name: "czosnek", amount: 2, unit: "ząbki" },
-            { name: "pesto bazyliowe", amount: 100, unit: "g" },
-            { name: "oliwa z oliwek", amount: 30, unit: "ml" }
+            { name: "basil pesto", amount: 100, unit: "g" },
+            { name: "olive oil", amount: 30, unit: "ml" }
         ],
-        steps: ["Ugotuj makaron al dente", "Pokrój cukinię, paprykę i cebulę", "Smaż cebulę i czosnek na oliwie, dodaj warzywa", "Dodaj pomidorki koktajlowe i smaż chwilę", "Wymieszaj warzywa z makaronem i pesto", "Podawaj natychmiast"]
+        // steps: ["Ugotuj makaron al dente", "Pokrój cukinię, paprykę i cebulę", "Smaż cebulę i czosnek na oliwie, dodaj warzywa", "Dodaj pomidorki koktajlowe i smaż chwilę", "Wymieszaj warzywa z makaronem i pesto", "Podawaj natychmiast"]
+        steps: []
     }
 ]);
 
@@ -210,7 +222,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('66a50ea4bdacf34ef3f53655'),
-        name: "makaron",
+        name: "pasta",
         packing_units: ["weight"],
         main_unit: "g",
         packing_sizes: [500,1000],
@@ -218,8 +230,8 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('66a50ebfbdacf34ef3f53657'),
-        name: "cukinia",
-        packing_units: ["weight", "szt."],
+        name: "zucchini",
+        packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 300,
         packing_sizes: [0],
@@ -227,7 +239,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('66a50ebfbdacf34ef3f53658'),
-        name: "pesto bazyliowe",
+        name: "basil pesto",
         packing_units: ["weight"],
         main_unit: "g",
         packing_sizes: [250,500],
@@ -235,7 +247,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('658c088e98487458f640453b'),
-        name: "kasza jaglana",
+        name: "millet groats",
         packing_units: ["weight", "measuring"],
         main_unit: "g",
         packing_sizes: [400,1000],
@@ -243,7 +255,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('658c088e98487458f640453c'),
-        name: "marchew",
+        name: "carrot",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 100,
@@ -252,7 +264,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('658c088e98487458f640453d'),
-        name: "brokul",
+        name: "broccoli",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 150,
@@ -261,7 +273,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('658c088e98487458f640453e'),
-        name: "oliwa z oliwek",
+        name: "olive oil",
         packing_units: ["capacity", "measuring"],
         main_unit: "ml",
         packing_sizes: [50,250,1000],
@@ -269,7 +281,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('6669d0e85a17b49d3cbfa10c'),
-        name: "jabłko",
+        name: "apple",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 80,
@@ -287,7 +299,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('6669d1235a17b49d3cbfa10f'),
-        name: "truskawki",
+        name: "strawberry",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         packing_sizes: [250, 500, 1000],
@@ -295,7 +307,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('6669d1235a17b49d3cbfa110'),
-        name: "miód",
+        name: "honey",
         packing_units: ["capacity", "measuring"],
         main_unit: "ml",
         packing_sizes: [500],
@@ -303,7 +315,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('6669d1235a17b49d3cbfa111'),
-        name: "banan",
+        name: "banana",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 100,
@@ -312,7 +324,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('6669d1235a17b49d3cbfa112'),
-        name: "sok pomarańczowy",
+        name: "orange juice",
         packing_units: ["capacity"],
         main_unit: "ml",
         packing_sizes: [250, 500, 1000],
@@ -320,7 +332,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('6669d1235a17b49d3cbfa113'),
-        name: "jogurt naturalny",
+        name: "natural yoghurt",
         packing_units: ["capacity"],
         main_unit: "ml",
         packing_sizes: [180, 250, 300],
@@ -328,7 +340,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('659d8d69d6d8ec0007e14d76'),
-        name: "jajko",
+        name: "egg",
         packing_units: ["piece"],
         main_unit: "piece",
         packing_sizes: [6,10],
@@ -336,7 +348,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('65a43bcc6b150200075ba406'),
-        name: "ryż",
+        name: "rice",
         packing_units: ["weight", "measuring"],
         main_unit: "g",
         packing_sizes: [400, 1000],
@@ -344,7 +356,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('65a43be46b150200075ba407'),
-        name: "kurczak",
+        name: "chicken",
         packing_units: ["weight"],
         main_unit: "g",
         packing_sizes: [400, 600],
@@ -352,7 +364,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('65a43bfc6b150200075ba408'),
-        name: "sos sojowy",
+        name: "soy sauce",
         packing_units: ["capacity", "measuring"],
         main_unit: "ml",
         packing_sizes: [150],
@@ -360,7 +372,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('65a980d8d5a2820007ae5a42'),
-        name: "papryka",
+        name: "pepper",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 120,
@@ -369,7 +381,7 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('65a98106d5a2820007ae5a43'),
-        name: "pomidor",
+        name: "tomato",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 100,
@@ -378,12 +390,12 @@ db.products.insertMany([
     },
     {
         _id: ObjectId('65a9813ad5a2820007ae5a44'),
-        name: "cebula",
+        name: "onion",
         packing_units: ["weight", "piece"],
         main_unit: "g",
         standard_weight: 80,
         packing_sizes: [0],
         max_days_after_opening: 5
-    },
+    }
 ]);
 

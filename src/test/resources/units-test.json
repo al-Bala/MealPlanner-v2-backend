@@ -63,7 +63,7 @@
       ]
     },
     {
-      "unit": "szt.",
+      "unit": "pc.",
       "group": "piece",
       "converting": []
     },
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "unit": "łyżka",
+      "unit": "tbsp",
       "group": "measuring",
       "converting": [
         {
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "unit": "łyżeczka",
+      "unit": "tsp",
       "group": "measuring",
       "converting": [
         {
