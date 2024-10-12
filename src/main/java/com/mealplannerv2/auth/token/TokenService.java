@@ -23,8 +23,9 @@ public class TokenService {
     }
 
     public boolean isTokenValid(String token) {
-        return tokenRepository.findByToken(token)
+        return tokenRepository.findByToken(token).stream()
                 .map(t -> !t.isExpired() && !t.isRevoked())
+                .findAny()
                 .orElse(false);
     }
 
