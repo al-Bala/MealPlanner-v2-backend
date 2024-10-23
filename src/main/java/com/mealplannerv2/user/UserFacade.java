@@ -32,12 +32,12 @@ public class UserFacade {
     @Setter
     private Clock clock;
 
-    public UserDto getUserDto() {
-        String username = getAuthenticatedUser();
-        return repository.findByUsername(username)
-                .map(UserMapper::mapFromUserToUserDto)
-                .orElseThrow(() -> new BadCredentialsException("Username not found"));
-    }
+//    public UserDto getUserDto() {
+//        String username = getAuthenticatedUser();
+//        return repository.findByUsername(username)
+//                .map(UserMapper::mapFromUserToUserDto)
+//                .orElseThrow(() -> new BadCredentialsException("Username not found"));
+//    }
 
     public List<Plan> getUserPlans() {
         User user = getUser();
@@ -47,13 +47,13 @@ public class UserFacade {
         return user.getPlans();
     }
 
-    public SavedPrefers getSavedPrefers(String userId) {
-        UserDto userDto = getById(userId);
+    public SavedPrefers getSavedPrefers(String username) {
+        UserDto userDto = getByUsername(username);
         return userDto.getPreferences();
     }
 
-    public void updateSavedPrefers(String userId, SavedPrefers newPrefers) {
-        UserDto userDto = getById(userId);
+    public void updateSavedPrefers(String username, SavedPrefers newPrefers) {
+        UserDto userDto = getByUsername(username);
         userDto.setPreferences(newPrefers);
         User user = UserMapper.mapFromUserDtoToUser(userDto);
         repository.save(user);
@@ -78,8 +78,8 @@ public class UserFacade {
                 .toList();
     }
 
-    public void saveNewPlan(String userId, List<PlannedDay> tempDays) {
-        UserDto userDto = getById(userId);
+    public void saveNewPlan(String username, List<PlannedDay> tempDays) {
+        UserDto userDto = getByUsername(username);
         List<Plan> plans = userDto.getPlans();
         if(plans == null){
             plans = new ArrayList<>();
@@ -122,11 +122,17 @@ public class UserFacade {
                 .orElseThrow(() -> new BadCredentialsException("Username not found"));
     }
 
-    public UserDto getById(String id) {
-        return repository.findById(id)
+    public UserDto getByEmail(String email) {
+        return repository.findByEmail(email)
                 .map(UserMapper::mapFromUserToUserDto)
-                .orElseThrow(() -> new BadCredentialsException("User with id " + id + " not found"));
+                .orElseThrow(() -> new BadCredentialsException("Email not found"));
     }
+
+//    public UserDto getById(String id) {
+//        return repository.findById(id)
+//                .map(UserMapper::mapFromUserToUserDto)
+//                .orElseThrow(() -> new BadCredentialsException("User with id " + id + " not found"));
+//    }
 
     private User getUser() {
         String username = getAuthenticatedUser();

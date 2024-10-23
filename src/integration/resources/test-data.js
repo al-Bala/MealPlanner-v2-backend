@@ -8,65 +8,41 @@ db.users.insertMany([
         password: "$2a$10$jqMDdOlw8P60m686b1Q.GeLjpdPncHUVJiXZUSq0QNFxoyMe74q86",
         email: "email@email.pl",
         preferences: {
-            diet: "miesna",
+            dietId: "66f7f883326bd5fde1b7f779",   // with meat
             portions: 2,
-            products_to_avoid: ["oliwki"]
+            products_to_avoid: ["olives"]
         },
         // user_recipes: [""],
         plans: [
             {
-                days: [
+                plannedDays: [
                     {
+                        // date: ISODate('2024-09-12T22:00:00.000Z'),
                         date: "2024-09-12",
-                        planned_day: [
+                        plannedRecipes: [
                             {
-                                type_of_meal: "DINNER",
-                                recipeId: {
-                                    $oid: "6577660abbac733a111c9421"
-                                },
-                                recipeName: "Millet groats with vegetables"
+                                typeOfMeal: 'DINNER',
+                                recipeId: '6577660abbac733a111c9425',
+                                recipeName: 'Rice with vegetables and chicken',
+                                forHowManyDays: 1
                             }
                         ]
                     },
                     {
+                        // date: ISODate('2024-09-13T22:00:00.000Z'),
                         date: "2024-09-13",
-                        planned_day: [
+                        plannedRecipes: [
                             {
-                                type_of_meal: "BREAKFAST",
-                                recipeId: {
-                                    $oid: "6577660abbac733a111c9423"
-                                },
-                                recipeName: "Scrambled eggs with vegetables"
-                            },
-                            {
-                                type_of_meal: "DINNER",
-                                recipeId: {
-                                    $oid: "6577660abbac733a111c9425"
-                                },
-                                recipeName: "Rice with vegetables and chicken"
+                                typeOfMeal: 'BREAKFAST',
+                                recipeId: '6577660abbac733a111c9423',
+                                recipeName: 'Scrambled eggs with vegetables',
+                                forHowManyDays: 1
                             }
                         ]
                     }
-                ],
-            },
-            {
-                days: [
-                    {
-                        date: "2024-09-14",
-                        planned_day: [
-                            {
-                                type_of_meal: "DINNER",
-                                recipeId: {
-                                    $oid: "6577660abbac733a111c9421"
-                                },
-                                recipeName: "Millet groats with vegetables"
-                            }
-                        ]
-                    }
-                ],
-            },
-        ],
-        // grocery_list:[]
+                ]
+            }
+        ]
     }
 ]);
 

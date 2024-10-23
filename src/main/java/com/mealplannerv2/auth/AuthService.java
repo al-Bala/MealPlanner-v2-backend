@@ -21,10 +21,10 @@ class AuthService {
     private final PasswordEncoder bCryptPasswordEncoder;
     private final UserRepository repository;
 
-    public AuthResponse saveUser(User user) {
+    public String saveUser(User user) {
         User savedUser = repository.save(user);
         log.info("User: {} added to database", savedUser.getUsername());
-        return new AuthResponse(savedUser.getUsername(), "");
+        return savedUser.getUsername();
     }
 
     public String encodePassword(String password) {

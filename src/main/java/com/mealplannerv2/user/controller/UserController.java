@@ -32,9 +32,9 @@ public class UserController {
                 .toList();
     }
 
-    @GetMapping("/{userId}/profile")
-    public ResponseEntity<Profile> showProfile(@PathVariable String userId) {
-        UserDto userDto = userFacade.getById(userId);
+    @GetMapping("/{username}/profile")
+    public ResponseEntity<Profile> showProfile(@PathVariable String username) {
+        UserDto userDto = userFacade.getByUsername(username);
         Profile profile = Profile.builder()
                 .username(userDto.getUsername())
                 .plans(userDto.getPlans())
@@ -42,25 +42,25 @@ public class UserController {
         return ResponseEntity.ok(profile);
     }
 
-    @GetMapping("/{userId}/prefs")
-    public ResponseEntity<SavedPrefers> getSavedPreferences(@PathVariable String userId){
-        SavedPrefers savedPrefers = userFacade.getSavedPrefers(userId);
+    @GetMapping("/{username}/prefs")
+    public ResponseEntity<SavedPrefers> getSavedPreferences(@PathVariable String username){
+        SavedPrefers savedPrefers = userFacade.getSavedPrefers(username);
         System.out.println("Fetched prefs: " + savedPrefers);
         return ResponseEntity.ok(savedPrefers);
     }
 
-    @PutMapping("/{userId}/prefs")
+    @PutMapping("/{username}/prefs")
     public void updateSavedPreferences(
-            @PathVariable String userId,
+            @PathVariable String username,
             @RequestBody SavedPrefers savedPrefers
     ){
-        userFacade.updateSavedPrefers(userId, savedPrefers);
-        System.out.println("SavedPrefers updated for " + userId);
+        userFacade.updateSavedPrefers(username, savedPrefers);
+        System.out.println("SavedPrefers updated for " + username);
     }
 
-    @PostMapping("/{userId}/plans")
+    @PostMapping("/{username}/plans")
     public ResponseEntity<String> savePlan(
-            @PathVariable String userId,
+            @PathVariable String username,
             @RequestBody PlanToSave planToSave
     ){
         int planLength = planToSave.daysToSave().size() - 1;
@@ -79,7 +79,7 @@ public class UserController {
             plannedDay.setDate(startDate);
             startDate = startDate.plusDays(1);
         }
-        userFacade.saveNewPlan(userId, planToSave.daysToSave());
+        userFacade.saveNewPlan(username, planToSave.daysToSave());
         System.out.println("Plan saved");
         return ResponseEntity.ok("Saved new plan");
     }

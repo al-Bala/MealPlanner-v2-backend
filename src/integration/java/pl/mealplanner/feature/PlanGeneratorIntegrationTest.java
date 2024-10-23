@@ -1,7 +1,12 @@
 package pl.mealplanner.feature;
 
 import com.auth0.jwt.JWT;
+import com.mealplannerv2.auth.dto.UserDto;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.AcceptDayRequest;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.TempRecipe;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.CreateDayResponse;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.RecipeResult;
 import com.mealplannerv2.user.model.SavedPrefers;
 import com.mealplannerv2.user.model.Plan;
 import com.mealplannerv2.recipe.RecipeRepository;
@@ -9,6 +14,8 @@ import com.mealplannerv2.user.UserFacade;
 import jakarta.servlet.http.Cookie;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC256;
@@ -49,13 +57,16 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
     @Test
     @WithMockUser(username = "testUser")
     public void plan_generator_test() throws Exception {
-        // 1) user ma w bazie zapisany plan: 12 - 13.09.2024
+
+    // 1) user ma w bazie zapisany plan: 12 - 13.09.2024
         log.info(userPlans());
-        // 2) user otwiera okno generatora --> jego zapisane preferencje autmatycznie sie uzupełniają
+
+
+    // 2) user otwiera okno generatora --> jego zapisane preferencje autmatycznie sie uzupełniają
         // given & when
-        ResultActions getSavePrefsAction = mockMvc.perform(get("/users/6672e2e8be614a1616e7552f/prefs")
-                .servletPath("/users/6672e2e8be614a1616e7552f/prefs")
-                .cookie(new Cookie("accessToken", token))
+        ResultActions getSavePrefsAction = mockMvc.perform(get("/users/testUser/prefs")
+                .servletPath("/users/testUser/prefs")
+                .header("Authorization", "Bearer " + token)
         );
         // then
         MvcResult getPrefsResult = getSavePrefsAction.andExpect(status().isOk()).andReturn();
@@ -64,25 +75,24 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         assertAll(
                 () -> assertThat(savedPrefersResult.getDietId()).isEqualTo("66f7f883326bd5fde1b7f779"),
                 () -> assertThat(savedPrefersResult.getPortions()).isEqualTo(2),
-                () -> assertThat(savedPrefersResult.getProducts_to_avoid()).containsOnly("oliwki")
+                () -> assertThat(savedPrefersResult.getProducts_to_avoid()).containsOnly("olives")
         );
         log.info("[1]: {}", jsonWithPrefers);
-//        System.out.println("[1] -- " + jsonWithPrefers);
 
-        // 3) user zmienia diete, ustawia początkową date na 12.09.2024, wypełnia pozostałe preferencje
+
+    // 3) user zmienia diete, ustawia początkową date na 12.09.2024, wypełnia pozostałe preferencje
         log.info("Chosen date: 12-09-2024");
-
         // i przechodzi dalej --> system aktualizuje preferencje
         // given & when
-        mockMvc.perform(put("/users/6672e2e8be614a1616e7552f/prefs")
-                .servletPath("/users/6672e2e8be614a1616e7552f/prefs")
-                .cookie(new Cookie("accessToken", token))
+        mockMvc.perform(put("/users/testUser/prefs")
+                .servletPath("/users/testUser/prefs")
+                .header("Authorization", "Bearer " + token)
                 .content("""
                         {
-                            "diet": "wegetarianska",
+                            "dietId": "66f7f86a326bd5fde1b7f775",
                             "portions": 2,
                             "products_to_avoid": [
-                              "oliwki"
+                              "olives"
                             ]
                          }
                         """.trim())
@@ -92,25 +102,24 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         SavedPrefers testUserPrefs = userFacade.getByUsername("testUser").getPreferences();
         assertThat(testUserPrefs.getDietId()).isEqualTo("66f7f86a326bd5fde1b7f775");
         log.info("[2]: {}", testUserPrefs);
-//        System.out.println("[2] -- " + testUserPrefs);
 
-        // 6) user wybiera jeden posiłek (obiad) na pierwszy dzień --> system wyświetla wygenerowane przepisy
 
+    // 4) user wybiera jeden posiłek (obiad) na pierwszy dzień --> system wyświetla wygenerowane przepisy
         ResultActions createFirstDayAction = mockMvc.perform(post("/generator/days/first")
-                .servletPath("/generator/plannedDays/first")
-                .cookie(new Cookie("accessToken", token))
+                .servletPath("/generator/days/first")
+                .header("Authorization", "Bearer " + token)
                 .content("""
                         {
                            "savedPrefers": {
-                             "diet": "wegetariańska",
+                             "dietId": "66f7f86a326bd5fde1b7f775",
                              "portions": 2,
                              "products_to_avoid": [
-                               "oliwki"
+                               "olives"
                              ]
                            },
                            "userProducts": [
                              {
-                               "name": "marchew",
+                               "name": "carrot",
                                "amount": 200,
                                "unit": "g"
                              }
@@ -127,11 +136,20 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         MvcResult firstDayResult = createFirstDayAction.andExpect(status().isOk()).andReturn();
-        String jsonWithFirstDayRecipe = firstDayResult.getResponse().getContentAsString();
-        log.info("[3]: {}", jsonWithFirstDayRecipe);
-//        System.out.println("[3] -- " + jsonWithFirstDayRecipe);
+        String jsonWithFirstDayResult = firstDayResult.getResponse().getContentAsString();
+        CreateDayResponse createDayResponse = objectMapper.readValue(jsonWithFirstDayResult, CreateDayResponse.class);
+        log.info("[3]: {}", createDayResponse);
+        RecipeResult oneRecipeResult = createDayResponse.dayResult().recipesResult().get(0);
+        assertAll(
+//                () -> assertThat(createDayResponse.message()).isEqualTo(""),
+                () -> assertThat(createDayResponse.dayResult().recipesResult().size()).isEqualTo(1),
+                () -> assertThat(oneRecipeResult.typeOfMeal()).isEqualTo("DINNER"),
+                () -> assertThat(oneRecipeResult.recipeId()).isEqualTo("6577660abbac733a111c9421"),
+                () -> assertThat(oneRecipeResult.recipeName()).isEqualTo("Millet groats with vegetables")
+        );
 
-        // 8) user zmienia przepisy na dany dzień
+
+    // 5) user zmienia przepisy na dany dzień
 
 //        ResultActions changeDayAction = mockMvc.perform(post("/plan/day/change")
 //                .servletPath("/plan/day/change")
@@ -139,7 +157,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 //                .content("""
 //                        {
 //                           "savedPrefers": {
-//                             "dietId": "wegetariańska",
+//                             "dietId": "66f7f86a326bd5fde1b7f775",
 //                             "portions": 2,
 //                             "products_to_avoid": [
 //                               "kiwi"
@@ -157,33 +175,45 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
 //                .contentType(MediaType.APPLICATION_JSON_VALUE)
 //        );
 
-        // 9) system wyświetla inne przepisy
 
-        // 10) user zatwierdza przepisy na dany dzień
+    // 6) system wyświetla inne przepisy
 
-        ResultActions saveDayInTempPlanAction = mockMvc.perform(post("/users/6672e2e8be614a1616e7552f/temp-plan/days")
-                .servletPath("/users/6672e2e8be614a1616e7552f/temp-plan/plannedDays")
-                .cookie(new Cookie("accessToken", token))
-                .content(jsonWithFirstDayRecipe)
+
+    // 7) user przechodzi do kolejnego dnia --> jednocześnie zatwierdza przepisy na dany dzień
+        ResultActions saveDayInTempPlanAction = mockMvc.perform(post("/generator/days/accept")
+                .servletPath("/generator/days/accept")
+                .header("Authorization", "Bearer " + token)
+                  .content("""
+                        {
+                           "portions": 2,
+                           "tempRecipes": [
+                             {
+                               "typeOfMeal": "DINNER",
+                               "recipeId": "6577660abbac733a111c9421",
+                               "recipeName": "Millet groats with vegetables",
+                               "forHowManyDays": 1,
+                               "isRepeated": false
+                             }
+                           ]
+                         }
+                        """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
-        MvcResult tempPlanResult = saveDayInTempPlanAction.andExpect(status().isOk()).andReturn();
-        String jsonWithTempPlan = tempPlanResult.getResponse().getContentAsString();
-        log.info("[4]: {}", jsonWithTempPlan);
-//        System.out.println("[4] -- " + jsonWithTempPlan);
+        saveDayInTempPlanAction.andExpect(status().isOk());
+        log.info("[4]: Day accepted");
 
-        // 11) user wybiera jeden posiłek (obiad) na kolejny dzień --> system wyświetla wygenerowane przepisy
 
+    // 8) user wybiera jeden posiłek (obiad) na kolejny dzień --> system wyświetla wygenerowane przepisy
         ResultActions createNextDayAction = mockMvc.perform(post("/generator/days/next")
-                .servletPath("/generator/plannedDays/next")
-                .cookie(new Cookie("accessToken", token))
+                .servletPath("/generator/days/next")
+                .header("Authorization", "Bearer " + token)
                 .content("""
                         {
                            "savedPrefers": {
-                             "diet": "wegetariańska",
+                             "dietId": "66f7f86a326bd5fde1b7f775",
                              "portions": 2,
                              "products_to_avoid": [
-                               "oliwki"
+                               "olives"
                              ]
                            },
                            "mealsValues": [
@@ -192,68 +222,139 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
                                "timeMin": -1,
                                "forHowManyDays": 1
                              }
-                           ]
+                           ],
+                           "usedRecipesNames": ["Millet groats with vegetables"]
                          }
                         """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         MvcResult nextDayResult = createNextDayAction.andExpect(status().isOk()).andReturn();
         String jsonWithNextDayRecipe = nextDayResult.getResponse().getContentAsString();
-//        System.out.println("[5] -- " + jsonWithNextDayRecipe);
-        log.info("[5]: {}", jsonWithNextDayRecipe);
+        CreateDayResponse createNextDayResponse = objectMapper.readValue(jsonWithNextDayRecipe, CreateDayResponse.class);
+        log.info("[5]: {}", createNextDayResponse);
+        RecipeResult oneNextRecipeResult = createNextDayResponse.dayResult().recipesResult().get(0);
+        assertAll(
+//                () -> assertThat(createDayResponse.message()).isEqualTo(""),
+                () -> assertThat(createDayResponse.dayResult().recipesResult().size()).isEqualTo(1),
+                () -> assertThat(oneNextRecipeResult.typeOfMeal()).isEqualTo("DINNER"),
+                () -> assertThat(oneNextRecipeResult.recipeId()).isEqualTo("6577660abbac733a111c9427"),
+                () -> assertThat(oneNextRecipeResult.recipeName()).isEqualTo("Pasta with vegetables and pesto")
+        );
 
-        // 10) user zatwierdza przepisy na kolejny dzień
 
-        ResultActions saveNextDayInTempPlanAction = mockMvc.perform(post("/users/6672e2e8be614a1616e7552f/temp-plan/days")
-                .servletPath("/users/6672e2e8be614a1616e7552f/temp-plan/plannedDays")
-                .cookie(new Cookie("accessToken", token))
-                .content(jsonWithFirstDayRecipe)
+    // 9) user przechodzi do kolejnego dnia --> jednocześnie zatwierdza przepisy na kolejny dzień
+        ResultActions saveNextDayAction = mockMvc.perform(post("/generator/days/accept")
+                .servletPath("/generator/days/accept")
+                .header("Authorization", "Bearer " + token)
+                .content("""
+                        {
+                           "portions": 2,
+                           "tempRecipes": [
+                             {
+                               "typeOfMeal": "DINNER",
+                               "recipeId": "6577660abbac733a111c9427",
+                               "recipeName": "Pasta with vegetables and pesto",
+                               "forHowManyDays": 1,
+                               "isRepeated": false
+                             }
+                           ]
+                         }
+                        """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
-        MvcResult nextTempPlanResult = saveNextDayInTempPlanAction.andExpect(status().isOk()).andReturn();
-        String jsonWithNextTempPlan = nextTempPlanResult.getResponse().getContentAsString();
-//        System.out.println("[6] -- " + jsonWithNextTempPlan);
-        log.info("[6]: {}", jsonWithNextTempPlan);
+        saveNextDayAction.andExpect(status().isOk());
+        log.info("[6]: Next day accepted");
 
-        // 10) user zatwierdza cały plan ale system zwraca błąd
-        ResultActions failSavePlanAction = mockMvc.perform(post("/users/6672e2e8be614a1616e7552f/plans")
-                .servletPath("/users/6672e2e8be614a1616e7552f/plans")
-                .cookie(new Cookie("accessToken", token))
-                .content("2024-09-12")
-                .contentType(MediaType.TEXT_PLAIN)
+    // 10) user zatwierdza cały plan ale system zwraca błąd
+        ResultActions failSavePlanAction = mockMvc.perform(post("/users/testUser/plans")
+                .servletPath("/users/testUser/plans")
+                .header("Authorization", "Bearer " + token)
+                  .content("""
+                        {
+                           "startDateText": "2024-09-12",
+                           "daysToSave": [
+                             {
+                               "date": "",
+                               "plannedRecipes": [
+                                  {
+                                    "typeOfMeal": "DINNER",
+                                    "recipeId": "6577660abbac733a111c9421",
+                                    "recipeName": "Millet groats with vegetables",
+                                    "forHowManyDays": 1
+                                  }
+                               ]
+                             },
+                             {
+                               "date": "",
+                               "plannedRecipes": [
+                                  {
+                                    "typeOfMeal": "DINNER",
+                                    "recipeId": "6577660abbac733a111c9427",
+                                    "recipeName": "Pasta with vegetables and pesto",
+                                    "forHowManyDays": 1
+                                  }
+                               ]
+                             }
+                           ]
+                         }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         MvcResult failSavePlanResult = failSavePlanAction.andExpect(status().isBadRequest()).andReturn();
         String jsonWithFailSaveResponse = failSavePlanResult.getResponse().getContentAsString();
-//        System.out.println("[7] -- " + jsonWithFailSaveResponse);
         log.info("[7]: {}", jsonWithFailSaveResponse);
+        assertThat(jsonWithFailSaveResponse).isEqualTo("Duplicate Plan");
 
-        // 11) system wyświetla komunikat o istniejącym już planie (nadpisać czy zmienić date?)
-        // 12) user zmienia początkową date na 14.09.2024 i zatwierdza plan --> system zapisuje cały plan w bazie
+    // 11) system wyświetla komunikat o istniejącym już planie (nadpisać czy zmienić date?)
+    // 12) user zmienia początkową date na 14.09.2024 i zatwierdza plan --> system zapisuje cały plan w bazie
         log.info("Changed date: 14-09-2024");
-        ResultActions savePlanAction = mockMvc.perform(post("/users/6672e2e8be614a1616e7552f/plans")
-                .servletPath("/users/6672e2e8be614a1616e7552f/plans")
-                .cookie(new Cookie("accessToken", token))
-                .content("2024-09-14")
-                .contentType(MediaType.TEXT_PLAIN)
+        ResultActions savePlanAction = mockMvc.perform(post("/users/testUser/plans")
+                .servletPath("/users/testUser/plans")
+                .header("Authorization", "Bearer " + token)
+                .content("""
+                        {
+                           "startDateText": "2024-09-14",
+                           "daysToSave": [
+                             {
+                               "date": "",
+                               "plannedRecipes": [
+                                  {
+                                    "typeOfMeal": "DINNER",
+                                    "recipeId": "6577660abbac733a111c9421",
+                                    "recipeName": "Millet groats with vegetables",
+                                    "forHowManyDays": 1
+                                  }
+                               ]
+                             },
+                             {
+                               "date": "",
+                               "plannedRecipes": [
+                                  {
+                                    "typeOfMeal": "DINNER",
+                                    "recipeId": "6577660abbac733a111c9427",
+                                    "recipeName": "Pasta with vegetables and pesto",
+                                    "forHowManyDays": 1
+                                  }
+                               ]
+                             }
+                           ]
+                         }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         MvcResult savePlanResult = savePlanAction.andExpect(status().isOk()).andReturn();
         String jsonWithSaveResponse = savePlanResult.getResponse().getContentAsString();
-//        System.out.println("[8] -- " + jsonWithSaveResponse);
         log.info("[8]: {}", jsonWithSaveResponse);
-
-//        List<Plan> plans2 = userFacade.getByUsername("testUser").getPlans();
-//        System.out.println("[8a] -- History");
-//        plans2.forEach(p -> {
-//            System.out.println("Plan: ");
-//            p.plannedDays().forEach(d -> System.out.println(d.getDate() + " " + d.getPlanned_day()));
-//        });
+        assertThat(jsonWithSaveResponse).isEqualTo("Saved new plan");
         log.info(userPlans());
 
         // TODO: przeliczanie porcji w wyświetlanym przepisie
     }
 
     private @NotNull StringBuilder userPlans() {
-        List<Plan> plans = userFacade.getByUsername("testUser").getPlans();
+        UserDto user = userFacade.getByUsername("testUser");
+        System.out.println(user);
+        List<Plan> plans = user.getPlans();
         StringBuilder logMessage = new StringBuilder();
         logMessage.append("[0] -- History:");
         plans.forEach(p -> {

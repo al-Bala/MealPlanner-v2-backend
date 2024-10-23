@@ -17,12 +17,11 @@ public class TokenDecoder {
 
     private final JwtConfigurationProperties properties;
 
-    public DecodedJWT getDecodedJWT(String token, String name) {
+    public DecodedJWT getDecodedJWT(String token) {
         final DecodedJWT jwt;
         try {
             jwt = decodeJwtToken(token);
         } catch (JWTVerificationException e) {
-            log.error("{}: {}", name, e.getMessage());
             throw new InvalidJwtException("JWT verification failed");
         }
         return jwt;

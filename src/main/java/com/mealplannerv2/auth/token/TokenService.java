@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -13,7 +14,7 @@ public class TokenService {
     final private TokenRepository tokenRepository;
 
     public void updateAllTokens(LoginTokens loginTokens) {
-        revokeAllUserTokens(loginTokens.userId());
+        revokeAllUserTokens(loginTokens.username());
         tokenRepository.saveAll(List.of(loginTokens.accessToken(), loginTokens.refreshToken()));
     }
 
@@ -52,4 +53,8 @@ public class TokenService {
         tokenRepository.saveAll(validTokens);
     }
 
+    public Token getRefreshToken(String username){
+        Optional<Token> validRefreshToken = tokenRepository.findValidRefreshToken(username);
+        return validRefreshToken.orElse(null);
+    }
 }

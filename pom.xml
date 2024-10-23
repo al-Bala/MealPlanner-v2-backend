@@ -42,6 +42,14 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!--  SWAGGER http://localhost:8080/swagger-ui/index.html#/ -->
+        <!--  SWAGGER https://localhost/swagger-ui/index.html#/ -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+
         <!-- TESTS -->
 <!--        <dependency>-->
 <!--            <groupId>de.flapdoodle.embed</groupId>-->
@@ -111,6 +119,7 @@
     </dependencies>
 
     <build>
+        <finalName>meal-planner-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

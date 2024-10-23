@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record LoginTokens(
-        String userId,
+        String username,
         Token accessToken,
         Token refreshToken
 ) {

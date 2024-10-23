@@ -28,28 +28,17 @@ class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().contains("/auth")) {
+        String tokenHeader = request.getHeader("Authorization");
+        if (tokenHeader == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        Cookie[] cookies = request.getCookies();
-        String token = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("accessToken")) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-            if(token == null){
-                filterChain.doFilter(request, response);
-                return;
-            }
-        }
         final DecodedJWT decodedJWT;
         try {
-            decodedJWT = tokenDecoder.getDecodedJWT(token, "Filter");
+            String accessToken = tokenHeader.substring(7);
+            decodedJWT = tokenDecoder.getDecodedJWT(accessToken);
         } catch (InvalidJwtException e) {
+            log.warn("Access token: {}", e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             return;
         }

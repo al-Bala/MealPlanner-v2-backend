@@ -15,14 +15,14 @@ class LoginUserDetailsService implements UserDetailsService {
     private final UserFacade userFacade;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws BadCredentialsException {
-        UserDto userDto = userFacade.getByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws BadCredentialsException {
+        UserDto userDto = userFacade.getByEmail(email);
         return getUser(userDto);
     }
 
     private org.springframework.security.core.userdetails.User getUser(UserDto userDto) {
         return new org.springframework.security.core.userdetails.User(
-                userDto.getUsername(),
+                userDto.getEmail(),
                 userDto.getPassword(),
                 Collections.emptyList());
     }

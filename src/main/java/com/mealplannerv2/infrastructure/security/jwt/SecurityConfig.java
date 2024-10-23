@@ -48,6 +48,10 @@ class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling((exceptions) ->

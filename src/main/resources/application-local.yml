@@ -1,0 +1,18 @@
+spring:
+  data:
+    mongodb:
+#      uri: mongodb://admin:admin@localhost:27018/mealplanner?authSource=admin
+      uri: mongodb://admin:admin@localhost:27018/mealplanner
+
+history:
+  scheduler:
+    occurrence: "0 * * ? * *"   #every minute
+#    occurrence: "0 */5 * ? * *"   #every 5 minutes
+
+scheduling:
+  enabled: false
+
+auth:
+  jwt:
+    access-expiration-sec: 5    # 5
+    refresh-expiration-sec: 60  # 1 * 60

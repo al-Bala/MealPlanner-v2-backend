@@ -1,15 +1,14 @@
 package com.mealplannerv2.auth;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mealplannerv2.auth.infrastructure.controller.dto.*;
 import com.mealplannerv2.auth.token.Token;
 import com.mealplannerv2.auth.token.TokenService;
 import com.mealplannerv2.auth.token.TokenType;
 import com.mealplannerv2.infrastructure.security.jwt.JwtAuthenticatorService;
 import com.mealplannerv2.infrastructure.security.jwt.TokenDecoder;
+import com.mealplannerv2.user.UserFacade;
 import com.mealplannerv2.user.model.SavedPrefers;
 import com.mealplannerv2.user.model.User;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -25,8 +24,9 @@ public class AuthFacade {
     private final JwtAuthenticatorService jwtAuthenticatorService;
     private final TokenService tokenService;
     private final TokenDecoder tokenDecoder;
+    private final UserFacade userFacade;
 
-    public AuthResponse register(RegisterRequest userDto) {
+    public String register(RegisterRequest userDto) {
         authService.validateRegistration(userDto);
         User user = User.builder()
                 .username(userDto.username())
@@ -38,30 +38,38 @@ public class AuthFacade {
         return authService.saveUser(user);
     }
 
-    public LoginTokens login(LoginRequestDto loginCredentials) {
-        JwtResponseDto jwtResponseDto = jwtAuthenticatorService.authenticateAndGenerateToken(loginCredentials);
+    public AuthResponse logIn(LogInRequestDto logInCredentials) {
+        JwtResponseDto jwtResponseDto = jwtAuthenticatorService.authenticateAndGenerateToken(logInCredentials);
         Token accessToken = new Token(
                 jwtResponseDto.accessToken(),
-                jwtResponseDto.userId(),
+                jwtResponseDto.username(),
                 TokenType.ACCESS
         );
         Token refreshToken = new Token(
                 jwtResponseDto.refreshToken(),
-                jwtResponseDto.userId(),
+                jwtResponseDto.username(),
                 TokenType.REFRESH
         );
         LoginTokens loginTokens = LoginTokens.builder()
-                .userId(jwtResponseDto.userId())
+                .username(jwtResponseDto.username())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
         tokenService.updateAllTokens(loginTokens);
-        return loginTokens;
+        return AuthResponse.builder()
+                .username(loginTokens.username())
+                .accessToken(loginTokens.accessToken().getToken())
+                .build();
     }
 
-    public String refreshToken(String refreshToken) {
-        DecodedJWT decodedJWT = tokenDecoder.getDecodedJWT(refreshToken, "RefreshToken");
-        String username = decodedJWT.getSubject();
+    public AuthResponse refreshToken(String username) {
+        Token refreshToken = tokenService.getRefreshToken(username);
+        String token = "";
+        // TODO: test
+        if(refreshToken != null){
+            token = refreshToken.getToken();
+        }
+        tokenDecoder.getDecodedJWT(token);
         String newAccessToken = jwtAuthenticatorService.createAccessToken(username);
         Token dbAccessToken = new Token(
                 newAccessToken,
@@ -69,12 +77,9 @@ public class AuthFacade {
                 TokenType.ACCESS
         );
         tokenService.updateAccessTokens(dbAccessToken);
-        return newAccessToken;
-    }
-
-    public void setCookie(String tokenName, String tokenValue, HttpServletResponse response){
-        response.addHeader("Set-Cookie",
-                String.format("%s=%s; Path=%s; HttpOnly; Secure; SameSite=%s",
-                        tokenName, tokenValue, "/", "Strict"));
+        return AuthResponse.builder()
+                .username(username)
+                .accessToken(newAccessToken)
+                .build();
     }
 }
