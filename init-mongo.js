@@ -1,3 +1,4 @@
+// db.getSiblingDB("admin").createUser(
 db.createUser(
     {
         user: "admin",
@@ -18,28 +19,10 @@ db.users.insertMany([
         email: 'admin@admin.pl',
         password: '$2a$10$tR8zusPyujdG.PgOg6ikM.DGxc//Y1F3GnqVMrjUQhF702iZSLDd6',
         preferences: {
-            dietId: '',
-            portions: 0,
-            products_to_avoid: ['']
+            dietId: '66f7f86a326bd5fde1b7f775',
+            portions: 2,
         },
-        plans: [
-            {
-                days: [
-                    {
-                        date: '',
-                        planned_day: [
-                            {
-                                type_of_meal: '',
-                                recipeId: {
-                                    $oid: ''
-                                },
-                                recipeName: ''
-                            }
-                        ]
-                    }
-                ],
-            }
-        ]
+        plans: []
     }
 ])
 
