@@ -1,7 +1,7 @@
 package pl.mealplanner.feature;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
-import com.mealplannerv2.auth.infrastructure.controller.error.response.RegisterErrorResponse;
 import com.mealplannerv2.user.controller.response.Profile;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
                 .content("""
                         {
                         "email": "someEmail",
-                        "password": "somePassword"
+                        "password": "somePassword123"
                         }
                         """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +64,7 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
                         {
                         "username": "testUser",
                         "email": "email@email.pl",
-                        "password": "somePassword"
+                        "password": "somePassword123"
                         }
                         """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -71,22 +72,22 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
         // then
         MvcResult invalidRegisterActionResult = invalidRegisterAction.andExpect(status().isBadRequest()).andReturn();
         String invalidRegisterActionResultJson = invalidRegisterActionResult.getResponse().getContentAsString();
-        RegisterErrorResponse invalidRegisterResult = objectMapper.readValue(invalidRegisterActionResultJson, RegisterErrorResponse.class);
+        Map<String, String> invalidRegisterResult = objectMapper.readValue(invalidRegisterActionResultJson, new TypeReference<Map<String, String>>() {});
         assertAll(
-                () -> assertThat(invalidRegisterResult.isUsernameValid()).isFalse(),
-                () -> assertThat(invalidRegisterResult.isEmailValid()).isFalse()
+                () -> assertThat(invalidRegisterResult.get("email")).isEqualTo("emailRepeated"),
+                () -> assertThat(invalidRegisterResult.get("username")).isEqualTo("usernameRepeated")
         );
 
 
-        //step 4: user made POST /register with username=someUser, email=someEmail and system registered user with status CREATED(201)
+        //step 4: user made POST /register with username=someUser, email=some.email@email.pl and system registered user with status CREATED(201)
         // given & when
         ResultActions registerAction = mockMvc.perform(post("/auth/register")
                 .servletPath("/auth/register")
                 .content("""
                         {
                         "username": "someUser",
-                        "email": "someEmail",
-                        "password": "somePassword"
+                        "email": "some.email@email.pl",
+                        "password": "somePassword123"
                         }
                         """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -106,8 +107,8 @@ public class LoginAndRegisterIntegrationTest extends BaseIntegrationTest {
                 .servletPath("/auth/login")
                 .content("""
                         {
-                        "email": "someEmail",
-                        "password": "somePassword"
+                        "email": "some.email@email.pl",
+                        "password": "somePassword123"
                         }
                         """.trim())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

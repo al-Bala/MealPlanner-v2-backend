@@ -16,7 +16,7 @@ db.users.insertMany([
     {
         _id: ObjectId('222222222222222222222222'),
         username: 'admin',
-        email: 'admin@admin.pl',
+        email: 'a@admin.pl',
         password: '$2a$10$tR8zusPyujdG.PgOg6ikM.DGxc//Y1F3GnqVMrjUQhF702iZSLDd6',
         preferences: {
             dietId: '66f7f86a326bd5fde1b7f775',

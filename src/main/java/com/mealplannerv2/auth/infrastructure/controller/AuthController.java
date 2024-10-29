@@ -2,7 +2,7 @@ package com.mealplannerv2.auth.infrastructure.controller;
 
 import com.mealplannerv2.auth.AuthFacade;
 import com.mealplannerv2.auth.infrastructure.controller.dto.AuthResponse;
-import com.mealplannerv2.auth.infrastructure.controller.dto.LogInRequestDto;
+import com.mealplannerv2.auth.infrastructure.controller.dto.LogInRequest;
 import com.mealplannerv2.auth.infrastructure.controller.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,13 +23,13 @@ public class AuthController {
     private final AuthFacade authFacade;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest) {
         String registeredUser = authFacade.register(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> logIn(@Valid @RequestBody LogInRequestDto logInRequest) {
+    public ResponseEntity<AuthResponse> logIn(@Valid @RequestBody LogInRequest logInRequest) {
         AuthResponse authResponse = authFacade.logIn(logInRequest);
         return ResponseEntity.ok(authResponse);
     }

@@ -1,6 +1,6 @@
 package com.mealplannerv2.infrastructure.security.jwt.error;
 
-import com.mealplannerv2.auth.infrastructure.controller.error.response.LoginErrorResponse;
+import com.mealplannerv2.auth.infrastructure.controller.error.LoginErrorResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

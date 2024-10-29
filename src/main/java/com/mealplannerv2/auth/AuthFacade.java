@@ -27,7 +27,6 @@ public class AuthFacade {
     private final UserFacade userFacade;
 
     public String register(RegisterRequest userDto) {
-        authService.validateRegistration(userDto);
         User user = User.builder()
                 .username(userDto.username())
                 .email(userDto.email())
@@ -38,7 +37,7 @@ public class AuthFacade {
         return authService.saveUser(user);
     }
 
-    public AuthResponse logIn(LogInRequestDto logInCredentials) {
+    public AuthResponse logIn(LogInRequest logInCredentials) {
         JwtResponseDto jwtResponseDto = jwtAuthenticatorService.authenticateAndGenerateToken(logInCredentials);
         Token accessToken = new Token(
                 jwtResponseDto.accessToken(),

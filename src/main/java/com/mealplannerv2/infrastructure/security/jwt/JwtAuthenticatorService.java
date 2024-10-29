@@ -3,7 +3,7 @@ package com.mealplannerv2.infrastructure.security.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.mealplannerv2.auth.infrastructure.controller.dto.JwtResponseDto;
-import com.mealplannerv2.auth.infrastructure.controller.dto.LogInRequestDto;
+import com.mealplannerv2.auth.infrastructure.controller.dto.LogInRequest;
 import com.mealplannerv2.user.UserFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +23,7 @@ public class JwtAuthenticatorService {
     private final Clock clock;
     private final UserFacade userFacade;
 
-    public JwtResponseDto authenticateAndGenerateToken(LogInRequestDto logInRequest){
+    public JwtResponseDto authenticateAndGenerateToken(LogInRequest logInRequest){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(logInRequest.email(), logInRequest.password()));
         User user = (User) authentication.getPrincipal();
