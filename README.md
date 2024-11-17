@@ -2,8 +2,8 @@
 
 ## Screenshots
 
-![Interface-prefers](./images/prefers.jpg)
-![Interface-creator](./images/creator.jpg)
+![Interface-prefers](./images/prefers-2.jpg)
+![Interface-creator](./images/creator-2.jpg)
 
 &nbsp;
 
@@ -41,8 +41,8 @@ Login and registration secured by JWT tokens (access and refresh).
 &nbsp;
 
 ## Status
-The project is still in progress. I plan to focus more on testing and, later, add a grocery list feature,
-allow user profile editing (changing email and password), and improve the interface to make it more user-friendly.
+The project is still in progress. I plan to focus more on testing, add a grocery list feature 
+and also allow for user profile editing (changing email and password).
 
 &nbsp;
 
