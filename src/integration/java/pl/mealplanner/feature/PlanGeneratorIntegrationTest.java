@@ -137,7 +137,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         assertAll(
 //                () -> assertThat(createDayResponse.message()).isEqualTo(""),
                 () -> assertThat(createDayResponse.resultDay().resultRecipes().size()).isEqualTo(1),
-                () -> assertThat(oneResultRecipe.nameOfMealType()).isEqualTo("DINNER"),
+                () -> assertThat(oneResultRecipe.mealTypeName()).isEqualTo("DINNER"),
                 () -> assertThat(oneResultRecipe.recipeId()).isEqualTo("6577660abbac733a111c9421"),
                 () -> assertThat(oneResultRecipe.recipeName()).isEqualTo("Millet groats with vegetables")
         );
@@ -230,7 +230,7 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         assertAll(
 //                () -> assertThat(createDayResponse.message()).isEqualTo(""),
                 () -> assertThat(createDayResponse.resultDay().resultRecipes().size()).isEqualTo(1),
-                () -> assertThat(oneNextResultRecipe.nameOfMealType()).isEqualTo("DINNER"),
+                () -> assertThat(oneNextResultRecipe.mealTypeName()).isEqualTo("DINNER"),
                 () -> assertThat(oneNextResultRecipe.recipeId()).isEqualTo("6577660abbac733a111c9427"),
                 () -> assertThat(oneNextResultRecipe.recipeName()).isEqualTo("Pasta with vegetables and pesto")
         );

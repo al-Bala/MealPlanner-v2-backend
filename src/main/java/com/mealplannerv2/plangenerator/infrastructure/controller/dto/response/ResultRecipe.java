@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record ResultRecipe(
-        String nameOfMealType,
+        String mealTypeName,
         String recipeId,
         String recipeName
 //        int forHowManyDays

@@ -89,7 +89,7 @@ public class PlanGeneratorFacade {
             RecipeDto matchingRecipe = recipeFetcherFacade.fetchRecipeByPreferences(recipeFilters);
 
             ResultRecipe resultRecipeForMeal = ResultRecipe.builder()
-                    .nameOfMealType(mealWithType.getMealType().getName())
+                    .mealTypeName(mealWithType.getMealType().getName())
                     .recipeId(matchingRecipe.getId().toString())
                     .recipeName(matchingRecipe.getName())
                     .build();
@@ -118,7 +118,7 @@ public class PlanGeneratorFacade {
 
     private static ResultRecipe createEmptyResultRecipe(MealType mealType) {
         return ResultRecipe.builder()
-                .nameOfMealType(mealType.getName())
+                .mealTypeName(mealType.getName())
                 .recipeId("SKIPPED")
                 .recipeName("")
                 .build();
