@@ -14,5 +14,7 @@ scheduling:
 
 auth:
   jwt:
-    access-expiration-sec: 5    # 5
-    refresh-expiration-sec: 60  # 1 * 60
+#    access-expiration-sec: 5    # 5
+#    refresh-expiration-sec: 60  # 1 * 60
+    access-expiration-sec: 1800    # 30min * 60s
+    refresh-expiration-sec: 86400  # 24h * 60min * 60s

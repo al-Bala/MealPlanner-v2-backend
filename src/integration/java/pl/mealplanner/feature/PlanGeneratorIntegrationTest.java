@@ -3,19 +3,14 @@ package pl.mealplanner.feature;
 import com.auth0.jwt.JWT;
 import com.mealplannerv2.auth.dto.UserDto;
 import com.mealplannerv2.plangenerator.PlanGeneratorFacade;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.AcceptDayRequest;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.request.TempRecipe;
 import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.CreateDayResponse;
-import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.RecipeResult;
+import com.mealplannerv2.plangenerator.infrastructure.controller.dto.response.ResultRecipe;
 import com.mealplannerv2.user.model.SavedPrefers;
 import com.mealplannerv2.user.model.Plan;
 import com.mealplannerv2.recipe.RecipeRepository;
 import com.mealplannerv2.user.UserFacade;
-import jakarta.servlet.http.Cookie;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.mealplanner.BaseIntegrationTest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC256;
@@ -139,13 +133,13 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         String jsonWithFirstDayResult = firstDayResult.getResponse().getContentAsString();
         CreateDayResponse createDayResponse = objectMapper.readValue(jsonWithFirstDayResult, CreateDayResponse.class);
         log.info("[3]: {}", createDayResponse);
-        RecipeResult oneRecipeResult = createDayResponse.dayResult().recipesResult().get(0);
+        ResultRecipe oneResultRecipe = createDayResponse.resultDay().resultRecipes().get(0);
         assertAll(
 //                () -> assertThat(createDayResponse.message()).isEqualTo(""),
-                () -> assertThat(createDayResponse.dayResult().recipesResult().size()).isEqualTo(1),
-                () -> assertThat(oneRecipeResult.typeOfMeal()).isEqualTo("DINNER"),
-                () -> assertThat(oneRecipeResult.recipeId()).isEqualTo("6577660abbac733a111c9421"),
-                () -> assertThat(oneRecipeResult.recipeName()).isEqualTo("Millet groats with vegetables")
+                () -> assertThat(createDayResponse.resultDay().resultRecipes().size()).isEqualTo(1),
+                () -> assertThat(oneResultRecipe.nameOfMealType()).isEqualTo("DINNER"),
+                () -> assertThat(oneResultRecipe.recipeId()).isEqualTo("6577660abbac733a111c9421"),
+                () -> assertThat(oneResultRecipe.recipeName()).isEqualTo("Millet groats with vegetables")
         );
 
 
@@ -232,13 +226,13 @@ public class PlanGeneratorIntegrationTest extends BaseIntegrationTest {
         String jsonWithNextDayRecipe = nextDayResult.getResponse().getContentAsString();
         CreateDayResponse createNextDayResponse = objectMapper.readValue(jsonWithNextDayRecipe, CreateDayResponse.class);
         log.info("[5]: {}", createNextDayResponse);
-        RecipeResult oneNextRecipeResult = createNextDayResponse.dayResult().recipesResult().get(0);
+        ResultRecipe oneNextResultRecipe = createNextDayResponse.resultDay().resultRecipes().get(0);
         assertAll(
 //                () -> assertThat(createDayResponse.message()).isEqualTo(""),
-                () -> assertThat(createDayResponse.dayResult().recipesResult().size()).isEqualTo(1),
-                () -> assertThat(oneNextRecipeResult.typeOfMeal()).isEqualTo("DINNER"),
-                () -> assertThat(oneNextRecipeResult.recipeId()).isEqualTo("6577660abbac733a111c9427"),
-                () -> assertThat(oneNextRecipeResult.recipeName()).isEqualTo("Pasta with vegetables and pesto")
+                () -> assertThat(createDayResponse.resultDay().resultRecipes().size()).isEqualTo(1),
+                () -> assertThat(oneNextResultRecipe.nameOfMealType()).isEqualTo("DINNER"),
+                () -> assertThat(oneNextResultRecipe.recipeId()).isEqualTo("6577660abbac733a111c9427"),
+                () -> assertThat(oneNextResultRecipe.recipeName()).isEqualTo("Pasta with vegetables and pesto")
         );
 
 

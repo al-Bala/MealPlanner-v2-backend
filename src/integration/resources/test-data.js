@@ -21,7 +21,7 @@ db.users.insertMany([
                         date: "2024-09-12",
                         plannedRecipes: [
                             {
-                                typeOfMeal: 'DINNER',
+                                typeOfMeal: 'DINNER-ID',
                                 recipeId: '6577660abbac733a111c9425',
                                 recipeName: 'Rice with vegetables and chicken',
                                 forHowManyDays: 1
@@ -33,7 +33,7 @@ db.users.insertMany([
                         date: "2024-09-13",
                         plannedRecipes: [
                             {
-                                typeOfMeal: 'BREAKFAST',
+                                typeOfMeal: 'BREAKFAST-ID',
                                 recipeId: '6577660abbac733a111c9423',
                                 recipeName: 'Scrambled eggs with vegetables',
                                 forHowManyDays: 1
@@ -50,7 +50,7 @@ db.recipes.insertMany([
     {
         _id: ObjectId('111111111111111111111111'),
         name: "Recipe not found",
-        type_of_meal: ["BREAKFAST", "DINNER", "SUPPER"],
+        type_of_meal: ["BREAKFAST-ID", "DINNER-ID", "SUPPER-ID"],
         portions: 1,
         prepare_time: 1000000,
         max_storage_time: 1000000,
@@ -64,7 +64,7 @@ db.recipes.insertMany([
         _id: ObjectId('6577660abbac733a111c9421'),
         // name: "Kasza jaglana z warzywami",
         name: "Millet groats with vegetables",
-        type_of_meal: ["DINNER"],
+        type_of_meal: ["DINNER-ID"],
         portions: 2,
         prepare_time: 30,
         max_storage_time: 2,
@@ -82,7 +82,7 @@ db.recipes.insertMany([
         _id: ObjectId('6577660abbac733a111c9422'),
         // name: "Sałatka owocowa",
         name: "Fruit salad",
-        type_of_meal: ["BREAKFAST", "SUPPER"],
+        type_of_meal: ["BREAKFAST-ID", "SUPPER-ID"],
         portions: 3,
         prepare_time: 15,
         max_storage_time: 1,
@@ -100,7 +100,7 @@ db.recipes.insertMany([
         _id: ObjectId('6577660abbac733a111c9423'),
         // name: "Jajecznica z warzywami",
         name: "Scrambled eggs with vegetables",
-        type_of_meal: ["BREAKFAST"],
+        type_of_meal: ["BREAKFAST-ID"],
         portions: 2,
         prepare_time: 15,
         max_storage_time: 1,
@@ -119,7 +119,7 @@ db.recipes.insertMany([
         _id: ObjectId('6577660abbac733a111c9424'),
         // name: "Koktajl owocowy",
         name: "Fruit cocktail",
-        type_of_meal: ["BREAKFAST", "SUPPER"],
+        type_of_meal: ["BREAKFAST-ID", "SUPPER-ID"],
         portions: 1,
         prepare_time: 10,
         max_storage_time: 1,
@@ -138,7 +138,7 @@ db.recipes.insertMany([
         _id: ObjectId('6577660abbac733a111c9425'),
         // name: "Ryż z warzywami i kurczakiem",
         name: "Rice with vegetables and chicken",
-        type_of_meal: ["DINNER"],
+        type_of_meal: ["DINNER-ID"],
         portions: 3,
         prepare_time: 25,
         max_storage_time: 2,
@@ -157,7 +157,7 @@ db.recipes.insertMany([
         _id: ObjectId('6577660abbac733a111c9427'),
         // name: "Makaron z warzywami i pesto",
         name: "Pasta with vegetables and pesto",
-        type_of_meal: ["DINNER"],
+        type_of_meal: ["DINNER-ID"],
         portions: 4,
         prepare_time: 20,
         max_storage_time: 3,

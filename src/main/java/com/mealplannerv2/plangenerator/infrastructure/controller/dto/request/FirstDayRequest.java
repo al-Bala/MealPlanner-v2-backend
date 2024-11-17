@@ -8,6 +8,6 @@ import java.util.List;
 public record FirstDayRequest(
         SavedPrefers savedPrefers,
         List<IngredientDto> userProducts,
-        List<MealValues> mealsValues
+        List<PanelValuesForMeal> mealsValues
 ) {
 }

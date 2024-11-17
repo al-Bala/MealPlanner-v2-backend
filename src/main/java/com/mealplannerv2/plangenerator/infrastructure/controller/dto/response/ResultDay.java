@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record DayResult(
-        List<RecipeResult> recipesResult
+public record ResultDay(
+        List<ResultRecipe> resultRecipes
 ) {
 }
